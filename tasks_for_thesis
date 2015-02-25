@@ -1,0 +1,35 @@
+These are the steps for the BSc thesis:
+
+a) Implement the low-level backend for LCM:
+a.a) Derive a core/base/LCMSerializer from core/base/Serializer
+a.b) Implement the respective constructor, destructor, and write(uint32_t id, T val) methods. The constructor is called to handle a potential header byte sequence for the encoded data, the write-methods are called in the sequence of appearance to serialize the attributes of a data structure, and the destructor is called to finalize the serialization (i.e. to write a data footer so to say).
+a.c) Derive a core/base/LCMDeserializer from core/base/Deserializer
+a.d) Implement the respective constructor, destructor, and read(uint32_t id, T val) methods. The constructor is called to handle a potential header byte sequence to decode data, the read-methods are called in the sequence of appearance to deserialize the attributes of a data structure, and the destructor is called to finalize the deserialization (if necessary).
+a.e) Modify core/base/SerializationFactory and core/base/DeserializationFactory to also return an LCMSerializer; please discuss potential solutions with Federico and Hugo first to come up with a good design (i.e. so that the user specifies that he/she wants to have an LCMSerializer or LCMDeserializer to the factory but that the factory returns a pointer to a Serializer* instead of the concrete type; thus, the high-level user-supplied code does not have to deal with the concrete LCMSerializer and LCMDeserializer but simply uses the Serializer and Deserializer interface
+a.f) Write good test cases to test your implementation
+
+b) Implement the low-level backend for Google Protobuf (there is an existing implementation sketch that needs to be integrated with OpenDaVINCI; I will pass it over to Federico who will guide you how to manage that)
+b.a) Derive a core/base/ProtoSerializer from core/base/Serializer
+b.b) Implement the respective constructor, destructor, and write(uint32_t id, T val) methods. The constructor is called to handle a potential header byte sequence for the encoded data, the write-methods are called in the sequence of appearance to serialize the attributes of a data structure, and the destructor is called to finalize the serialization (i.e. to write a data footer so to say).
+b.c) Derive a core/base/ProtoDeserializer from core/base/Deserializer
+b.d) Implement the respective constructor, destructor, and read(uint32_t id, T val) methods. The constructor is called to handle a potential header byte sequence to decode data, the read-methods are called in the sequence of appearance to deserialize the attributes of a data structure, and the destructor is called to finalize the deserialization (if necessary).
+b.e) Modify core/base/SerializationFactory and core/base/DeserializationFactory to also return an ProtoSerializer; please discuss potential solutions with Federico and Hugo first to come up with a good design (i.e. so that the user specifies that he/she wants to have an ProtoSerializer or ProtoDeserializer to the factory but that the factory returns a pointer to a Serializer* instead of the concrete type; thus, the high-level user-supplied code does not have to deal with the concrete ProtoSerializer and ProtoDeserializer but simply uses the Serializer and Deserializer interface
+b.f) Write good test cases to test your implementation
+
+c) Assess the current overhead and encoding/decoding duration for the QueryableNetstringsSerializer and QueryableNetstringsDeserializer for all data structures that are exchanged on the CaroloCup car.
+c.a) Calculate the maximum possible throughput per second.
+
+d) Assess the current overhead and encoding/decoding duration for the LCMSerializer and LCMDeserializer for all data structures that are exchanged on the CaroloCup car.
+d.a) Calculate the maximum possible throughput per second for LCM.
+
+e) Assess the current overhead and encoding/decoding duration for the ProtoSerializer and ProtoDeserializer for all data structures that are exchanged on the CaroloCup car.
+e.a) Calculate the maximum possible throughput per second for Google Protobuf.
+
+f) Discuss the results in terms of:
+f.a) Descriptive expressiveness for the three approaches (i.e. which different data structure types (i.e. PODs, lists, maps, nested types, fixed arrays, …) are available?
+f.b) Which concepts are transformable into each other?
+f.c) What is the performance of the current solution?
+f.d) What is the performance of the LCM solution?
+f.e) What is the performance of the Google Protobuf solution?
+
+g) Conclude your work and give an outlook for future work.
