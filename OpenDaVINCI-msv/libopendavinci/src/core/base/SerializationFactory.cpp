@@ -5,7 +5,9 @@
  */
 
 #include "core/base/QueryableNetstringsSerializer.h"
-#include "core/base/QueryableNetstringsDeserializer.h"
+ #include "core/base/QueryableNetstringsDeserializer.h"
+#include "core/base/LCMSerializer.h"
+#include "core/base/LCMDeserializer.h"
 #include "core/base/SerializationFactory.h"
 
 namespace core {
@@ -24,8 +26,11 @@ namespace core {
 
         Serializer& SerializationFactory::getSerializer(ostream &out) const {
             Serializer *s = NULL;
+            Serializer *temp = NULL;
             if (m_listOfSerializers.empty()) {
-                s = new QueryableNetstringsSerializer(out);
+             s = new QueryableNetstringsSerializer(out);
+                temp = new LCMSerializer(out);
+                cout << "just to get rid of unsued variable warning " << temp<<endl;
                 m_listOfSerializers.push_back(SharedPointer<Serializer>(s));
             }
             else {
@@ -36,9 +41,14 @@ namespace core {
 
         Deserializer& SerializationFactory::getDeserializer(istream &in) const {
             Deserializer *d = NULL;
+            Deserializer *temd = NULL ;
             if (m_listOfDeserializers.empty()) {
-                d = new QueryableNetstringsDeserializer(in);
-                m_listOfDeserializers.push_back(SharedPointer<Deserializer>(d)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
+               d = new QueryableNetstringsDeserializer(in);
+                temd = new  LCMDeserializer(in);
+                cout << "creating lcm Deserializer" << endl;
+               
+               cout << "Getting rid of unused variable warning " << temd << endl;  
+	       	    m_listOfDeserializers.push_back(SharedPointer<Deserializer>(d)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
             }
             else {
                 d = &(*(*(m_listOfDeserializers.begin())));
