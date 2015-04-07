@@ -1,0 +1,24 @@
+project(proto)
+cmake_minimum_required(VERSION 2.8)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+
+set(SRC_LIST
+  proto.cpp
+)
+
+set(PUBLIC_HEADERS
+  proto.h
+)
+
+add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
+
+INSTALL(TARGETS ${PROJECT_NAME}
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+INSTALL(FILES ${PUBLIC_HEADERS} DESTINATION "include/${PROJECT_NAME}")
