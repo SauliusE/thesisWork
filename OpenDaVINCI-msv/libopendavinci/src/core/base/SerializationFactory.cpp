@@ -6,8 +6,8 @@
 
 #include "core/base/QueryableNetstringsSerializer.h"
  #include "core/base/QueryableNetstringsDeserializer.h"
-#include "core/base/LCMSerializer.h"
-#include "core/base/LCMDeserializer.h"
+#include "core/base/PROTOSerializer.h"
+#include "core/base/PROTODeserializer.h"
 #include "core/base/SerializationFactory.h"
 
 namespace core {
@@ -28,9 +28,9 @@ namespace core {
             Serializer *s = NULL;
             Serializer *temp = NULL;
             if (m_listOfSerializers.empty()) {
-             s = new QueryableNetstringsSerializer(out);
-                temp = new LCMSerializer(out);
-                cout << "just to get rid of unsued variable warning " << temp<<endl;
+           //	s = new QueryableNetstringsSerializer(out);
+                s = new PROTOSerializer(out);
+               cout << "just to get rid of unsued variable warning " << temp<<endl;
                 m_listOfSerializers.push_back(SharedPointer<Serializer>(s));
             }
             else {
@@ -44,7 +44,7 @@ namespace core {
             Deserializer *temd = NULL ;
             if (m_listOfDeserializers.empty()) {
                d = new QueryableNetstringsDeserializer(in);
-                temd = new  LCMDeserializer(in);
+                temd = new  PROTODeserializer(in);
                 cout << "creating lcm Deserializer" << endl;
                
                cout << "Getting rid of unused variable warning " << temd << endl;  

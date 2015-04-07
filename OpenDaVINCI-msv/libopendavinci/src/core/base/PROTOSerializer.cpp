@@ -42,22 +42,22 @@ namespace core {
             cout << "Writing id : " << id << " of unsigned char : " << uc << endl;
         }
         void PROTOSerializer::write ( const uint32_t id, const int32_t& i ) {
-			cout << "Writing id : " << id << " of int32 " << endl;
+			cout << "Writing id : " << id << " of int32 " <<  i << endl;
         }
         
         void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
-			cout << "Writing id : " << id << " of uint32_t : "  << endl;
+			cout << "Writing id : " << id << " of uint32_t : "  << ui << endl;
 		}
         
         void PROTOSerializer::write ( const uint32_t id, const float& f ) {
-			cout << "Writing id: " << id <<  " of float " << endl;
+			cout << "Writing id: " << id <<  " of float " << f <<endl;
 	   }
 
         void PROTOSerializer::write ( const uint32_t id, const double& d ) {
-			cout << " Writing id: " << id << " of double " << endl;
+			cout << " Writing id: " << id << " of double " << d<<endl;
         }
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {
-			cout << "Writing id: " << id << "of string " << endl;
+			cout << "Writing id: " << id << "of string " << s << endl;
 		}
 
         void PROTOSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
