@@ -17,73 +17,36 @@ namespace core {
 				m_out(out),
 				m_buffer() {}
 		
-		LCMSerializer::~LCMSerializer(){
-			// Here suppose to be finnalized message based on LCM approach, as far i know it is
-			// It is : 
-			cout << "created LCM serializer" << endl;
-			uint32_t magicHeader = 0x4c433032;
-			uint32_t id = 6575338; // sequence_number
-			cout << "magic: "<< magicHeader << "\nid: " << id << endl;
+		LCMSerializer::~LCMSerializer() {
+			uint16_t magicNumber = 0xAACF;
+			uint32_t v;
 			
-			uint8_t buf[4];
+			// Write Magic Number
+			uint8_t *magic = new uint8_t[2];
+			v = magicNumber;
+			magic[0] = (v>>8)&0xff;
+			magic[1] = (v & 0xff);
+			m_out.write(reinterpret_cast<const char *>(magic), sizeof(uint16_t));
 			
-			int32_t v = magicHeader;
-			buf[0] = (v>>24)&0xff;
-			buf[1] = (v>>16)&0xff;
-			buf[2] = (v>>8)&0xff;
-			buf[3] = (v & 0xff);
-			
-			cout << "buf: " << buf << endl;
-			
-			m_out.write(reinterpret_cast<const char *>(&buf), sizeof(uint32_t));
-			
-			
-			uint8_t buf2[4];
-			
-			v = id;
-			buf2[0] = (v>>24)&0xff;
-			buf2[1] = (v>>16)&0xff;
-			buf2[2] = (v>>8)&0xff;
-			buf2[3] = (v & 0xff);
-			
-			m_out.write(reinterpret_cast<const char *>(&buf2), sizeof(uint32_t));
+			// Write Length
+			uint8_t *length = new uint8_t[4];
+			v = static_cast<uint32_t>(m_buffer.str().length());
+			length[0] = (v>>24)&0xff;
+			length[1] = (v>>16)&0xff;
+			length[2] = (v>>8)&0xff;
+			length[3] = (v & 0xff);
+			m_out.write(reinterpret_cast<const char *>(length), sizeof(uint32_t));
 			
 			
-			m_out << m_buffer;
+			m_out << m_buffer.str();
+			
 			
 			m_out << ",";
-			
-			
-/*                                   === Small messages ===
-*
-*               A small message is defined as one where the LCM small message header, channel name, and the payload can fit into a single UDP datagram.  While this can technically be up to 64 kb, in practice the current LCM implementations limit this to 1400 bytes (to stay under the Ethernet MTU).
-*
-*               The header for a small message is 8 bytes long and has the following form:
-*
-*               {{{
-*               0      7 8     15 16    23 24    31 
-*                +--------+--------+--------+--------+
-*                | short_header_magic                |
-*                +--------+--------+--------+--------+
-*                | sequence_number                   |
-*                +--------+--------+--------+--------+
-*                }}}
-*
-*               {{{short_header_magic}}} is an unsigned 32-bit integer with value  {{{0x4c433032}}}.
-*
-*              {{{sequence_number}}} is a monotonically increasing (subject to integer wraparound) unsigned 32-bit number identifying the message.
-*
-*               Both values are encoded in network byte order (Big-Endian).
-*
-*               The header is followed by the null-terminated UTF-8 encoding of the channel name.
-*
-*                The channel name is followed by the payload.
-*/
 			
 		} // end of deconstructor
 		
 		void LCMSerializer::write ( const uint32_t id, const Serializable& s ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -91,14 +54,20 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
 			
 			stringstream buffer;
 			buffer << s;
 			
-			uint32_t size = static_cast<uint32_t>(buffer.str().length());
-			size = htonl(size);
-			m_buffer.write(reinterpret_cast<const char*>(&size), sizeof(uint32_t));
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(buffer.str().length());;
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
 			
 			m_buffer << buffer.str();
 
@@ -106,7 +75,7 @@ namespace core {
 	
 	
 		void LCMSerializer::write ( const uint32_t id, const bool& b ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -114,13 +83,23 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(b));;
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
 			
 			m_buffer.write(reinterpret_cast<const char *>(&b), sizeof(const bool));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const char& c ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -128,13 +107,23 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(c));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
 			
 			m_buffer.write(&c, sizeof(const char));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const unsigned char& uc ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -142,13 +131,23 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(uc));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
 			
 			m_buffer.write(reinterpret_cast<const char *>(&uc), sizeof(const unsigned char));
 
 		}
 		void LCMSerializer::write ( const uint32_t id, const int32_t& i ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -156,9 +155,19 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
-
-			uint8_t buf[4];
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(i));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
+			
+			uint8_t *buf = new uint8_t[4];
 			v = i;
 			
 			buf[0] = (v>>24)&0xff;
@@ -166,11 +175,11 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const uint32_t& ui ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -178,9 +187,19 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
 			
-			uint8_t buf[4];
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(ui));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
+			
+			uint8_t *buf = new uint8_t[4];
 			v = ui;
 			
 			buf[0] = (v>>24)&0xff;
@@ -188,11 +207,11 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const float& f ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -200,9 +219,19 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
-
-			uint8_t buf[4];
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(f));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
+			
+			uint8_t *buf = new uint8_t[4];
 			v = f;
 			
 			buf[0] = (v>>24)&0xff;
@@ -210,11 +239,11 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const double& d ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int64_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -222,9 +251,19 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
-
-			uint8_t buf[8];
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
+			
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(d));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
+			
+			uint8_t *buf = new uint8_t[8];
 			v = d;
 			
 			buf[0] = (v>>56)&0xff;
@@ -236,10 +275,10 @@ namespace core {
 			buf[6] = (v>>8)&0xff;
 			buf[7] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(uint64_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint64_t));
 		}
 		void LCMSerializer::write ( const uint32_t id, const string& s ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -247,11 +286,21 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
-
-			int32_t length = s.length() + 1; // length includes \0
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
 			
-			uint8_t buf[4];
+			uint32_t length = s.length();
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(length + sizeof(uint32_t));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
+			
+			
+			uint8_t *buf = new uint8_t[4];
 			v = length;
 			
 			buf[0] = (v>>24)&0xff;
@@ -259,12 +308,12 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(uint32_t));
-			m_buffer.write(reinterpret_cast<const char *>(&s), sizeof(uint8_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(s.c_str()), length);
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
-			uint8_t idbuf[4];
+			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
 			idbuf[0] = (v>>24)&0xff;
@@ -272,15 +321,22 @@ namespace core {
 			idbuf[2] = (v>>8)&0xff;
 			idbuf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(&idbuf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(idbuf), sizeof(uint32_t));
 
 			uint32_t realSize = size;
-			realSize = htonl(realSize);
-			m_buffer.write(reinterpret_cast<const char*>(&realSize), sizeof(uint32_t));
+			uint8_t *sizebuf = new uint8_t[4];
+			v = static_cast<uint32_t>(sizeof(realSize));
+			
+			sizebuf[0] = (v>>24)&0xff;
+			sizebuf[1] = (v>>16)&0xff;
+			sizebuf[2] = (v>>8)&0xff;
+			sizebuf[3] = (v & 0xff);
+			
+            m_buffer.write(reinterpret_cast<const char*>(sizebuf), sizeof(uint32_t));
 			m_buffer.write(reinterpret_cast<const char*>(data), size);
-			}
+		}
 
-		} 
+	} 
 } // core:base
 
 	

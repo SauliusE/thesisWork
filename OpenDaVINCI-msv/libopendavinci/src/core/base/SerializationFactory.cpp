@@ -30,7 +30,7 @@ namespace core {
             Serializer *s = NULL;
             //Serializer *temp = NULL;
             if (m_listOfSerializers.empty()) {
-           //	s = new QueryableNetstringsSerializer(out);
+           	//s = new QueryableNetstringsSerializer(out);
                 //s = new PROTOSerializer(out);
 	      s = new LCMSerializer(out);
                //cout << "just to get rid of unsued variable warning " << temp<<endl;
