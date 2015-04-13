@@ -175,7 +175,7 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(const uint32_t));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const uint32_t& ui ) {
@@ -207,7 +207,7 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(const uint32_t));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const float& f ) {
@@ -239,7 +239,7 @@ namespace core {
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint32_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(const float));
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const double& d ) {
@@ -275,7 +275,7 @@ namespace core {
 			buf[6] = (v>>8)&0xff;
 			buf[7] = (v & 0xff);
 			
-			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(uint64_t));
+			m_buffer.write(reinterpret_cast<const char *>(buf), sizeof(const double));
 		}
 		void LCMSerializer::write ( const uint32_t id, const string& s ) {
 			uint8_t *idbuf = new uint8_t[4];

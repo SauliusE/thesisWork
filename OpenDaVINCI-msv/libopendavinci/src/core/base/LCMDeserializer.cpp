@@ -87,25 +87,37 @@ namespace core {
         }
 
         void LCMDeserializer::read(const uint32_t id, bool &b) {
-              cout << "Read Bool Deserializer" << "- ID value: " << id <<" | Bool value" << b << endl ;
-        }
-
-        void LCMDeserializer::read(const uint32_t id, char &c) {
-              cout << "Read char Deserializer" << "- ID value: " << id <<" | char  value: " << c << endl;
-        }
-
-        void LCMDeserializer::read(const uint32_t id, unsigned char &uc) {
-             cout << "Read unsgined char Deserializer" << "- ID value: " << id <<"  | unsigned char  value: " << uc << endl;
-
-        }
-
-        void LCMDeserializer::read(const uint32_t id, int32_t &i) {
-			//cout << "Read int32_t Deserializer" << "- ID value: " << id <<" | int32_t  value: " << i << endl;
-			
 			map<uint32_t, streampos>::iterator it = m_values.find(id);
 			
 			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[4];;
+				m_buffer.seekg(it->second);
+				m_buffer.read(reinterpret_cast<char *>(&b), sizeof(bool));
+			}
+        }
+
+        void LCMDeserializer::read(const uint32_t id, char &c) {
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				m_buffer.seekg(it->second);
+				m_buffer.read(&c, sizeof(char));
+			}
+        }
+
+        void LCMDeserializer::read(const uint32_t id, unsigned char &uc) {
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				m_buffer.seekg(it->second);
+				m_buffer.read(reinterpret_cast<char *>(&uc), sizeof(unsigned char));
+			}
+        }
+
+        void LCMDeserializer::read(const uint32_t id, int32_t &i) {
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				uint8_t *buf = new uint8_t[4];
 				
 				m_buffer.seekg(it->second);
 				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(int32_t));
@@ -115,12 +127,10 @@ namespace core {
         }
 
         void LCMDeserializer::read(const uint32_t id, uint32_t &ui) {
-			//cout << "Read uint32_t Deserializer" << "- ID value: " << id <<" | uint32_t  value: " << ui << endl;
-			
 			map<uint32_t, streampos>::iterator it = m_values.find(id);
 			
 			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[4];;
+				uint8_t *buf = new uint8_t[4];
 				
 				m_buffer.seekg(it->second);
 				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(uint32_t));
@@ -129,13 +139,27 @@ namespace core {
         }
 
         void LCMDeserializer::read(const uint32_t id, float &f) {
-             cout << "Read float Deserializer" << "- ID value: " << id <<" < | float   value: " << f << endl;
-
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				uint8_t *buf = new uint8_t[4];
+				
+				m_buffer.seekg(it->second);
+				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(float));
+				f = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+			}
         }
 
         void LCMDeserializer::read(const uint32_t id, double &d) {
-              cout << "Read double Deserializer" << "- ID value: " << id <<" | double  value: " << d << endl;
-
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				uint8_t *buf = new uint8_t[8];
+				
+				m_buffer.seekg(it->second);
+				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(double));
+				d = (((int64_t)buf[0])<<56) + (((int64_t)buf[1])<<48) + (((int64_t)buf[2])<<40) + (((int64_t)buf[3])<<32) + (((int64_t)buf[4])<<24) + (((int64_t)buf[5])<<16) + (((int64_t)buf[6])<<8) + ((int64_t)buf[7]);
+			}
         }
 
         void LCMDeserializer::read(const uint32_t id, string &s) {
@@ -159,8 +183,12 @@ namespace core {
         }
 
         void LCMDeserializer::read(const uint32_t id, void *data, uint32_t size) {
-              cout << "Read data Deserializer" << "- ID value: " << id <<" |  data  value: " << data << " | size of data : "<< size << endl;
-
+			map<uint32_t, streampos>::iterator it = m_values.find(id);
+			
+			if (it != m_values.end()) {
+				m_buffer.seekg(it->second);
+				m_buffer.read(reinterpret_cast<char*>(data), size);
+			}
         }
 
     }
