@@ -72,6 +72,7 @@ namespace core{
             private:
                 ostream &m_out;
                 stringstream m_buffer;
+		uint8_t m_size;
         };
     }
 } // core::base

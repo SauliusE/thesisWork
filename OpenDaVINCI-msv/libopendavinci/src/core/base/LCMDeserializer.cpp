@@ -59,13 +59,12 @@ namespace core {
 				m_values.insert(make_pair(tokenIdentifier, m_buffer.tellp()));
 				
 				// Decode payload.
-				if (lengthOfPayload < 10000) {
 					for (uint32_t i = 0; i < lengthOfPayload; i++) {
 						in.get(c);
 						m_buffer.put(c);
 						length--;
 					}
-				}
+
 			}
 			
 			// Check for trailing ','

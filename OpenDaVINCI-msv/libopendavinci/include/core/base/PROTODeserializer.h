@@ -87,6 +87,8 @@ namespace core {
             private:
                 stringstream m_buffer;
                 map<uint32_t, streampos> m_values;
+                uint8_t m_size;
+                uint8_t position;
         };
 
     }
