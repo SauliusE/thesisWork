@@ -4,3 +4,6 @@ build*
 *kdev4
 .idea
 *.user
+.cproject
+.project
+.settings
