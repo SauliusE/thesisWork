@@ -1,0 +1,9 @@
+<map id="info.monitorenter.gui.chart.test.ATestChartOperations" name="info.monitorenter.gui.chart.test.ATestChartOperations">
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1errorbars_1_1_test_error_bars_visual.html" title="info.monitorenter.gui.chart.errorbars.\lTestErrorBarsVisual" alt="" coords="693,5,926,47"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_test_label_formatter_auto_units.html" title="info.monitorenter.gui.chart.labelformatters.\lTestLabelFormatterAutoUnits" alt="" coords="676,71,943,112"/>
+<area shape="rect" id="node7" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_test_label_formatter_simple.html" title="info.monitorenter.gui.chart.labelformatters.\lTestLabelFormatterSimple" alt="" coords="676,136,943,177"/>
+<area shape="rect" id="node8" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html" title="info.monitorenter.gui.chart.\lTestChartOperationsVisual" alt="" coords="717,201,901,243"/>
+<area shape="rect" id="node2" href="$classjunit_1_1framework_1_1_test_case.html" title="junit.framework.TestCase" alt="" coords="205,111,380,138"/>
+<area shape="rect" id="node3" href="$classjunit_1_1framework_1_1_assert.html" title="junit.framework.Assert" alt="" coords="5,86,157,113"/>
+<area shape="rect" id="node4" href="$interfacejunit_1_1framework_1_1_test.html" title="junit.framework.Test" alt="" coords="10,137,153,163"/>
+</map>

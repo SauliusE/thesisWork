@@ -1,0 +1,6 @@
+<map id="info.monitorenter.gui.chart.events.ATrace2DActionErrorBarPolicy" name="info.monitorenter.gui.chart.events.ATrace2DActionErrorBarPolicy">
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_error_bar_policy_multi_action.html" title="info.monitorenter.gui.chart.events.\lErrorBarPolicyMultiAction" alt="" coords="769,5,988,47"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_trace2_d_action_add_error_bar_policy.html" title="info.monitorenter.gui.chart.events.\lTrace2DActionAddErrorBarPolicy" alt="" coords="767,71,991,112"/>
+<area shape="rect" id="node7" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_trace2_d_action_remove_error_bar_policy.html" title="info.monitorenter.gui.chart.events.\lTrace2DActionRemoveErrorBarPolicy" alt="" coords="753,136,1004,177"/>
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_a_trace2_d_action.html" title="info.monitorenter.gui.chart.events.\lATrace2DAction" alt="" coords="220,71,439,112"/>
+</map>

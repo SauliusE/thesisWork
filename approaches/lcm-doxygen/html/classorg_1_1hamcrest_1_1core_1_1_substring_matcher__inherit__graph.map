@@ -1,0 +1,9 @@
+<map id="org.hamcrest.core.SubstringMatcher" name="org.hamcrest.core.SubstringMatcher">
+<area shape="rect" id="node6" href="$classorg_1_1hamcrest_1_1core_1_1_string_contains.html" title="org.hamcrest.core.String\lContains" alt="" coords="1267,5,1433,47"/>
+<area shape="rect" id="node7" href="$classorg_1_1hamcrest_1_1core_1_1_string_ends_with.html" title="org.hamcrest.core.String\lEndsWith" alt="" coords="1267,71,1433,112"/>
+<area shape="rect" id="node8" href="$classorg_1_1hamcrest_1_1core_1_1_string_starts_with.html" title="org.hamcrest.core.String\lStartsWith" alt="" coords="1267,136,1433,177"/>
+<area shape="rect" id="node2" href="$classorg_1_1hamcrest_1_1_type_safe_matcher.html" title="org::hamcrest::TypeSafeMatcher\l\&lt; String \&gt;" alt="" coords="761,71,983,112"/>
+<area shape="rect" id="node3" href="$classorg_1_1hamcrest_1_1_base_matcher.html" title="org::hamcrest::BaseMatcher\&lt; T \&gt;" alt="" coords="487,78,713,105"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1hamcrest_1_1_matcher.html" title="org::hamcrest::Matcher\&lt; T \&gt;" alt="" coords="244,78,439,105"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1hamcrest_1_1_self_describing.html" title="org.hamcrest.SelfDescribing" alt="" coords="5,78,196,105"/>
+</map>

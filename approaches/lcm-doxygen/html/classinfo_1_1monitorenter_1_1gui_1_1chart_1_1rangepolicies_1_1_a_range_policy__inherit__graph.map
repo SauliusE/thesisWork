@@ -1,0 +1,9 @@
+<map id="info.monitorenter.gui.chart.rangepolicies.ARangePolicy" name="info.monitorenter.gui.chart.rangepolicies.ARangePolicy">
+<area shape="rect" id="node4" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_fixed_viewport.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyFixedViewport" alt="" coords="679,5,939,47"/>
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_highest_values.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyHighestValues" alt="" coords="679,71,939,112"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_highest_values_forced_min.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyHighestValuesForcedMin" alt="" coords="679,136,939,177"/>
+<area shape="rect" id="node7" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_minimum_viewport.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyMinimumViewport" alt="" coords="679,201,939,243"/>
+<area shape="rect" id="node9" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_unbounded.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyUnbounded" alt="" coords="679,267,939,308"/>
+<area shape="rect" id="node2" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_range_policy.html" title="info.monitorenter.gui.chart.\lIRangePolicy" alt="" coords="147,136,323,177"/>
+<area shape="rect" id="node8" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_forced_point.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyForcedPoint" alt="" coords="987,201,1247,243"/>
+</map>

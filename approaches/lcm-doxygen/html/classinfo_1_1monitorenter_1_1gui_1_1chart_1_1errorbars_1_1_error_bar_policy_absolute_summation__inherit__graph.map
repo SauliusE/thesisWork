@@ -1,0 +1,5 @@
+<map id="info.monitorenter.gui.chart.errorbars.ErrorBarPolicyAbsoluteSummation" name="info.monitorenter.gui.chart.errorbars.ErrorBarPolicyAbsoluteSummation">
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1errorbars_1_1_a_error_bar_policy_configurable.html" title="info.monitorenter.gui.chart.errorbars.\lAErrorBarPolicyConfigurable" alt="" coords="495,46,728,87"/>
+<area shape="rect" id="node3" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_error_bar_policy.html" title="info::monitorenter\l::gui::chart::IErrorBarPolicy\l\&lt; AErrorBarPolicyConfigurable \&gt;" alt="" coords="229,5,447,61"/>
+<area shape="rect" id="node4" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_trace_painter.html" title="info.monitorenter.gui.chart.\lITracePainter\&lt; T \&gt;" alt="" coords="5,13,181,54"/>
+</map>

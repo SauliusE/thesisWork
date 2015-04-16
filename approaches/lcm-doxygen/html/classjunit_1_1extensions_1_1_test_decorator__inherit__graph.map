@@ -1,0 +1,6 @@
+<map id="junit.extensions.TestDecorator" name="junit.extensions.TestDecorator">
+<area shape="rect" id="node4" href="$classjunit_1_1extensions_1_1_repeated_test.html" title="junit.extensions.RepeatedTest" alt="" coords="5,155,208,181"/>
+<area shape="rect" id="node5" href="$classjunit_1_1extensions_1_1_test_setup.html" title="junit.extensions.TestSetup" alt="" coords="232,155,411,181"/>
+<area shape="rect" id="node2" href="$classjunit_1_1framework_1_1_assert.html" title="junit.framework.Assert" alt="" coords="52,5,204,32"/>
+<area shape="rect" id="node3" href="$interfacejunit_1_1framework_1_1_test.html" title="junit.framework.Test" alt="" coords="229,5,371,32"/>
+</map>

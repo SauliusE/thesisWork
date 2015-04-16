@@ -1,0 +1,14 @@
+<map id="_lcmtest2_cross_package_t_subscription_t" name="_lcmtest2_cross_package_t_subscription_t">
+<area shape="rect" id="node2" href="$struct__lcm__recv__buf__t.html" title="_lcm_recv_buf_t" alt="" coords="884,15,1001,42"/>
+<area shape="rect" id="node14" href="$struct__lcm__subscription__t.html" title="_lcm_subscription_t" alt="" coords="1109,50,1247,77"/>
+<area shape="rect" id="node3" href="$struct__lcm__t.html" title="_lcm_t" alt="" coords="645,130,705,157"/>
+<area shape="rect" id="node4" href="$struct__lcm__provider__t.html" title="_lcm_provider_t" alt="" coords="885,299,1001,326"/>
+<area shape="rect" id="node13" href="$struct__lcm__provider__vtable__t.html" title="_lcm_provider_vtable_t" alt="" coords="1099,181,1257,207"/>
+<area shape="rect" id="node5" href="$struct__lcm__eventlog__event__t.html" title="_lcm_eventlog_event_t" alt="" coords="596,249,755,275"/>
+<area shape="rect" id="node11" href="$struct__lcm__buf.html" title="_lcm_buf" alt="" coords="400,357,475,383"/>
+<area shape="rect" id="node7" href="$struct__lcm__ringbuf.html" title="_lcm_ringbuf" alt="" coords="212,403,308,430"/>
+<area shape="rect" id="node8" href="$struct__lcm__ringbuf__rec.html" title="_lcm_ringbuf_rec" alt="" coords="5,403,128,430"/>
+<area shape="rect" id="node9" href="$struct__lcm__frag__buf__store.html" title="_lcm_frag_buf_store" alt="" coords="605,486,746,513"/>
+<area shape="rect" id="node10" href="$struct__lcm__buf__queue.html" title="_lcm_buf_queue" alt="" coords="616,354,735,381"/>
+<area shape="rect" id="node12" href="$struct__lcm__eventlog__t.html" title="_lcm_eventlog_t" alt="" coords="616,537,735,563"/>
+</map>

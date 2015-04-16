@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1io_1_1_a_data_collector.html" title="info.monitorenter.gui.chart.io.\lADataCollector" alt="" coords="132,39,323,80"/>
+<area shape="rect" id="node3" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1io_1_1_random_data_collector_offset.html" title="info.monitorenter.gui.chart.io.\lRandomDataCollectorOffset" alt="" coords="397,5,587,47"/>
+<area shape="rect" id="node4" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1io_1_1_random_data_collector_time_stamped.html" title="info.monitorenter.gui.chart.io.\lRandomDataCollectorTimeStamped" alt="" coords="371,71,613,112"/>
+</map>

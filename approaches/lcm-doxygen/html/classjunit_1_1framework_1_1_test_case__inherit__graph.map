@@ -1,0 +1,28 @@
+<map id="junit.framework.TestCase" name="junit.framework.TestCase">
+<area shape="rect" id="node4" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_blank_chart.html" title="info.monitorenter.gui.chart.\lBlankChart" alt="" coords="451,5,627,47"/>
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_label_spacing_test_chart.html" title="info.monitorenter.gui.chart.demos.\lLabelSpacingTestChart" alt="" coords="429,71,650,112"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_test_add_remove_trace.html" title="info.monitorenter.gui.chart.demos.\lTestAddRemoveTrace" alt="" coords="429,136,650,177"/>
+<area shape="rect" id="node7" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_test_static_collector_chart.html" title="info.monitorenter.gui.chart.demos.\lTestStaticCollectorChart" alt="" coords="429,201,650,243"/>
+<area shape="rect" id="node8" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1layouts_1_1_test_chart_panel.html" title="info.monitorenter.gui.chart.layouts.\lTestChartPanel" alt="" coords="428,267,651,308"/>
+<area shape="rect" id="node9" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1test_1_1_a_test_chart_operations.html" title="info.monitorenter.gui.chart.test.\lATestChartOperations" alt="" coords="439,332,639,373"/>
+<area shape="rect" id="node14" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1test_1_1_a_test_j_chart2_d.html" title="info.monitorenter.gui.chart.test.\lATestJChart2D" alt="" coords="439,397,639,439"/>
+<area shape="rect" id="node18" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1test_1_1_a_test_stacked_j_chart2_d.html" title="info.monitorenter.gui.chart.test.\lATestStackedJChart2D" alt="" coords="439,463,639,504"/>
+<area shape="rect" id="node20" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart2_d_headless.html" title="info.monitorenter.gui.chart.\lTestChart2DHeadless" alt="" coords="451,528,627,569"/>
+<area shape="rect" id="node21" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_multithreading.html" title="info.monitorenter.gui.chart.\lTestMultithreading" alt="" coords="451,593,627,635"/>
+<area shape="rect" id="node23" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_test_trace2_d.html" title="info.monitorenter.gui.chart.traces.\lTestTrace2D" alt="" coords="431,659,647,700"/>
+<area shape="rect" id="node24" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_test_trace2_d_ltd.html" title="info.monitorenter.gui.chart.traces.\lTestTrace2DLtd" alt="" coords="431,724,647,765"/>
+<area shape="rect" id="node25" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_test_trace2_d_simple.html" title="info.monitorenter.gui.chart.traces.\lTestTrace2DSimple" alt="" coords="431,789,647,831"/>
+<area shape="rect" id="node26" href="$classinfo_1_1monitorenter_1_1util_1_1collections_1_1_test_ring_buffer_array_fast.html" title="info.monitorenter.util.collections.\lTestRingBufferArrayFast" alt="" coords="435,855,644,896"/>
+<area shape="rect" id="node27" href="$classinfo_1_1monitorenter_1_1util_1_1collections_1_1_test_tree_set_greedy.html" title="info.monitorenter.util.collections.\lTestTreeSetGreedy" alt="" coords="435,920,644,961"/>
+<area shape="rect" id="node2" href="$classjunit_1_1framework_1_1_assert.html" title="junit.framework.Assert" alt="" coords="5,445,157,471"/>
+<area shape="rect" id="node3" href="$interfacejunit_1_1framework_1_1_test.html" title="junit.framework.Test" alt="" coords="10,495,153,522"/>
+<area shape="rect" id="node10" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1errorbars_1_1_test_error_bars_visual.html" title="info.monitorenter.gui.chart.errorbars.\lTestErrorBarsVisual" alt="" coords="715,136,949,177"/>
+<area shape="rect" id="node11" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_test_label_formatter_auto_units.html" title="info.monitorenter.gui.chart.labelformatters.\lTestLabelFormatterAutoUnits" alt="" coords="699,201,965,243"/>
+<area shape="rect" id="node12" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_test_label_formatter_simple.html" title="info.monitorenter.gui.chart.labelformatters.\lTestLabelFormatterSimple" alt="" coords="699,267,965,308"/>
+<area shape="rect" id="node13" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html" title="info.monitorenter.gui.chart.\lTestChartOperationsVisual" alt="" coords="740,332,924,373"/>
+<area shape="rect" id="node15" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1_test_axis.html" title="info.monitorenter.gui.chart.axis.\lTestAxis" alt="" coords="730,397,934,439"/>
+<area shape="rect" id="node16" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart2_d.html" title="info.monitorenter.gui.chart.\lTestChart2D" alt="" coords="744,463,920,504"/>
+<area shape="rect" id="node17" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_trace_point2_d.html" title="info.monitorenter.gui.chart.\lTestTracePoint2D" alt="" coords="1013,463,1189,504"/>
+<area shape="rect" id="node19" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_stacked_j_chart2_d.html" title="info.monitorenter.gui.chart.\lTestStackedJChart2D" alt="" coords="744,528,920,569"/>
+<area shape="rect" id="node22" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_multi_threading_and_tracing.html" title="info.monitorenter.gui.chart.\lTestMultiThreadingAndTracing" alt="" coords="727,593,937,635"/>
+</map>

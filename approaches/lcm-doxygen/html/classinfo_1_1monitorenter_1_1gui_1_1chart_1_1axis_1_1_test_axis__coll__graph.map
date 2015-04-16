@@ -1,0 +1,9 @@
+<map id="info.monitorenter.gui.chart.axis.TestAxis" name="info.monitorenter.gui.chart.axis.TestAxis">
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1test_1_1_a_test_j_chart2_d.html" title="info.monitorenter.gui.chart.test.\lATestJChart2D" alt="" coords="544,146,744,187"/>
+<area shape="rect" id="node3" href="$classjunit_1_1framework_1_1_test_case.html" title="junit.framework.TestCase" alt="" coords="247,36,421,63"/>
+<area shape="rect" id="node4" href="$classjunit_1_1framework_1_1_assert.html" title="junit.framework.Assert" alt="" coords="18,56,170,83"/>
+<area shape="rect" id="node5" href="$interfacejunit_1_1framework_1_1_test.html" title="junit.framework.Test" alt="" coords="23,5,165,32"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1_a_axis.html" title="info.monitorenter.gui.chart.axis.\lAAxis\&lt;?\&gt;" alt="" coords="232,87,436,129"/>
+<area shape="rect" id="node8" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_chart2_d.html" title="info.monitorenter.gui.chart.\lChart2D" alt="" coords="246,289,422,330"/>
+<area shape="rect" id="node13" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_trace2_d.html" title="info.monitorenter.gui.chart.\lITrace2D" alt="" coords="246,205,422,246"/>
+</map>

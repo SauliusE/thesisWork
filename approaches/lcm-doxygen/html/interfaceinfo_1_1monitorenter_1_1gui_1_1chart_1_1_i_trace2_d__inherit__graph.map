@@ -1,0 +1,15 @@
+<map id="info.monitorenter.gui.chart.ITrace2D" name="info.monitorenter.gui.chart.ITrace2D">
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_a_trace2_d.html" title="info.monitorenter.gui.chart.traces.\lATrace2D" alt="" coords="455,157,671,199"/>
+<area shape="rect" id="node9" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_ltd.html" title="info.monitorenter.gui.chart.traces.\lTrace2DLtd" alt="" coords="751,201,967,243"/>
+<area shape="rect" id="node11" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_simple.html" title="info.monitorenter.gui.chart.traces.\lTrace2DSimple" alt="" coords="751,267,967,308"/>
+<area shape="rect" id="node14" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_sorted.html" title="info.monitorenter.gui.chart.traces.\lTrace2DSorted" alt="" coords="751,332,967,373"/>
+<area shape="rect" id="node16" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_axis_swap.html" title="info.monitorenter.gui.chart.traces.\lTrace2DAxisSwap" alt="" coords="455,376,671,417"/>
+<area shape="rect" id="node17" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_debugger.html" title="info.monitorenter.gui.chart.traces.\lTrace2DDebugger" alt="" coords="455,441,671,483"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1computing_1_1_trace2_d_arithmetic_mean.html" title="info.monitorenter.gui.chart.traces.computing.\lTrace2DArithmeticMean" alt="" coords="719,5,999,47"/>
+<area shape="rect" id="node7" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1computing_1_1_trace2_d_arithmetic_mean_x.html" title="info.monitorenter.gui.chart.traces.computing.\lTrace2DArithmeticMeanX" alt="" coords="719,71,999,112"/>
+<area shape="rect" id="node8" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1computing_1_1_trace2_d_arithmetic_mean_y.html" title="info.monitorenter.gui.chart.traces.computing.\lTrace2DArithmeticMeanY" alt="" coords="719,136,999,177"/>
+<area shape="rect" id="node10" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_ltd_replacing.html" title="info.monitorenter.gui.chart.traces.\lTrace2DLtdReplacing" alt="" coords="1047,168,1263,209"/>
+<area shape="rect" id="node12" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_bijective.html" title="info.monitorenter.gui.chart.traces.\lTrace2DBijective" alt="" coords="1047,233,1263,275"/>
+<area shape="rect" id="node13" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_replacing.html" title="info.monitorenter.gui.chart.traces.\lTrace2DReplacing" alt="" coords="1047,299,1263,340"/>
+<area shape="rect" id="node15" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1traces_1_1_trace2_d_ltd_sorted.html" title="info.monitorenter.gui.chart.traces.\lTrace2DLtdSorted" alt="" coords="1047,364,1263,405"/>
+</map>

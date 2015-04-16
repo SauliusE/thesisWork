@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classjunit_1_1framework_1_1_assertion_failed_error.html" title="junit.framework.Assertion\lFailedError" alt="" coords="167,5,338,47"/>
+<area shape="rect" id="node4" href="$classorg_1_1junit_1_1_comparison_failure.html" title="org.junit.ComparisonFailure" alt="" coords="160,71,345,98"/>
+<area shape="rect" id="node5" href="$classorg_1_1junit_1_1internal_1_1_array_comparison_failure.html" title="org.junit.internal.Array\lComparisonFailure" alt="" coords="178,123,327,164"/>
+<area shape="rect" id="node3" href="$classjunit_1_1framework_1_1_comparison_failure.html" title="junit.framework.Comparison\lFailure" alt="" coords="393,5,580,47"/>
+</map>

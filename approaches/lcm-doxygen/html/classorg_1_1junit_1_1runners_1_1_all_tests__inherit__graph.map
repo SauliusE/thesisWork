@@ -1,0 +1,8 @@
+<map id="org.junit.runners.AllTests" name="org.junit.runners.AllTests">
+<area shape="rect" id="node2" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_suite_method.html" title="org.junit.internal.runners.\lSuiteMethod" alt="" coords="685,57,849,98"/>
+<area shape="rect" id="node3" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_j_unit38_class_runner.html" title="org.junit.internal.runners.\lJUnit38ClassRunner" alt="" coords="473,57,637,98"/>
+<area shape="rect" id="node4" href="$classorg_1_1junit_1_1runner_1_1_runner.html" title="org.junit.runner.Runner" alt="" coords="254,5,407,32"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1junit_1_1runner_1_1_describable.html" title="org.junit.runner.Describable" alt="" coords="5,5,188,32"/>
+<area shape="rect" id="node6" href="$interfaceorg_1_1junit_1_1runner_1_1manipulation_1_1_filterable.html" title="org.junit.runner.manipulation.\lFilterable" alt="" coords="236,57,425,98"/>
+<area shape="rect" id="node7" href="$interfaceorg_1_1junit_1_1runner_1_1manipulation_1_1_sortable.html" title="org.junit.runner.manipulation.\lSortable" alt="" coords="236,122,425,163"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="lcmgen/getopt.h" name="lcmgen/getopt.h">
+<area shape="rect" id="node2" href="$lcmgen_8h.html" title="lcmgen/lcmgen.h" alt="" coords="490,80,614,107"/>
+<area shape="rect" id="node5" href="$emit__csharp_8c.html" title="lcmgen/emit_csharp.c" alt="" coords="5,155,157,181"/>
+<area shape="rect" id="node6" href="$emit__java_8c.html" title="lcmgen/emit_java.c" alt="" coords="181,155,320,181"/>
+<area shape="rect" id="node10" href="$main_8c.html" title="lcmgen/main.c" alt="" coords="1124,155,1233,181"/>
+<area shape="rect" id="node11" href="$lcmgen_2getopt_8c.html" title="lcmgen/getopt.c" alt="" coords="689,80,807,107"/>
+<area shape="rect" id="node3" href="$emit__c_8c.html" title="lcmgen/emit_c.c" alt="" coords="493,155,611,181"/>
+<area shape="rect" id="node4" href="$emit__cpp_8c.html" title="lcmgen/emit_cpp.c" alt="" coords="636,155,769,181"/>
+<area shape="rect" id="node7" href="$emit__lua_8c.html" title="lcmgen/emit_lua.c" alt="" coords="793,155,924,181"/>
+<area shape="rect" id="node8" href="$emit__python_8c.html" title="lcmgen/emit_python.c" alt="" coords="949,155,1099,181"/>
+<area shape="rect" id="node9" href="$lcmgen_8c.html" title="lcmgen/lcmgen.c" alt="" coords="345,155,469,181"/>
+</map>

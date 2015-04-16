@@ -1,0 +1,4 @@
+var classinfo_1_1monitorenter_1_1util_1_1collections_1_1_i_ring_buffer_1_1_ring_buffer_exception =
+[
+    [ "RingBufferException", "classinfo_1_1monitorenter_1_1util_1_1collections_1_1_i_ring_buffer_1_1_ring_buffer_exception.html#a682330fc4026f87fca6ff466444f7c4b", null ]
+];

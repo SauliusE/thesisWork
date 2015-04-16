@@ -1,0 +1,5 @@
+<map id="info.monitorenter.gui.chart.labelformatters.LabelFormatterSimple" name="info.monitorenter.gui.chart.labelformatters.LabelFormatterSimple">
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_label_formatter_number.html" title="info.monitorenter.gui.chart.labelformatters.\lLabelFormatterNumber" alt="" coords="685,35,952,76"/>
+<area shape="rect" id="node3" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1labelformatters_1_1_a_label_formatter.html" title="info.monitorenter.gui.chart.labelformatters.\lALabelFormatter" alt="" coords="371,85,637,127"/>
+<area shape="rect" id="node4" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_axis_label_formatter.html" title="info.monitorenter.gui.chart.\lIAxisLabelFormatter" alt="" coords="147,27,323,68"/>
+</map>

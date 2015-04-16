@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interfacejunit_1_1framework_1_1_test_listener.html" title="junit.framework.TestListener" alt="" coords="5,31,195,57"/>
+<area shape="rect" id="node2" href="$classjunit_1_1runner_1_1_base_test_runner.html" title="junit.runner.BaseTestRunner" alt="" coords="243,5,433,32"/>
+<area shape="rect" id="node4" href="$classjunit_1_1textui_1_1_result_printer.html" title="junit.textui.ResultPrinter" alt="" coords="259,56,417,83"/>
+<area shape="rect" id="node3" href="$classjunit_1_1textui_1_1_test_runner.html" title="junit.textui.TestRunner" alt="" coords="481,5,633,32"/>
+</map>

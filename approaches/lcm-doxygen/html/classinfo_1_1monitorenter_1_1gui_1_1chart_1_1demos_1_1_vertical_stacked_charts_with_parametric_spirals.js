@@ -1,0 +1,4 @@
+var classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_vertical_stacked_charts_with_parametric_spirals =
+[
+    [ "VerticalStackedChartsWithParametricSpirals", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_vertical_stacked_charts_with_parametric_spirals.html#a9853eb77f43727e7c441713e1422176d", null ]
+];

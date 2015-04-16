@@ -1,0 +1,5 @@
+<map id="_lcm_buf_queue" name="_lcm_buf_queue">
+<area shape="rect" id="node2" href="$struct__lcm__buf.html" title="_lcm_buf" alt="" coords="33,216,108,243"/>
+<area shape="rect" id="node4" href="$struct__lcm__ringbuf.html" title="_lcm_ringbuf" alt="" coords="83,112,179,139"/>
+<area shape="rect" id="node5" href="$struct__lcm__ringbuf__rec.html" title="_lcm_ringbuf_rec" alt="" coords="69,7,192,33"/>
+</map>

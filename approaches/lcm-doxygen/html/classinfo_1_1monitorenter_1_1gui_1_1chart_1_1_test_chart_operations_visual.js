@@ -1,0 +1,25 @@
+var classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual =
+[
+    [ "TestChartOperationsVisual", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a1fac769f4783fb56cc264f90c7088bb1", null ],
+    [ "testAddDiscontinuation", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a8d1f7b174004f327b5116b7e98ff6d0c", null ],
+    [ "testAddPoint", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a1d8825b05119c3ce34eb3e3500c03b92", null ],
+    [ "testAddRemoveTrace", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a9f8a407e64be108132789e7b7277d832", null ],
+    [ "testAxisLabelFormatterNumberFormatSetNumberFormat", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#ac5684dca90d5e5c376eaab03a3a5e328", null ],
+    [ "testAxisSetLabelFormatter", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a42abf62cc1ae1c0265af8621590a5e2c", null ],
+    [ "testDeadLockAddPointThread", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#ab834354ab50eb07cb04d4b60c52065c9", null ],
+    [ "testIErrorBarPainterSetStartPointPainter", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#aa0d3971f5c638e8b50ff3fa96a447a67", null ],
+    [ "testRemoveAllPoints", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a550fd95e30acf37d12627d023d895855", null ],
+    [ "testRemoveAllTraces", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#ab6473b2e1c666ceb09799127d5949d03", null ],
+    [ "testRemoveTraceForBug2891801", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a53421de867896f26444240ec9fe8f59e", null ],
+    [ "testSetEmptyTraceTitle", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a61b5bb90602c9fe9a4c78a4616647478", null ],
+    [ "testSetNullTraceTitle", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a50a8dab6da8f90a084b6061743b794ba", null ],
+    [ "testSetRangePolicyX", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a5206116cb9ce7f0e30f4204fd58d1031", null ],
+    [ "testSetStroke", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#acf6c285ff73d8012c45b2111f3816e1e", null ],
+    [ "testSetTraceName", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a0e8edc19e6bf169f51c07db0fef29675", null ],
+    [ "testSetTraceNameEmptyTrace", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a74300cc930494c4e34c7b015ff3c051e", null ],
+    [ "testSetTraceTitleOnEmptyTitleTrace", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#aa07cc865a3c6031a26f88cbe5fe560a8", null ],
+    [ "testSetZIndex", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#af56fa6ad9cffd9ed2da8b570194452ac", null ],
+    [ "testTracePointSetLocation", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a7b645560372aff62914c2556f7c8a4e1", null ],
+    [ "testTraceSetErrorBarPolicy", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#ad793817ab7cb32344b5e0cb490327d5d", null ],
+    [ "testZoom", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1_test_chart_operations_visual.html#a830b088648866c488dc3dc99be52cd62", null ]
+];

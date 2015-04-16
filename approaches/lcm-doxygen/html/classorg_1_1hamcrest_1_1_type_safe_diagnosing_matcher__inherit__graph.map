@@ -1,0 +1,9 @@
+<map id="org.hamcrest.TypeSafeDiagnosingMatcher&lt; T &gt;" name="org.hamcrest.TypeSafeDiagnosingMatcher&lt; T &gt;">
+<area shape="rect" id="node5" href="$classorg_1_1hamcrest_1_1core_1_1_combinable_matcher.html" title="org::hamcrest::core\l::CombinableMatcher\&lt; T \&gt;" alt="" coords="1070,5,1254,47"/>
+<area shape="rect" id="node6" href="$classorg_1_1hamcrest_1_1core_1_1_every.html" title="org::hamcrest::core\l::Every\&lt; Iterable\&lt; T \&gt; \&gt;" alt="" coords="1079,71,1245,112"/>
+<area shape="rect" id="node7" href="$classorg_1_1hamcrest_1_1core_1_1_is_collection_containing.html" title="org::hamcrest::core\l::IsCollectionContaining\l\&lt; Iterable\&lt;?super T \&gt; \&gt;" alt="" coords="1080,135,1244,191"/>
+<area shape="rect" id="node8" href="$classorg_1_1hamcrest_1_1_feature_matcher.html" title="org::hamcrest::FeatureMatcher\&lt; T \&gt;" alt="" coords="1041,215,1283,242"/>
+<area shape="rect" id="node2" href="$classorg_1_1hamcrest_1_1_base_matcher.html" title="org::hamcrest::BaseMatcher\&lt; T \&gt;" alt="" coords="487,114,713,141"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1hamcrest_1_1_matcher.html" title="org::hamcrest::Matcher\&lt; T \&gt;" alt="" coords="244,114,439,141"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1hamcrest_1_1_self_describing.html" title="org.hamcrest.SelfDescribing" alt="" coords="5,114,196,141"/>
+</map>

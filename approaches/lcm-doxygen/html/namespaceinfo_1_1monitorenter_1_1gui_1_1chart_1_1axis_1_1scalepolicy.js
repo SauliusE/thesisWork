@@ -1,0 +1,6 @@
+var namespaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy =
+[
+    [ "AxisScalePolicyAutomaticBestFit", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_automatic_best_fit.html", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_automatic_best_fit" ],
+    [ "AxisScalePolicyManualTicks", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_manual_ticks.html", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_manual_ticks" ],
+    [ "AxisScalePolicyTransformation", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_transformation.html", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_transformation" ]
+];

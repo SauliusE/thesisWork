@@ -1,0 +1,31 @@
+<map id="org.hamcrest.BaseMatcher&lt; T &gt;" name="org.hamcrest.BaseMatcher&lt; T &gt;">
+<area shape="rect" id="node4" href="$classorg_1_1hamcrest_1_1core_1_1_described_as.html" title="org::hamcrest::core\l::DescribedAs\&lt; T \&gt;" alt="" coords="808,5,951,47"/>
+<area shape="rect" id="node5" href="$classorg_1_1hamcrest_1_1core_1_1_is.html" title="org::hamcrest::core\l::Is\&lt; T \&gt;" alt="" coords="809,71,949,112"/>
+<area shape="rect" id="node6" href="$classorg_1_1hamcrest_1_1core_1_1_is_anything.html" title="org::hamcrest::core\l::IsAnything\&lt; T \&gt;" alt="" coords="809,136,949,177"/>
+<area shape="rect" id="node7" href="$classorg_1_1hamcrest_1_1core_1_1_is_equal.html" title="org::hamcrest::core\l::IsEqual\&lt; T \&gt;" alt="" coords="809,201,949,243"/>
+<area shape="rect" id="node8" href="$classorg_1_1hamcrest_1_1core_1_1_is_not.html" title="org::hamcrest::core\l::IsNot\&lt; T \&gt;" alt="" coords="809,267,949,308"/>
+<area shape="rect" id="node9" href="$classorg_1_1hamcrest_1_1core_1_1_is_null.html" title="org::hamcrest::core\l::IsNull\&lt; T \&gt;" alt="" coords="809,332,949,373"/>
+<area shape="rect" id="node10" href="$classorg_1_1hamcrest_1_1core_1_1_is_same.html" title="org::hamcrest::core\l::IsSame\&lt; T \&gt;" alt="" coords="809,397,949,439"/>
+<area shape="rect" id="node13" href="$classorg_1_1hamcrest_1_1_custom_matcher.html" title="org::hamcrest::CustomMatcher\&lt; T \&gt;" alt="" coords="759,529,1000,555"/>
+<area shape="rect" id="node14" href="$classorg_1_1hamcrest_1_1_diagnosing_matcher.html" title="org::hamcrest::Diagnosing\lMatcher\&lt; T \&gt;" alt="" coords="788,580,971,621"/>
+<area shape="rect" id="node17" href="$classorg_1_1hamcrest_1_1_type_safe_diagnosing_matcher.html" title="org::hamcrest::TypeSafeDiagnosing\lMatcher\&lt; T \&gt;" alt="" coords="758,677,1001,719"/>
+<area shape="rect" id="node22" href="$classorg_1_1hamcrest_1_1_type_safe_matcher.html" title="org::hamcrest::TypeSafeMatcher\&lt; T \&gt;" alt="" coords="752,959,1007,986"/>
+<area shape="rect" id="node31" href="$classorg_1_1junit_1_1internal_1_1matchers_1_1_type_safe_matcher.html" title="org::junit::internal\l::matchers::TypeSafeMatcher\&lt; T \&gt;" alt="" coords="762,1011,997,1052"/>
+<area shape="rect" id="node2" href="$interfaceorg_1_1hamcrest_1_1_matcher.html" title="org::hamcrest::Matcher\&lt; T \&gt;" alt="" coords="244,405,439,431"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1hamcrest_1_1_self_describing.html" title="org.hamcrest.SelfDescribing" alt="" coords="5,405,196,431"/>
+<area shape="rect" id="node12" href="$classorg_1_1hamcrest_1_1core_1_1_any_of.html" title="org::hamcrest::core\l::AnyOf\&lt; T \&gt;" alt="" coords="1125,416,1265,457"/>
+<area shape="rect" id="node15" href="$classorg_1_1hamcrest_1_1core_1_1_all_of.html" title="org::hamcrest::core\l::AllOf\&lt; T \&gt;" alt="" coords="1125,481,1265,523"/>
+<area shape="rect" id="node16" href="$classorg_1_1hamcrest_1_1core_1_1_is_instance_of.html" title="org::hamcrest::core\l::IsInstanceOf\&lt; Object \&gt;" alt="" coords="1112,547,1277,588"/>
+<area shape="rect" id="node18" href="$classorg_1_1hamcrest_1_1core_1_1_combinable_matcher.html" title="org::hamcrest::core\l::CombinableMatcher\&lt; T \&gt;" alt="" coords="1103,612,1287,653"/>
+<area shape="rect" id="node19" href="$classorg_1_1hamcrest_1_1core_1_1_every.html" title="org::hamcrest::core\l::Every\&lt; Iterable\&lt; T \&gt; \&gt;" alt="" coords="1111,677,1278,719"/>
+<area shape="rect" id="node20" href="$classorg_1_1hamcrest_1_1core_1_1_is_collection_containing.html" title="org::hamcrest::core\l::IsCollectionContaining\l\&lt; Iterable\&lt;?super T \&gt; \&gt;" alt="" coords="1113,742,1277,798"/>
+<area shape="rect" id="node21" href="$classorg_1_1hamcrest_1_1_feature_matcher.html" title="org::hamcrest::FeatureMatcher\&lt; T \&gt;" alt="" coords="1074,822,1315,849"/>
+<area shape="rect" id="node23" href="$classorg_1_1hamcrest_1_1core_1_1_substring_matcher.html" title="org::hamcrest::core\l::SubstringMatcher\&lt;\l String \&gt;" alt="" coords="1124,873,1265,929"/>
+<area shape="rect" id="node27" href="$classorg_1_1hamcrest_1_1_custom_type_safe_matcher.html" title="org::hamcrest::CustomType\lSafeMatcher\&lt; T \&gt;" alt="" coords="1099,952,1290,993"/>
+<area shape="rect" id="node28" href="$classorg_1_1junit_1_1internal_1_1matchers_1_1_stacktrace_printing_matcher.html" title="org::junit::internal\l::matchers::StacktracePrinting\lMatcher\&lt; T \&gt;" alt="" coords="1094,1017,1295,1073"/>
+<area shape="rect" id="node29" href="$classorg_1_1junit_1_1internal_1_1matchers_1_1_throwable_cause_matcher.html" title="org::junit::internal\l::matchers::ThrowableCauseMatcher\&lt; T \&gt;" alt="" coords="1055,1096,1335,1137"/>
+<area shape="rect" id="node30" href="$classorg_1_1junit_1_1internal_1_1matchers_1_1_throwable_message_matcher.html" title="org::junit::internal\l::matchers::ThrowableMessage\lMatcher\&lt; T \&gt;" alt="" coords="1087,1161,1302,1217"/>
+<area shape="rect" id="node24" href="$classorg_1_1hamcrest_1_1core_1_1_string_contains.html" title="org.hamcrest.core.String\lContains" alt="" coords="1383,815,1549,856"/>
+<area shape="rect" id="node25" href="$classorg_1_1hamcrest_1_1core_1_1_string_ends_with.html" title="org.hamcrest.core.String\lEndsWith" alt="" coords="1383,880,1549,921"/>
+<area shape="rect" id="node26" href="$classorg_1_1hamcrest_1_1core_1_1_string_starts_with.html" title="org.hamcrest.core.String\lStartsWith" alt="" coords="1383,945,1549,987"/>
+</map>

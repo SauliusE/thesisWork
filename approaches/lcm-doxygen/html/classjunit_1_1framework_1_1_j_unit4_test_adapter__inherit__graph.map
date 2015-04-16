@@ -1,0 +1,6 @@
+<map id="junit.framework.JUnit4TestAdapter" name="junit.framework.JUnit4TestAdapter">
+<area shape="rect" id="node2" href="$interfacejunit_1_1framework_1_1_test.html" title="junit.framework.Test" alt="" coords="29,5,171,32"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1junit_1_1runner_1_1manipulation_1_1_filterable.html" title="org.junit.runner.manipulation.\lFilterable" alt="" coords="5,57,195,98"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1junit_1_1runner_1_1manipulation_1_1_sortable.html" title="org.junit.runner.manipulation.\lSortable" alt="" coords="5,122,195,163"/>
+<area shape="rect" id="node5" href="$interfaceorg_1_1junit_1_1runner_1_1_describable.html" title="org.junit.runner.Describable" alt="" coords="9,188,191,215"/>
+</map>

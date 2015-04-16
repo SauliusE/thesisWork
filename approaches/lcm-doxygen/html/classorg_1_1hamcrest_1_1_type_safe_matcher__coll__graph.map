@@ -1,0 +1,5 @@
+<map id="org.hamcrest.TypeSafeMatcher&lt; T &gt;" name="org.hamcrest.TypeSafeMatcher&lt; T &gt;">
+<area shape="rect" id="node2" href="$classorg_1_1hamcrest_1_1_base_matcher.html" title="org::hamcrest::BaseMatcher\&lt; T \&gt;" alt="" coords="15,155,241,181"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1hamcrest_1_1_matcher.html" title="org::hamcrest::Matcher\&lt; T \&gt;" alt="" coords="31,80,225,107"/>
+<area shape="rect" id="node4" href="$interfaceorg_1_1hamcrest_1_1_self_describing.html" title="org.hamcrest.SelfDescribing" alt="" coords="33,5,223,32"/>
+</map>

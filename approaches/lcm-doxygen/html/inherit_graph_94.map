@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_axis_scale_policy.html" title="info.monitorenter.gui.chart.\lIAxisScalePolicy" alt="" coords="5,71,181,112"/>
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_automatic_best_fit.html" title="info.monitorenter.gui.chart.axis.scalepolicy.\lAxisScalePolicyAutomaticBestFit" alt="" coords="229,5,504,47"/>
+<area shape="rect" id="node3" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_manual_ticks.html" title="info.monitorenter.gui.chart.axis.scalepolicy.\lAxisScalePolicyManualTicks" alt="" coords="229,71,504,112"/>
+<area shape="rect" id="node4" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1axis_1_1scalepolicy_1_1_axis_scale_policy_transformation.html" title="info.monitorenter.gui.chart.axis.scalepolicy.\lAxisScalePolicyTransformation" alt="" coords="229,136,504,177"/>
+</map>

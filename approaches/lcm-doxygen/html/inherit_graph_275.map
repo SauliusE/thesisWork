@@ -1,0 +1,12 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interfaceorg_1_1junit_1_1rules_1_1_test_rule.html" title="org.junit.rules.TestRule" alt="" coords="5,162,164,189"/>
+<area shape="rect" id="node2" href="$classorg_1_1junit_1_1rules_1_1_expected_exception.html" title="org.junit.rules.Expected\lException" alt="" coords="223,5,382,47"/>
+<area shape="rect" id="node3" href="$classorg_1_1junit_1_1rules_1_1_external_resource.html" title="org.junit.rules.External\lResource" alt="" coords="227,71,378,112"/>
+<area shape="rect" id="node5" href="$classorg_1_1junit_1_1rules_1_1_rule_chain.html" title="org.junit.rules.RuleChain" alt="" coords="220,137,385,163"/>
+<area shape="rect" id="node6" href="$classorg_1_1junit_1_1rules_1_1_test_watcher.html" title="org.junit.rules.TestWatcher" alt="" coords="212,187,393,214"/>
+<area shape="rect" id="node8" href="$classorg_1_1junit_1_1rules_1_1_timeout.html" title="org.junit.rules.Timeout" alt="" coords="226,238,379,265"/>
+<area shape="rect" id="node9" href="$classorg_1_1junit_1_1rules_1_1_verifier.html" title="org.junit.rules.Verifier" alt="" coords="230,289,375,315"/>
+<area shape="rect" id="node4" href="$classorg_1_1junit_1_1rules_1_1_temporary_folder.html" title="org.junit.rules.Temporary\lFolder" alt="" coords="449,71,619,112"/>
+<area shape="rect" id="node7" href="$classorg_1_1junit_1_1rules_1_1_test_name.html" title="org.junit.rules.TestName" alt="" coords="451,187,617,214"/>
+<area shape="rect" id="node10" href="$classorg_1_1junit_1_1rules_1_1_error_collector.html" title="org.junit.rules.ErrorCollector" alt="" coords="441,289,627,315"/>
+</map>

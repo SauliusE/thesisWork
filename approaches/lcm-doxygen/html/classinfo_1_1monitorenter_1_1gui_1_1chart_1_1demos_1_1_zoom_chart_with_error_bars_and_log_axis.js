@@ -1,0 +1,4 @@
+var classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_zoom_chart_with_error_bars_and_log_axis =
+[
+    [ "ZoomChartWithErrorBarsAndLogAxis", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1demos_1_1_zoom_chart_with_error_bars_and_log_axis.html#ad9f02d63bb6601a64506f9e085fdeef2", null ]
+];

@@ -1,0 +1,12 @@
+<map id="logger" name="logger">
+<area shape="rect" id="node2" href="$struct__lcm__t.html" title="_lcm_t" alt="" coords="785,335,845,361"/>
+<area shape="rect" id="node3" href="$struct__lcm__provider__t.html" title="_lcm_provider_t" alt="" coords="488,439,604,465"/>
+<area shape="rect" id="node12" href="$struct__lcm__provider__vtable__t.html" title="_lcm_provider_vtable_t" alt="" coords="705,528,864,555"/>
+<area shape="rect" id="node4" href="$struct__lcm__eventlog__event__t.html" title="_lcm_eventlog_event_t" alt="" coords="5,335,164,361"/>
+<area shape="rect" id="node10" href="$struct__lcm__buf.html" title="_lcm_buf" alt="" coords="269,216,343,243"/>
+<area shape="rect" id="node6" href="$struct__lcm__ringbuf.html" title="_lcm_ringbuf" alt="" coords="307,112,403,139"/>
+<area shape="rect" id="node7" href="$struct__lcm__ringbuf__rec.html" title="_lcm_ringbuf_rec" alt="" coords="294,7,417,33"/>
+<area shape="rect" id="node8" href="$struct__lcm__frag__buf__store.html" title="_lcm_frag_buf_store" alt="" coords="382,335,523,361"/>
+<area shape="rect" id="node9" href="$struct__lcm__buf__queue.html" title="_lcm_buf_queue" alt="" coords="240,335,359,361"/>
+<area shape="rect" id="node11" href="$struct__lcm__eventlog__t.html" title="_lcm_eventlog_t" alt="" coords="620,335,739,361"/>
+</map>

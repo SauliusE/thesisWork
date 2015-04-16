@@ -1,0 +1,5 @@
+<map id="info.monitorenter.gui.chart.rangepolicies.RangePolicyMinimumViewport" name="info.monitorenter.gui.chart.rangepolicies.RangePolicyMinimumViewport">
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_range_policy_forced_point.html" title="info.monitorenter.gui.chart.rangepolicies.\lRangePolicyForcedPoint" alt="" coords="5,348,265,389"/>
+<area shape="rect" id="node2" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1rangepolicies_1_1_a_range_policy.html" title="info.monitorenter.gui.chart.rangepolicies.\lARangePolicy" alt="" coords="5,169,265,211"/>
+<area shape="rect" id="node3" href="$interfaceinfo_1_1monitorenter_1_1gui_1_1chart_1_1_i_range_policy.html" title="info.monitorenter.gui.chart.\lIRangePolicy" alt="" coords="47,80,223,121"/>
+</map>

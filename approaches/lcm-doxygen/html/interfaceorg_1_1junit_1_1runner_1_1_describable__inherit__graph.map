@@ -1,0 +1,12 @@
+<map id="org.junit.runner.Describable" name="org.junit.runner.Describable">
+<area shape="rect" id="node2" href="$classjunit_1_1framework_1_1_j_unit4_test_adapter.html" title="junit.framework.JUnit4Test\lAdapter" alt="" coords="236,12,415,53"/>
+<area shape="rect" id="node3" href="$classjunit_1_1framework_1_1_j_unit4_test_case_facade.html" title="junit.framework.JUnit4Test\lCaseFacade" alt="" coords="236,77,415,119"/>
+<area shape="rect" id="node4" href="$classorg_1_1junit_1_1runner_1_1_runner.html" title="org.junit.runner.Runner" alt="" coords="249,143,402,170"/>
+<area shape="rect" id="node5" href="$classorg_1_1junit_1_1internal_1_1builders_1_1_ignored_class_runner.html" title="org.junit.internal.builders.\lIgnoredClassRunner" alt="" coords="463,5,629,47"/>
+<area shape="rect" id="node6" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_error_reporting_runner.html" title="org.junit.internal.runners.\lErrorReportingRunner" alt="" coords="464,71,628,112"/>
+<area shape="rect" id="node7" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_j_unit38_class_runner.html" title="org.junit.internal.runners.\lJUnit38ClassRunner" alt="" coords="464,136,628,177"/>
+<area shape="rect" id="node10" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_j_unit4_class_runner.html" title="org.junit.internal.runners.\lJUnit4ClassRunner" alt="" coords="464,201,628,243"/>
+<area shape="rect" id="node11" href="$classorg_1_1junit_1_1runners_1_1_parent_runner.html" title="org.junit.runners.Parent\lRunner\&lt; T \&gt;" alt="" coords="467,267,625,308"/>
+<area shape="rect" id="node8" href="$classorg_1_1junit_1_1internal_1_1runners_1_1_suite_method.html" title="org.junit.internal.runners.\lSuiteMethod" alt="" coords="677,136,841,177"/>
+<area shape="rect" id="node9" href="$classorg_1_1junit_1_1runners_1_1_all_tests.html" title="org.junit.runners.AllTests" alt="" coords="889,143,1057,170"/>
+</map>

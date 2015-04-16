@@ -1,0 +1,15 @@
+<map id="PyLCMSubscriptionObject" name="PyLCMSubscriptionObject">
+<area shape="rect" id="node2" href="$struct_py_l_c_m_object.html" title="PyLCMObject" alt="" coords="1025,5,1129,32"/>
+<area shape="rect" id="node3" href="$struct__lcm__t.html" title="_lcm_t" alt="" coords="645,145,705,172"/>
+<area shape="rect" id="node4" href="$struct__lcm__provider__t.html" title="_lcm_provider_t" alt="" coords="885,337,1001,364"/>
+<area shape="rect" id="node14" href="$struct__lcm__subscription__t.html" title="_lcm_subscription_t" alt="" coords="1164,67,1301,93"/>
+<area shape="rect" id="node15" href="$struct__lcm__recv__buf__t.html" title="_lcm_recv_buf_t" alt="" coords="884,119,1001,145"/>
+<area shape="rect" id="node13" href="$struct__lcm__provider__vtable__t.html" title="_lcm_provider_vtable_t" alt="" coords="1153,220,1312,247"/>
+<area shape="rect" id="node5" href="$struct__lcm__eventlog__event__t.html" title="_lcm_eventlog_event_t" alt="" coords="596,287,755,313"/>
+<area shape="rect" id="node11" href="$struct__lcm__buf.html" title="_lcm_buf" alt="" coords="400,395,475,421"/>
+<area shape="rect" id="node7" href="$struct__lcm__ringbuf.html" title="_lcm_ringbuf" alt="" coords="212,441,308,468"/>
+<area shape="rect" id="node8" href="$struct__lcm__ringbuf__rec.html" title="_lcm_ringbuf_rec" alt="" coords="5,441,128,468"/>
+<area shape="rect" id="node9" href="$struct__lcm__frag__buf__store.html" title="_lcm_frag_buf_store" alt="" coords="605,524,746,551"/>
+<area shape="rect" id="node10" href="$struct__lcm__buf__queue.html" title="_lcm_buf_queue" alt="" coords="616,392,735,419"/>
+<area shape="rect" id="node12" href="$struct__lcm__eventlog__t.html" title="_lcm_eventlog_t" alt="" coords="616,575,735,601"/>
+</map>

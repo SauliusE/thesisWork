@@ -1,0 +1,5 @@
+var classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_j_component_action_set_custom_foreground_singleton =
+[
+    [ "actionPerformed", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_j_component_action_set_custom_foreground_singleton.html#ac968a89913d7601bb3733ceeb103b318", null ],
+    [ "propertyChange", "classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_j_component_action_set_custom_foreground_singleton.html#aff4e7388829424aba03cbcca97d04104", null ]
+];

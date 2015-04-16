@@ -1,0 +1,5 @@
+<map id="info.monitorenter.gui.chart.events.AErrorBarPolicyAction" name="info.monitorenter.gui.chart.events.AErrorBarPolicyAction">
+<area shape="rect" id="node4" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_error_bar_policy_action_add_painter.html" title="info.monitorenter.gui.chart.events.\lErrorBarPolicyActionAddPainter" alt="" coords="497,5,715,47"/>
+<area shape="rect" id="node5" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_error_bar_policy_action_remove_painter.html" title="info.monitorenter.gui.chart.events.\lErrorBarPolicyActionRemovePainter" alt="" coords="487,71,725,112"/>
+<area shape="rect" id="node6" href="$classinfo_1_1monitorenter_1_1gui_1_1chart_1_1events_1_1_error_bar_policy_action_show_wizard.html" title="info.monitorenter.gui.chart.events.\lErrorBarPolicyActionShowWizard" alt="" coords="495,136,717,177"/>
+</map>
