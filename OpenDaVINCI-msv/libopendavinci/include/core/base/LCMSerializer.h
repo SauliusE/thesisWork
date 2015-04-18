@@ -9,6 +9,8 @@
 #define OPENDAVINCI_CORE_BASE_LCMSERIALIZER_H_
 
 #include "core/platform.h"
+#include "core/data/Container.h"
+
 
 #include "core/base/Serializer.h"
 
@@ -16,6 +18,7 @@ namespace core{
     namespace base{
         
         using namespace std;
+        using namespace core::data;
 
         class SerializationFactory;
 
@@ -69,12 +72,17 @@ namespace core{
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
 
+                void write(const uint32_t id, const Container &con);
+
+
             private:
                 ostream &m_out;
                 stringstream m_buffer;
+                uint64_t hash = 0x123456789;
         };
     }
 } // core::base
+
 
 #endif /*OPENDAVINCI_CORE_BASE_LCMSERIALIZER_H_*/
 

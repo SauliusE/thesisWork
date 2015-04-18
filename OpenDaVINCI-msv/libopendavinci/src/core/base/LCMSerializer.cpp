@@ -6,12 +6,14 @@
 
 #include "core/base/LCMSerializer.h"
 #include "core/base/Serializable.h"
+//#include "core/data/Container.h"
 
 
 namespace core {
 	namespace base {
 		
 		using namespace std;
+		using namespace core::data;
 		
 		LCMSerializer::LCMSerializer(ostream& out) :
 				m_out(out),
@@ -36,7 +38,7 @@ namespace core {
 			length[2] = (v>>8)&0xff;
 			length[3] = (v & 0xff);
 			m_out.write(reinterpret_cast<const char *>(length), sizeof(uint32_t));
-			
+
 			
 			m_out << m_buffer.str();
 			
@@ -147,6 +149,10 @@ namespace core {
 
 		}
 		void LCMSerializer::write ( const uint32_t id, const int32_t& i ) {
+			// calculate hash for ID = membername , typeof(i) = typename;
+			hash = calculate_hash(hash,id);
+
+
 			uint8_t *idbuf = new uint8_t[4];
 			int32_t v = id;
 			
@@ -336,7 +342,45 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char*>(data), size);
 		}
 
+		void write( const uint32_t id, Container &con){
+			(void) id;
+			(void) con;
+			cout << "deserializing container" <<endl;
+
+			//write magic number
+			//sequence
+			//channel name
+			// '\0'
+			// hash
+			// payload
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		}
+
 	} 
 } // core:base
 
-	
