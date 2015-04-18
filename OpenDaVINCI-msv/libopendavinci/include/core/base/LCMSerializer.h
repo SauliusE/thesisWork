@@ -72,13 +72,17 @@ namespace core{
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
 
-                void write(const uint32_t id, const Container &con);
+                virtual void write( const uint32_t id, const Container &con );
+				
+				int64_t calculate_hash(int64_t v, char c);
+				
+				int64_t hash_string(int64_t v, const char *s);
 
 
             private:
                 ostream &m_out;
                 stringstream m_buffer;
-                uint64_t hash = 0x123456789;
+                uint64_t m_hash;
         };
     }
 } // core::base
