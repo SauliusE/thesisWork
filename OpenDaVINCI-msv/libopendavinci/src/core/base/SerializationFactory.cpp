@@ -31,8 +31,8 @@ namespace core {
             //Serializer *temp = NULL;
             if (m_listOfSerializers.empty()) {
            	//s = new QueryableNetstringsSerializer(out);
-                s = new PROTOSerializer(out);
-	    //  s = new LCMSerializer(out);
+              //  s = new PROTOSerializer(out);
+	      s = new LCMSerializer(out);
                //cout << "just to get rid of unsued variable warning " << temp<<endl;
                 m_listOfSerializers.push_back(SharedPointer<Serializer>(s));
             }
@@ -47,9 +47,9 @@ namespace core {
              //Deserializer *temd = NULL ;
             if (m_listOfDeserializers.empty()) {
                //d = new QueryableNetstringsDeserializer(in);
-                cout << "creating proto Deserializer" << endl;
-                d = new  PROTODeserializer(in);
-	      //d = new LCMDeserializer(in);
+                //cout << "creating proto Deserializer" << endl;
+              //  d = new  PROTODeserializer(in);
+	      d = new LCMDeserializer(in);
                 cout << "created proto Deserializer" << endl;
                
                //cout << "Getting rid of unused variable warning " << temd << endl;  
