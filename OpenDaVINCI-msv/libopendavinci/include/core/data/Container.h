@@ -168,9 +168,11 @@ namespace core {
                  */
                 const string toString() const;
 
-            private:
                 DATATYPE m_dataType;
                 stringstream m_serializedData;
+
+            private:
+
 
                 TimeStamp m_sent;
                 TimeStamp m_received;

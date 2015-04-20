@@ -20,7 +20,7 @@ namespace core {
 		LCMSerializer::LCMSerializer(ostream& out) :
 				m_out(out),
 				m_buffer(),
-				m_hash() {}
+				m_hash(0x12345678) {}
 		
 		LCMSerializer::~LCMSerializer() {
 			
@@ -178,18 +178,90 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char*>(data), size);
 		}
 
-	/*	void LCMSerializer::writeContainer(const uint32_t id, core::data::Container con){
+		void LCMSerializer::writeContainer (const uint32_t id, core::data::Container &container){
 			(void) id;
-			(void) con;
+			(void) container;
 			cout << "deserializing container" <<endl;
 
 			//write magic number
-			//sequence
-			//channel name
-			// '\0'
-			// hash
-			// payload
-		}*/
+			  uint32_t magicNumber = 0x4c433032;
+			  uint8_t mnbuf[4];
+			  mnbuf[0] = (magicNumber>>24)&0xff;
+			  mnbuf[1] = (magicNumber>>16)&0xff;
+			  mnbuf[2] = (magicNumber>>8)&0xff;
+			  mnbuf[3] = (magicNumber & 0xff);
+
+			  m_buffer.write(reinterpret_cast<const char *>(mnbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(mnbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(mnbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(mnbuf[0]), sizeof(const uint8_t));
+
+			  //sequence
+			  uint32_t sequence = 0;
+
+			  uint8_t seqbuf[4];
+			  seqbuf[0] = (sequence>>24)&0xff;
+			  seqbuf[1] = (sequence>>16)&0xff;
+			  seqbuf[2] = (sequence>>8)&0xff;
+			  seqbuf[3] = (sequence & 0xff);
+
+			  m_buffer.write(reinterpret_cast<const char *>(seqbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(seqbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(seqbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(seqbuf[0]), sizeof(const uint8_t));
+
+			   //Channel name
+			   string channel;
+			   channel = container.getDataType();
+
+			   char* cstr = (char*) channel.c_str();
+			   int32_t length = strlen(cstr) + 1;
+
+			   uint8_t lengthbuf[4];
+
+			   lengthbuf[0] = (length>>24)&0xff;
+			   lengthbuf[1] = (length>>16)&0xff;
+			   lengthbuf[2] = (length>>8)&0xff;
+			   lengthbuf[3] = (length & 0xff);
+
+				m_buffer.write(reinterpret_cast<const char *>(lengthbuf[0]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(lengthbuf[1]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(lengthbuf[2]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(lengthbuf[3]), sizeof(const uint8_t));
+
+				m_buffer.write(reinterpret_cast<const char *>(&cstr), length);
+
+				//  '\0'
+				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
+
+				// hash
+				uint8_t hashbuf[8];
+
+				hashbuf[0] = (m_hash>>56)&0xff;
+				hashbuf[1] = (m_hash>>48)&0xff;
+				hashbuf[2] = (m_hash>>40)&0xff;
+				hashbuf[3] = (m_hash>>32)&0xff;
+				hashbuf[4] = (m_hash>>24)&0xff;
+				hashbuf[5] = (m_hash>>16)&0xff;
+				hashbuf[6] = (m_hash>>8)&0xff;
+				hashbuf[7] = (m_hash & 0xff);
+
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[0]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[1]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[2]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[3]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[4]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[5]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[6]), sizeof(const uint8_t));
+				m_buffer.write(reinterpret_cast<const char *>(hashbuf[7]), sizeof(const uint8_t));
+
+				// payload
+
+				m_buffer << container.m_serializedData;
+		}
 		
 		int64_t calculate_hash(int64_t v, char c) {
 			v = ((v<<8) ^ (v>>55)) + c;

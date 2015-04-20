@@ -9,6 +9,7 @@
 #include "core/data/TimeStamp.h"
 #include "core/io/UDPMultiCastContainerConference.h"
 #include "core/wrapper/UDPFactory.h"
+#include "core/base/LCMSerializer.h"
 
 namespace core {
     namespace io {
@@ -66,7 +67,7 @@ namespace core {
         void UDPMultiCastContainerConference::send(Container &container) const {
             // Set sending time stamp.
             container.setSentTimeStamp(TimeStamp());
-
+            LCMSerializer::writeContainer(1232131, container);
             stringstream stringstreamValue;
             stringstreamValue << container;
             string stringValue = stringstreamValue.str();

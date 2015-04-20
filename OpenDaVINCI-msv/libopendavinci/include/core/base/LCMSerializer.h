@@ -71,8 +71,9 @@ namespace core{
                 virtual void write( const uint32_t id, const string &s );
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
+                void writeContainer( const uint32_t id, core::data::Container &container );
 
-            //    void writeContainer( const uint32_t id, core::data::Container &con );
+
 
 
             private:
@@ -82,7 +83,8 @@ namespace core{
 
         };
         int64_t calculate_hash(int64_t v, char c);
-                        int64_t hash_string(int64_t v, const char *s);
+        int64_t hash_string(int64_t v, const char *s);
+
 
 
 
