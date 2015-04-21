@@ -72,7 +72,7 @@ namespace core{
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
 
-                void write(const uint32_t id, core::data::Container &container );
+                void write(core::data::Container &container );
 
                 void setHash(int64_t hash);
 

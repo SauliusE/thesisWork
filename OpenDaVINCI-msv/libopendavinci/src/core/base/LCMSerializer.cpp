@@ -201,7 +201,7 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char*>(&data), size);
 		}
 
-		void LCMSerializer::write(const uint32_t, core::data::Container &container){
+		void LCMSerializer::write(core::data::Container &container){
 
 			cout << "deserializing container" <<endl;
 
