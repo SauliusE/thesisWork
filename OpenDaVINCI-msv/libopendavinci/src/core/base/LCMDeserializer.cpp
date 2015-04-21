@@ -12,182 +12,132 @@ namespace core {
 		
 		using namespace std;
 		
-		LCMDeserializer::LCMDeserializer(istream &in) :
+		LCMDeserializer::LCMDeserializer(istream &in):
 			m_buffer(),
 			m_values() {
 			// Initialize the stringstream for getting valid positions when calling tellp().
 			// This MUST be a blank (Win32 has a *special* implementation...)!
-			m_buffer << " ";
 			
-			uint16_t magicNumber = 0;
-			
-			//Magic number
-			uint8_t *magic = new uint8_t[2];
-			in.read(reinterpret_cast<char*>(magic), sizeof(uint16_t));
-			magicNumber = (((int16_t)magic[0])<<8) + ((int16_t)magic[1]);
-			if (magicNumber != 0xAACF) {
+			// Magic number
+			cout << "TESST" << endl;
+			uint8_t magicBuf[4];
+			in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
+			int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+			if (magicNumber != 0x4c433032) {
 				if (in.good()) {
 					// Stream is good but still no magic number?
 					clog << "Stream corrupt: magic number not found." << endl;
 				}
+				cout << "FUKKK" << endl;
 				return;
 			}
 			
-			// Decoding length of the payload.
-			uint8_t *bufLength = new uint8_t[4];
-			in.read(reinterpret_cast<char*>(bufLength), sizeof(uint32_t));
-			uint32_t length = (((int32_t)bufLength[0])<<24) + (((int32_t)bufLength[1])<<16) + (((int32_t)bufLength[2])<<8) + ((int32_t)bufLength[3]);
+			// Decoding the seq_number.
+			uint8_t seqBuf[4];
+			in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
+			int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
+			(void) msg_seq;
 			
+			// Decoding channel
+			char channel[256];
+			int channel_len = 0;
+			char ch = 0;
+			in.get(ch);
+			cout << "CH_CHAR1: " << ch << endl;
 			
-			char c = 0;
-			uint32_t tokenIdentifier = 0;
-			uint32_t lengthOfPayload = 0;
-			while (in.good() && (length > 0)) {
-				// Start of next token by reading ID.
-				uint8_t *tokenBuf = new uint8_t[4];;
-				in.read(reinterpret_cast<char*>(tokenBuf), sizeof(uint32_t));
-				tokenIdentifier = (((int32_t)tokenBuf[0])<<24) + (((int32_t)tokenBuf[1])<<16) + (((int32_t)tokenBuf[2])<<8) + ((int32_t)tokenBuf[3]);
-				length -= (sizeof(uint32_t));
-				
-				// Read length of payload.
-				uint8_t *lengthBuf = new uint8_t[4];;
-				in.read(reinterpret_cast<char*>(lengthBuf), sizeof(uint32_t));
-				lengthOfPayload = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
-				length -= (sizeof(uint32_t));
-				
-				// Create new (tokenIdentifier, m_buffer) hashmap entry.
-				m_values.insert(make_pair(tokenIdentifier, m_buffer.tellp()));
-				
-				// Decode payload.
-					for (uint32_t i = 0; i < lengthOfPayload; i++) {
-						in.get(c);
-						m_buffer.put(c);
-						length--;
-					}
-
+			while (ch != '0') {
+				channel[channel_len++] = ch;
+				in.get(ch);
+				cout << "CH_CHAR: " << ch << endl;
 			}
 			
-			// Check for trailing ','
-            in.get(c);
-            if (c != ',') {
-                clog << "Stream corrupt: trailing ',' missing,  found: '" << c << "'" << endl;
-            }
+			channel[channel_len] = 0;
+			cout << "channel!!!!: " << channel << endl;
+			
+			uint8_t hashBuf[8];
+			in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
+			int64_t hash = (((int64_t)seqBuf[0])<<56) + (((int64_t)seqBuf[1])<<48) + (((int64_t)seqBuf[2])<<40) + (((int64_t)seqBuf[3])<<32) + (((int64_t)seqBuf[4])<<24) + (((int64_t)seqBuf[5])<<16) + (((int64_t)seqBuf[6])<<8) + ((int64_t)seqBuf[7]);
+			(void) hash;
+			
+			cout << "DEHASH: " << hash << endl;
+			/*
+			if (hash != 0x0e65ec258fc2e665LL) {
+				return;
+			}
+			*/
+			
+			char c = 0;
+			while (in.good()) {
+				in.get(c);
+				m_buffer.put(c);
+			}
         }
 
         LCMDeserializer::~LCMDeserializer() {}
 
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				m_buffer >> s;
-			}
+			(void) id;
+			m_buffer >> s;
         }
 
         void LCMDeserializer::read(const uint32_t id, bool &b) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(&b), sizeof(bool));
-			}
+			(void) id;
+			m_buffer.read(reinterpret_cast<char *>(&b), sizeof(bool));
         }
 
         void LCMDeserializer::read(const uint32_t id, char &c) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				m_buffer.read(&c, sizeof(char));
-			}
+			(void) id;
+			m_buffer.read(&c, sizeof(char));
         }
 
         void LCMDeserializer::read(const uint32_t id, unsigned char &uc) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(&uc), sizeof(unsigned char));
-			}
+			(void) id;
+			m_buffer.read(reinterpret_cast<char *>(&uc), sizeof(unsigned char));
         }
 
         void LCMDeserializer::read(const uint32_t id, int32_t &i) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[4];
-				
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(int32_t));
-				i = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
-			}
-			
+			(void) id;
+			uint8_t buf[4];
+			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(int32_t));
+			i = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
         }
 
         void LCMDeserializer::read(const uint32_t id, uint32_t &ui) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[4];
-				
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(uint32_t));
-				ui = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
-			}
+			(void) id;
+			uint8_t buf[4];
+			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
+			ui = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
         }
 
         void LCMDeserializer::read(const uint32_t id, float &f) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[4];
-				
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(float));
-				f = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
-			}
+			(void) id;
+			uint8_t buf[4];
+			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(float));
+			f = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
         }
 
         void LCMDeserializer::read(const uint32_t id, double &d) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				uint8_t *buf = new uint8_t[8];
-				
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char *>(buf), sizeof(double));
-				d = (((int64_t)buf[0])<<56) + (((int64_t)buf[1])<<48) + (((int64_t)buf[2])<<40) + (((int64_t)buf[3])<<32) + (((int64_t)buf[4])<<24) + (((int64_t)buf[5])<<16) + (((int64_t)buf[6])<<8) + ((int64_t)buf[7]);
-			}
+			(void) id;
+			uint8_t buf[4];
+			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(double));
+			d = (((int64_t)buf[0])<<56) + (((int64_t)buf[1])<<48) + (((int64_t)buf[2])<<40) + (((int64_t)buf[3])<<32) + (((int64_t)buf[4])<<24) + (((int64_t)buf[5])<<16) + (((int64_t)buf[6])<<8) + ((int64_t)buf[7]);
         }
 
         void LCMDeserializer::read(const uint32_t id, string &s) {
-			//cout << "Read char Deserializer" << "- ID value: " << id <<" | string  value: " << s << endl;
+			(void) id;
+			uint8_t lengthBuf[4];
+			m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(int32_t));
+			int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
 			
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				uint8_t *stringLengthBuf = new uint8_t[4];
-				m_buffer.read(reinterpret_cast<char *>(stringLengthBuf), sizeof(uint32_t));
-				
-				uint32_t stringLength = (((int32_t)stringLengthBuf[0])<<24) + (((int32_t)stringLengthBuf[1])<<16) + (((int32_t)stringLengthBuf[2])<<8) + ((int32_t)stringLengthBuf[3]);
-				char *str = new char[stringLength+1];
-				m_buffer.read(reinterpret_cast<char *>(str), static_cast<uint32_t>(stringLength));
-				str[stringLength] = '\0';
-				// It is absolutely necessary to specify the size of the serialized string, otherwise, s contains only data until the first '\0' is read.
-				s = string(str, stringLength);
-				OPENDAVINCI_CORE_DELETE_ARRAY(str);
-			}
+			cout << "STRING LENGTH: " << length << endl;
+			cout << "STRING1" << endl;
+			m_buffer.read(reinterpret_cast<char *>(&s), length);
+			cout << "STRING2: " << s << endl;
         }
 
         void LCMDeserializer::read(const uint32_t id, void *data, uint32_t size) {
-			map<uint32_t, streampos>::iterator it = m_values.find(id);
-			
-			if (it != m_values.end()) {
-				m_buffer.seekg(it->second);
-				m_buffer.read(reinterpret_cast<char*>(data), size);
-			}
+			(void) id;
+			m_buffer.read(reinterpret_cast<char*>(data), size);
         }
 
     }

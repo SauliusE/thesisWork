@@ -193,7 +193,7 @@ namespace core {
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
-
+			
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(data).name());
@@ -214,9 +214,9 @@ namespace core {
 			  mnbuf[3] = (magicNumber & 0xff);
 
 			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[1]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[2]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&mnbuf[3]), sizeof(const uint8_t));
 
 			  //sequence
 			  uint32_t sequence = 0;
@@ -228,9 +228,9 @@ namespace core {
 			  seqbuf[3] = (sequence & 0xff);
 
 			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[0]), sizeof(const uint8_t));
-			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[0]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[1]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[2]), sizeof(const uint8_t));
+			  m_buffer.write(reinterpret_cast<const char *>(&seqbuf[3]), sizeof(const uint8_t));
 
 			   //Channel name
 			   string channel;
@@ -239,25 +239,10 @@ namespace core {
 			   char* cstr = (char*) channel.c_str();
 			   int32_t length = strlen(cstr) + 1;
 
-			   uint8_t lengthbuf[4];
-
-			   lengthbuf[0] = (length>>24)&0xff;
-			   lengthbuf[1] = (length>>16)&0xff;
-			   lengthbuf[2] = (length>>8)&0xff;
-			   lengthbuf[3] = (length & 0xff);
-
-				m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[0]), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[1]), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[2]), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[3]), sizeof(const uint8_t));
-
 				m_buffer.write(reinterpret_cast<const char *>(&cstr), length);
 
-				//  '\0'
-				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
-				m_buffer.write(reinterpret_cast<const char *>('\0'), sizeof(const uint8_t));
+				// '0'
+				m_buffer.write(reinterpret_cast<const char *>('0'), sizeof(const uint8_t));
 
 				// hash
 				uint8_t hashbuf[8];
@@ -271,7 +256,7 @@ namespace core {
 				hashbuf[6] = (m_hash>>8)&0xff;
 				hashbuf[7] = (m_hash & 0xff);
 
-				m_buffer.write(reinterpret_cast<const char *>(&hashbuf[0]), sizeof(const uint64_t));
+				m_buffer.write(reinterpret_cast<const char *>(&hashbuf[0]), sizeof(const uint8_t));
 				m_buffer.write(reinterpret_cast<const char *>(&hashbuf[1]), sizeof(const uint8_t));
 				m_buffer.write(reinterpret_cast<const char *>(&hashbuf[2]), sizeof(const uint8_t));
 				m_buffer.write(reinterpret_cast<const char *>(&hashbuf[3]), sizeof(const uint8_t));
