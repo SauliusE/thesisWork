@@ -5,9 +5,10 @@
  */
 
 #include "core/base/Hash.h"
-#include "core/base/Deserializer.h"
+#include "core/base/LCMDeserializer.h"
 #include "core/base/SerializationFactory.h"
-#include "core/base/Serializer.h"
+#include "core/base/LCMSerializer.h"
+//#include "core/base/Serializer.h"
 #include "core/data/Container.h"
 
 namespace core {
@@ -17,22 +18,38 @@ namespace core {
         using namespace base;
 
         Container::Container() :
+        		m_payloadHash(),
                 m_dataType(UNDEFINEDDATA),
                 m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
+        		m_payloadHash(),
                 m_dataType(dataType),
                 m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {
+        	//Serializing payload
+
+        	SerializationFactory sf;
+        	cout << "inside container constructor" << endl;
+        	LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+
+        	lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+        	m_payloadHash = lcm.getHash();
+        	cout << "Printing hash inside container" << m_payloadHash << endl;
             // Get data for container.
+        //	cout << "m_serializedData << serializableData " << endl;
+
             m_serializedData << serializableData;
+           // cout << "end of container:container" << endl;
+
         }
 
         Container::Container(const Container &obj) :
                 Serializable(),
+                m_payloadHash(),
                 m_dataType(obj.getDataType()),
                 m_serializedData(),
                 m_sent(obj.m_sent),
@@ -71,11 +88,13 @@ namespace core {
             m_received = receivedTimeStamp;
         }
 
+
+
         ostream& Container::operator<<(ostream &out) const {
             SerializationFactory sf;
 
             Serializer &s = sf.getSerializer(out);
-
+            cout << "inside operator << "<< endl;
             // Write container data type.
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,

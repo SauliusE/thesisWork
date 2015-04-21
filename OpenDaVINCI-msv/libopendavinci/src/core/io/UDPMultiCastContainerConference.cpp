@@ -10,6 +10,7 @@
 #include "core/io/UDPMultiCastContainerConference.h"
 #include "core/wrapper/UDPFactory.h"
 #include "core/base/LCMSerializer.h"
+#include "core/base/SerializationFactory.h"
 
 namespace core {
     namespace io {
@@ -66,10 +67,16 @@ namespace core {
 
         void UDPMultiCastContainerConference::send(Container &container) const {
             // Set sending time stamp.
-            container.setSentTimeStamp(TimeStamp());
-            LCMSerializer::writeContainer(1232131, container);
+        	//thesis implementation
             stringstream stringstreamValue;
-            stringstreamValue << container;
+
+        	SerializationFactory sf;
+        	LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
+          //  container.setSentTimeStamp(TimeStamp());
+            cout << "UDP" << endl<< endl<< endl;
+            lcm.write(container);
+         //   stringstreamValue << container;
+            cout << "after stringstream << container" << endl;
             string stringValue = stringstreamValue.str();
 
             // Send data.

@@ -80,7 +80,7 @@ namespace core {
                  * @param dataType Type of data inside this container.
                  * @param serializableData Data to be serialized.
                  */
-                Container(const DATATYPE &dataType, const SerializableData &serializableData);
+                Container(const DATATYPE &dataType, const SerializableData &serializableData)	;
 
                 /**
                  * Copy constructor.
@@ -168,11 +168,12 @@ namespace core {
                  */
                 const string toString() const;
 
+                uint64_t m_payloadHash;
                 DATATYPE m_dataType;
                 stringstream m_serializedData;
 
-            private:
 
+            private:
 
                 TimeStamp m_sent;
                 TimeStamp m_received;
