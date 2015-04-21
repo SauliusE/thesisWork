@@ -116,6 +116,7 @@ namespace core {
         }
 
         istream& Container::operator>>(istream &in) {
+        	cout<< "Container operator >> " << endl;
             string rawData = "";
 
             SerializationFactory sf;

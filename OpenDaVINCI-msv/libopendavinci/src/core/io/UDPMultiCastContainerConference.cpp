@@ -57,6 +57,7 @@ namespace core {
             if (hasContainerListener()) {
                 stringstream stringstreamData(s);
                 Container container;
+                cout << "starting deserialize" << endl;
                 stringstreamData >> container;
                 container.setReceivedTimeStamp(TimeStamp());
 
