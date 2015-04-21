@@ -11,6 +11,7 @@
 #include "core/platform.h"
 
 #include "core/base/Deserializer.h"
+#include "core/data/Container.h"
 
 namespace core {
     namespace base {
@@ -83,6 +84,8 @@ namespace core {
                 virtual void read(const uint32_t id, string &s);
 
                 virtual void read(const uint32_t id, void *data, uint32_t size);
+
+                void read(istream &in, core::data::Container &con );
 
             private:
                 stringstream m_buffer;

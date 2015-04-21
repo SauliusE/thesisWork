@@ -24,12 +24,13 @@ namespace core {
 				{}
 		
 		LCMSerializer::~LCMSerializer() {
-		//	cout << "hash " << getHash()<< endl;
+		//	cout << "hash " << getHash()<< endl
+			m_out << m_buffer.str();
 		} // end of deconstructor
 
 		//Set and get method for hash
 		void LCMSerializer::setHash(const int64_t hash){
-			m_hash = hash;
+			payload_hash = hash;
 		}
 
 		int64_t LCMSerializer::getHash(){
@@ -45,8 +46,10 @@ namespace core {
 
 			stringstream buffer;
 			buffer << s;
+			cout << "i am here !!!!"<<endl;
 			
 			m_buffer << buffer.str();
+			cout << "end of here" <<endl;
 			
 		}
 	
@@ -58,6 +61,7 @@ namespace core {
 			m_hash = hash_string(m_hash, typeid(b).name());
 			
 			m_buffer.write(reinterpret_cast<const char *>(&b), sizeof(const bool));
+
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const char& c ) {
@@ -67,6 +71,8 @@ namespace core {
 			m_hash = hash_string(m_hash, typeid(c).name());
 			
 			m_buffer.write(&c, sizeof(const char));
+
+
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const unsigned char& uc ) {
@@ -75,6 +81,8 @@ namespace core {
 			m_hash = hash_string(m_hash, typeid(uc).name());
 			
 			m_buffer.write(reinterpret_cast<const char *>(&uc), sizeof(const unsigned char));
+
+
 
 		}
 		
@@ -95,6 +103,8 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char *>(&buf[1]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[2]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[3]), sizeof(const uint8_t));
+
+
 
 		}
 		
@@ -117,6 +127,8 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char *>(&buf[2]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[3]), sizeof(const uint8_t));
 
+
+
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const float& f ) {
@@ -136,6 +148,8 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char *>(&buf[1]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[2]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[3]), sizeof(const uint8_t));
+
+
 
 		}
 
@@ -166,30 +180,30 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char *>(&buf[6]), sizeof(const uint8_t));
 			m_buffer.write(reinterpret_cast<const char *>(&buf[7]), sizeof(const uint8_t));
 
+
+
 		}
 		void LCMSerializer::write ( const uint32_t id, const string& s ) {
 
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(s).name());
-			
+
 			char* cstr = (char*) s.c_str();
-			int32_t length = strlen(cstr) + 1;
+			int32_t length1 = strlen(cstr) + 1;
 			
-			uint8_t lengthbuf[4];
-			int32_t v = length;
+			uint8_t lengthBuf[4];
+			int32_t v = length1;
+				cout << "string lenght in the write function " << length1 << endl;
+			lengthBuf[0] = (v>>24)&0xff;
+			lengthBuf[1] = (v>>16)&0xff;
+			lengthBuf[2] = (v>>8)&0xff;
+			lengthBuf[3] = (v & 0xff);
+			m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const int32_t));
 			
-			lengthbuf[0] = (v>>24)&0xff;
-			lengthbuf[1] = (v>>16)&0xff;
-			lengthbuf[2] = (v>>8)&0xff;
-			lengthbuf[3] = (v & 0xff);
-			
-			m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[0]), sizeof(const uint8_t));
-			m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[1]), sizeof(const uint8_t));
-			m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[2]), sizeof(const uint8_t));
-			m_buffer.write(reinterpret_cast<const char *>(&lengthbuf[3]), sizeof(const uint8_t));
-			
-			m_buffer.write(reinterpret_cast<const char *>(&cstr), length);
+			m_buffer.write(reinterpret_cast<const char *>(&cstr), length1);
+
+
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
@@ -199,11 +213,12 @@ namespace core {
 			m_hash = hash_string(m_hash, typeid(data).name());
 			
 			m_buffer.write(reinterpret_cast<const char*>(&data), size);
+
 		}
 
 		void LCMSerializer::write(core::data::Container &container){
 
-			cout << "deserializing container" <<endl;
+			cout << "serializing container" <<endl;
 
 			cout <<"write magic number"<<endl;
 			  uint32_t magicNumber = 0x4c433032;
@@ -242,8 +257,8 @@ namespace core {
 			    channel = ss.str();
 			   char* cstr = (char*)  channel.c_str();
 			   int32_t length = strlen(cstr) + 1;
-				m_out.write(reinterpret_cast<const char *>(&cstr), length);
-
+				m_out.write(cstr, length);
+				cout << "channel name" << channel <<endl;
 				std::cout << "NULL terminator \0" <<endl;
 				// '0'
 				//const char* nullValue = '\0';
@@ -252,7 +267,8 @@ namespace core {
 				cout << " writing hash" <<endl;
 				// hash
 				uint8_t hashbuf[8];
-
+				m_hash = container.m_payloadHash;
+				cout << "m_hash" <<  m_hash<<endl;
 				hashbuf[0] = (m_hash>>56)&0xff;
 				hashbuf[1] = (m_hash>>48)&0xff;
 				hashbuf[2] = (m_hash>>40)&0xff;
@@ -262,19 +278,13 @@ namespace core {
 				hashbuf[6] = (m_hash>>8)&0xff;
 				hashbuf[7] = (m_hash & 0xff);
 
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[0]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[1]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[2]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[3]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[4]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[5]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[6]), sizeof(const uint8_t));
-				m_out.write(reinterpret_cast<const char *>(&hashbuf[7]), sizeof(const uint8_t));
+				m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
+
 				cout << "writing payload"<<endl;
 				// payload
 
-				m_out << container.m_serializedData;
-				cout << "end of container" <<endl;
+				m_out << container.m_serializedData.str();
+				cout << "end of  serializing container" <<endl;
 		}
 		
 		int64_t calculate_hash(int64_t v, char c) {

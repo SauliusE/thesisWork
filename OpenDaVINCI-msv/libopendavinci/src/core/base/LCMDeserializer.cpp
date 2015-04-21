@@ -15,63 +15,11 @@ namespace core {
 		LCMDeserializer::LCMDeserializer(istream &in):
 			m_buffer(),
 			m_values() {
+			(void)in;
 			// Initialize the stringstream for getting valid positions when calling tellp().
 			// This MUST be a blank (Win32 has a *special* implementation...)!
 			
-			// Magic number
-			cout << "TESST" << endl;
-			uint8_t magicBuf[4];
-			in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
-			int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
-			if (magicNumber != 0x4c433032) {
-				if (in.good()) {
-					// Stream is good but still no magic number?
-					clog << "Stream corrupt: magic number not found." << endl;
-				}
-				cout << "FUKKK" << endl;
-				return;
-			}
-			
-			// Decoding the seq_number.
-			uint8_t seqBuf[4];
-			in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
-			int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
-			(void) msg_seq;
-			
-			// Decoding channel
-			char channel[256];
-			int channel_len = 0;
-			char ch = 0;
-			in.get(ch);
-			cout << "CH_CHAR1: " << ch << endl;
-			
-			while (ch != '0') {
-				channel[channel_len++] = ch;
-				in.get(ch);
-				cout << "CH_CHAR: " << ch << endl;
-			}
-			
-			channel[channel_len] = 0;
-			cout << "channel!!!!: " << channel << endl;
-			
-			uint8_t hashBuf[8];
-			in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
-			int64_t hash = (((int64_t)seqBuf[0])<<56) + (((int64_t)seqBuf[1])<<48) + (((int64_t)seqBuf[2])<<40) + (((int64_t)seqBuf[3])<<32) + (((int64_t)seqBuf[4])<<24) + (((int64_t)seqBuf[5])<<16) + (((int64_t)seqBuf[6])<<8) + ((int64_t)seqBuf[7]);
-			(void) hash;
-			
-			cout << "DEHASH: " << hash << endl;
-			/*
-			if (hash != 0x0e65ec258fc2e665LL) {
-				return;
-			}
-			*/
-			
-			char c = 0;
-			while (in.good()) {
-				in.get(c);
-				m_buffer.put(c);
-			}
-        }
+		        }
 
         LCMDeserializer::~LCMDeserializer() {}
 
@@ -126,13 +74,16 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, string &s) {
 			(void) id;
 			uint8_t lengthBuf[4];
-			m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(int32_t));
+			lengthBuf[0]=0;
+			lengthBuf[1]=0;
+			lengthBuf[2]=0;
+			lengthBuf[3]=0;
+			m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const int32_t));
 			int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
 			
 			cout << "STRING LENGTH: " << length << endl;
-			cout << "STRING1" << endl;
 			m_buffer.read(reinterpret_cast<char *>(&s), length);
-			cout << "STRING2: " << s << endl;
+			cout << "STRING: " << s << endl;
         }
 
         void LCMDeserializer::read(const uint32_t id, void *data, uint32_t size) {
@@ -140,5 +91,61 @@ namespace core {
 			m_buffer.read(reinterpret_cast<char*>(data), size);
         }
 
+        void LCMDeserializer::read(istream &in, core::data::Container &container){
+        	(void) container;
+        	// Magic number
+        			cout << "Starting with magic number " << endl;
+        			uint8_t magicBuf[4];
+        			in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
+        			int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+        			if (magicNumber != 0x4c433032) {
+        				if (in.good()) {
+        					// Stream is good but still no magic number?
+        					clog << "Stream corrupt: magic number not found." << endl;
+        				}
+        				cout << "returning from magic number" <<endl;
+        				return;
+        			}
+        			cout<< "magic number" << magicNumber << endl;
+        			// Decoding the seq_number.
+        			uint8_t seqBuf[4];
+        			in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
+        			int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
+        			cout << "msg sequence "<<  msg_seq <<endl;
+
+
+        			// Decoding channel
+        			char channel[256];
+        			int channel_len = 0;
+        			char ch = 0;
+        			in.get(ch);
+
+        			while (ch != '0') {
+        				channel[channel_len++] = ch;
+        				in.get(ch);
+        			}
+
+        			channel[channel_len] = 0;
+        			cout << "channel name: " << channel << endl;
+
+        			uint8_t hashBuf[8];
+        			in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
+        			uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
+
+
+        			cout << "DEHASH: " << hash << endl;
+        			/*
+        			if (hash != 0x0e65ec258fc2e665LL) {
+        				return;
+        			}
+        			*/
+
+        			char c = 0;
+        			while (in.good()) {
+        				in.get(c);
+        				m_buffer.put(c);
+        			}
+
+        }
     }
 } // core::base

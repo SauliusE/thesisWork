@@ -22,7 +22,7 @@ namespace core {
                 m_dataType(UNDEFINEDDATA),
                 m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)) {}
+                m_received(TimeStamp(0, 0)) {cout <<"last hope"<<endl;}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
         		m_payloadHash(),
@@ -30,6 +30,7 @@ namespace core {
                 m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {
+        	 cout << "5 "<< endl;
         	//Serializing payload
 
         	SerializationFactory sf;
@@ -42,8 +43,8 @@ namespace core {
             // Get data for container.
         //	cout << "m_serializedData << serializableData " << endl;
 
-            m_serializedData << serializableData;
-           // cout << "end of container:container" << endl;
+           // m_serializedData << serializableData;
+            cout << "end of container:container" << endl;
 
         }
 
@@ -55,6 +56,7 @@ namespace core {
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
             m_serializedData.str(obj.m_serializedData.str());
+            cout << "3 "<< endl;
         }
 
         Container& Container::operator=(const Container &obj) {
@@ -93,13 +95,14 @@ namespace core {
         ostream& Container::operator<<(ostream &out) const {
             SerializationFactory sf;
 
-            Serializer &s = sf.getSerializer(out);
-            cout << "inside operator << "<< endl;
+            LCMSerializer &s = sf.getLCMSerializer(out);
+
+            cout << "CONTAINER operator << !!! I AM NOT SUPPOSE TO BE HERE "<< endl;
             // Write container data type.
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
-
+            cout << "serialized data " << dataType<<endl;
             // Write container data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                     m_serializedData.str());
@@ -116,14 +119,14 @@ namespace core {
         }
 
         istream& Container::operator>>(istream &in) {
-        	cout<< "Container operator >> " << endl;
+        	cout<< "Container operator >>  2" << endl;
             string rawData = "";
 
             SerializationFactory sf;
-            Deserializer &d = sf.getDeserializer(in);
-
+            LCMDeserializer &d = sf.getLCMDeserializer(in);
+         //   d.read();
             // Read container data type.
-            uint32_t dataType = 0;
+           uint32_t dataType = 0;
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                    dataType);
 
