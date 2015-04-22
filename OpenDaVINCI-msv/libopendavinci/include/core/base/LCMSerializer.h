@@ -86,7 +86,7 @@ namespace core{
                 ostream &m_out;
                 stringstream m_buffer;
                 uint64_t m_hash;
-                uint64_t payload_hash;
+            //    uint64_t payload_hash;
 
         };
         int64_t calculate_hash(int64_t v, char c);

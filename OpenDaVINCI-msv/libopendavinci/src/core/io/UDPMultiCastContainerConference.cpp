@@ -57,15 +57,16 @@ namespace core {
             if (hasContainerListener()) {
             	cout << "starting next string" <<endl;
                 stringstream stringstreamData(s);
+		cout << "string data " << s << endl;
                 Container container;
                 cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
                 LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
-                lcm.read(stringstreamData, container);
-               // stringstreamData >> container;
-                cout << " after stringstreamData >> container; " <<endl;
-              //  container.setReceivedTimeStamp(TimeStamp());
-
+                lcm.read(stringstreamData, container); //double stringstreamData variable
+        //       stringstreamData >> container;
+                cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
+             //   container.setReceivedTimeStamp(TimeStamp());
+	  
                 // Use superclass to distribute any received containers.
                 cout << "receive container"<< endl;
                 receive(container);
@@ -80,15 +81,16 @@ namespace core {
 
         	SerializationFactory sf;
         	LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
-          //  container.setSentTimeStamp(TimeStamp());
-            cout << "UDP" << endl<< endl<< endl;
+            container.setSentTimeStamp(TimeStamp());
+            cout << "--- UDP send function ---" << endl<< endl<< endl;
             lcm.write(container);
-         //   stringstreamValue << container;
+        //    stringstreamValue << container;
             cout << "after stringstream << container" << endl;
             string stringValue = stringstreamValue.str();
-
+	      cout << "sending data"<< endl;
             // Send data.
             m_sender->send(stringValue);
+	    cout << "----  done ! -----"<<endl;
         }
 
     }

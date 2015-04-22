@@ -126,25 +126,31 @@ namespace core {
         			}
 
         			channel[channel_len] = 0;
+				int containerDataType = (int) channel;
         			cout << "channel name: " << channel << endl;
-
+				container.m_dataType = static_cast<core::data::Container::DATATYPE>(containerDataType);
+				cout << " container : " << container.toString()<<endl;
         			uint8_t hashBuf[8];
         			in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
         			uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
 
-
+				container.m_payloadHash = hash;
         			cout << "DEHASH: " << hash << endl;
         			/*
         			if (hash != 0x0e65ec258fc2e665LL) {
         				return;
         			}
         			*/
-
+	
         			char c = 0;
         			while (in.good()) {
         				in.get(c);
         				m_buffer.put(c);
         			}
+        			cout << "string buffer " <<  m_buffer.str()<<endl;
+        			container.m_serializedData.str(m_buffer.str());
+				cout << "done " <<endl;
+				
 
         }
     }

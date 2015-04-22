@@ -25,16 +25,17 @@ namespace core {
 		
 		LCMSerializer::~LCMSerializer() {
 		//	cout << "hash " << getHash()<< endl
+		//	setHash(m_hash);
 			m_out << m_buffer.str();
 		} // end of deconstructor
 
 		//Set and get method for hash
 		void LCMSerializer::setHash(const int64_t hash){
-			payload_hash = hash;
+			m_hash = hash;
 		}
 
 		int64_t LCMSerializer::getHash(){
-			return this->m_hash;
+			return m_hash;
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const Serializable& s ) {
@@ -43,13 +44,12 @@ namespace core {
 		//	uint32_t _id = id;
 		//	m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 		//	m_hash = hash_string(m_hash, typeid(s).name());
-
+		//	cout << "lcm Serializable"<< endl;
 			stringstream buffer;
+		//	cout << "buffer << s " <<endl;
 			buffer << s;
-			cout << "i am here !!!!"<<endl;
-			
+		//		cout << "buffer.str() " <<endl;
 			m_buffer << buffer.str();
-			cout << "end of here" <<endl;
 			
 		}
 	
@@ -252,22 +252,23 @@ namespace core {
 			   //Channel name
 			   string channel;
 			   stringstream ss;
-			   int chan = container.getDataType();
+			   uint32_t chan = container.getDataType();
 			    ss << chan;
 			    channel = ss.str();
-			   char* cstr = (char*)  channel.c_str();
-			   int32_t length = strlen(cstr) + 1;
-				m_out.write(cstr, length);
+// 			   char* cstr = (char*)  channel.c_str();
+// 			   int32_t length = strlen(cstr) + 1; //fix strlen
+// 				m_out.write(cstr, length);
 				cout << "channel name" << channel <<endl;
-				std::cout << "NULL terminator \0" <<endl;
+			      m_out << channel;
+				
+				cout << "NULL terminator \0" <<endl;
 				// '0'
 				//const char* nullValue = '\0';
 				m_out.write("0", sizeof(const uint8_t));
-
 				cout << " writing hash" <<endl;
 				// hash
 				uint8_t hashbuf[8];
-				m_hash = container.m_payloadHash;
+				m_hash = container.m_payloadHash; //get function
 				cout << "m_hash" <<  m_hash<<endl;
 				hashbuf[0] = (m_hash>>56)&0xff;
 				hashbuf[1] = (m_hash>>48)&0xff;

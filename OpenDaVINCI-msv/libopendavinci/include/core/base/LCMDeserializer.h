@@ -85,7 +85,7 @@ namespace core {
 
                 virtual void read(const uint32_t id, void *data, uint32_t size);
 
-                void read(istream &in, core::data::Container &con );
+                void read(istream &in, core::data::Container &container );
 
             private:
                 stringstream m_buffer;
