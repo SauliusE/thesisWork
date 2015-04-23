@@ -16,21 +16,35 @@ namespace core {
 			m_buffer(),
 			m_values() {
 				
+				uint8_t magicBuf[4];
+				in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
+				int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+				
+				in.clear();
+				in.seekg(0, ios::beg);
+				
+				if (magicNumber == 0x4c433032) {
+					cout << "HAH" << endl;
+					return;
+				}
+				
+				cout << "NOT" << endl;
 				
 				char c = 0;
 				while (in.good()) {
 					in.get(c);
+					//cout << c << "-";
 					m_buffer.put(c);
 				}
-				
 				in.clear();
-				in.seekg(0, ios::beg);
+				in.seekg(0, ios_base::beg);
 			}
 
         LCMDeserializer::~LCMDeserializer() {}
 
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
 			(void) id;
+			cout << "DESERRRR" << endl;
 			m_buffer >> s;
         }
 
@@ -80,16 +94,14 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, string &s) {
 			(void) id;
 			uint8_t lengthBuf[4];
-			lengthBuf[0]=0;
-			lengthBuf[1]=0;
-			lengthBuf[2]=0;
-			lengthBuf[3]=0;
 			m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const int32_t));
 			int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
 			
 			cout << "STRING LENGTH: " << length << endl;
-			m_buffer.read(reinterpret_cast<char *>(&s), length);
-			cout << "STRING: " << s << endl;
+			char *str = new char[length];
+			m_buffer.read(str, length);
+			s = string(str, length);
+			cout << "STRING: " << str << endl;
         }
 
         void LCMDeserializer::read(const uint32_t id, void *data, uint32_t size) {
@@ -98,9 +110,9 @@ namespace core {
         }
 
         void LCMDeserializer::read(istream &in, core::data::Container &container){
-        	(void) container;
+        	m_buffer.flush();
         	// Magic number
-        	cout << "Starting with magic number " << endl;
+        	//cout << "Starting with magic number " << endl;
         	uint8_t magicBuf[4];
         	in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
         	int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
@@ -112,12 +124,13 @@ namespace core {
         		cout << "returning from magic number" <<endl;
         		return;
         	}
-        	cout<< "magic number" << magicNumber << endl;
+        	cout<< "rec magic number: " << magicNumber << endl;
         	// Decoding the seq_number.
         	uint8_t seqBuf[4];
         	in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
         	int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
-        	cout << "msg sequence "<<  msg_seq <<endl;
+        	cout << "rec msg sequence: "<<  msg_seq <<endl;
+			(void) msg_seq;
 
 
         	// Decoding channel
@@ -126,7 +139,7 @@ namespace core {
         	char ch = 0;
         	in.get(ch);
 
-        	while (ch != '0') {
+        	while (ch != 0) {
         		channel[channel_len++] = ch;
         		in.get(ch);
         	}
@@ -136,14 +149,14 @@ namespace core {
    
 		uint32_t containerDataType = 0;
 		ss >> containerDataType;
-        	cout << "channel name: " << channel << endl;
+        	cout << "rec channel name: " << channel << endl;
 		container.m_dataType = static_cast<core::data::Container::DATATYPE>(containerDataType);
 		
 		// Decoding Hash
         	uint8_t hashBuf[8];
         	in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
         	uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
-
+			cout << "rec hash: " << hash << endl;
 		container.setHash(hash);
   
         	/*
@@ -153,12 +166,15 @@ namespace core {
         	*/
 	
         	char c = 0;
+			cout << "!!!!" << endl;
+			in.get(c);
         	while (in.good()) {
+				m_buffer.put(c);
         		in.get(c);
-        		m_buffer.put(c);
+				//cout << c << "-";
         	}
         	container.m_serializedData.str(m_buffer.str());
-		cout << "done " <<endl;
+		//cout << "done " <<endl;
 	
 
         }

@@ -5,9 +5,9 @@
  */
 
 #include "core/base/Hash.h"
-#include "core/base/Deserializer.h"
+#include "core/base/LCMDeserializer.h"
 #include "core/base/SerializationFactory.h"
-#include "core/base/Serializer.h"
+#include "core/base/LCMSerializer.h"
 
 #include "Example3Data.h"
 
