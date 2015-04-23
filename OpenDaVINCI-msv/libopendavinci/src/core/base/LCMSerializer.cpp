@@ -18,10 +18,9 @@ namespace core {
 	//	using namespace core::data;
 		
 		LCMSerializer::LCMSerializer(ostream& out) :
-				m_out(out),
-				m_buffer(),
-				m_hash(0x12345678)
-				{}
+			m_out(out),
+			m_buffer(),
+			m_hash(0x12345678) {}
 		
 		LCMSerializer::~LCMSerializer() {
 		//	cout << "hash " << getHash()<< endl
@@ -218,9 +217,9 @@ namespace core {
 
 		void LCMSerializer::write(core::data::Container &container){
 
-			cout << "serializing container" <<endl;
+			//cout << "serializing container" <<endl;
 
-			cout <<"write magic number"<<endl;
+			//cout <<"write magic number"<<endl;
 			  uint32_t magicNumber = 0x4c433032;
 			  uint8_t mnbuf[4];
 			  mnbuf[0] = (magicNumber>>24)&0xff;
@@ -233,7 +232,7 @@ namespace core {
 			  m_out.write(reinterpret_cast<const char *>(&mnbuf[2]), sizeof(const uint8_t));
 			  m_out.write(reinterpret_cast<const char *>(&mnbuf[3]), sizeof(const uint8_t));
 
-			  cout << "write sequence "<< endl;
+			 // cout << "write sequence "<< endl;
 			  //sequence
 			  uint32_t sequence = 0;
 
@@ -248,7 +247,7 @@ namespace core {
 			  m_out.write(reinterpret_cast<const char *>(&seqbuf[2]), sizeof(const uint8_t));
 			  m_out.write(reinterpret_cast<const char *>(&seqbuf[3]), sizeof(const uint8_t));
 
-			  cout << "channel name" <<endl;
+			  //cout << "channel name" <<endl;
 			   //Channel name
 			   string channel;
 			   stringstream ss;
@@ -258,18 +257,18 @@ namespace core {
 // 			   char* cstr = (char*)  channel.c_str();
 // 			   int32_t length = strlen(cstr) + 1; //fix strlen
 // 				m_out.write(cstr, length);
-				cout << "channel name" << channel <<endl;
+				//cout << "channel name" << channel <<endl;
 			      m_out << channel;
 				
-				cout << "NULL terminator \0" <<endl;
+				//cout << "NULL terminator \0" <<endl;
 				// '0'
 				//const char* nullValue = '\0';
 				m_out.write("0", sizeof(const uint8_t));
-				cout << " writing hash" <<endl;
+				//cout << " writing hash" <<endl;
 				// hash
 				uint8_t hashbuf[8];
-				m_hash = container.m_payloadHash; //get function
-				cout << "m_hash" <<  m_hash<<endl;
+				m_hash = container.getHash();
+				//cout << "m_hash" <<  m_hash<<endl;
 				hashbuf[0] = (m_hash>>56)&0xff;
 				hashbuf[1] = (m_hash>>48)&0xff;
 				hashbuf[2] = (m_hash>>40)&0xff;
@@ -281,11 +280,11 @@ namespace core {
 
 				m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
 
-				cout << "writing payload"<<endl;
+				//cout << "writing payload"<<endl;
 				// payload
 
 				m_out << container.m_serializedData.str();
-				cout << "end of  serializing container" <<endl;
+				//cout << "end of  serializing container" <<endl;
 		}
 		
 		int64_t calculate_hash(int64_t v, char c) {

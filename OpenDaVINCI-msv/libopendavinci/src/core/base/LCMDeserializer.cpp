@@ -138,7 +138,7 @@ namespace core {
         	in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
         	uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
 
-		container.m_payloadHash = hash;
+		container.setHash(hash);
   
         	/*
         	if (hash != 0x0e65ec258fc2e665LL) {

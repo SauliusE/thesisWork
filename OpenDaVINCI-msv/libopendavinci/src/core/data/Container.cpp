@@ -18,45 +18,45 @@ namespace core {
         using namespace base;
 
         Container::Container() :
-        		m_payloadHash(),
                 m_dataType(UNDEFINEDDATA),
                 m_serializedData(),
+                m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
-        		m_payloadHash(),
                 m_dataType(dataType),
                 m_serializedData(),
+                m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {
-        	 cout << "5 "<< endl;
+        	 //cout << "5 "<< endl;
         	//Serializing payload
 
         	SerializationFactory sf;
-        	cout << "inside container constructor" << endl;
+        	//cout << "inside container constructor" << endl;
         	LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
 
         	lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
         	m_payloadHash = lcm.getHash();
-        	cout << "Printing hash inside container" << m_payloadHash << endl;
+        	//cout << "Printing hash inside container" << m_payloadHash << endl;
             // Get data for container.
         //	cout << "m_serializedData << serializableData " << endl;
 
            // m_serializedData << serializableData;
-            cout << "end of container:container" << endl;
+            //cout << "end of container:container" << endl;
 
         }
 
         Container::Container(const Container &obj) :
                 Serializable(),
-                m_payloadHash(),
                 m_dataType(obj.getDataType()),
                 m_serializedData(),
+                m_payloadHash(),
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
             m_serializedData.str(obj.m_serializedData.str());
-            cout << "3 "<< endl;
+            //cout << "3 "<< endl;
         }
 
         Container& Container::operator=(const Container &obj) {
@@ -69,9 +69,21 @@ namespace core {
         }
 
         Container::~Container() {}
+        
+        uint64_t Container::getHash() const {
+            return m_payloadHash;
+        }
+        
+        void Container::setHash(const uint64_t &hash) {
+            m_payloadHash = hash;
+        }
 
         Container::DATATYPE Container::getDataType() const {
             return m_dataType;
+        }
+        
+        void Container::setDataType(const DATATYPE &dataType) {
+            m_dataType = dataType;
         }
 
         const TimeStamp Container::getSentTimeStamp() const {
@@ -102,7 +114,7 @@ namespace core {
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
-            cout << "serialized data " << dataType<<endl;
+            //cout << "serialized data " << dataType<<endl;
             // Write container data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                     m_serializedData.str());

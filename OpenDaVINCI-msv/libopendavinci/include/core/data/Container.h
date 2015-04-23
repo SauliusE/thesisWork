@@ -98,6 +98,11 @@ namespace core {
                  * @return Reference to this instance.
                  */
                 Container& operator=(const Container &obj);
+				
+				
+				uint64_t getHash() const;
+				
+				void setHash(const uint64_t &hash);
 
                 /**
                  * This method returns the data type inside this container.
@@ -105,6 +110,8 @@ namespace core {
                  * @return Data type of the data contained in this container.
                  */
                 DATATYPE getDataType() const;
+				
+				void setDataType(const DATATYPE &dataType);
 
                 virtual ostream& operator<<(ostream &out) const;
                 virtual istream& operator>>(istream &in);
@@ -168,13 +175,14 @@ namespace core {
                  */
                 const string toString() const;
 
-                uint64_t m_payloadHash;
+                
                 DATATYPE m_dataType;
                 stringstream m_serializedData;
 
 
             private:
-
+				
+				uint64_t m_payloadHash;
                 TimeStamp m_sent;
                 TimeStamp m_received;
         };
