@@ -94,63 +94,66 @@ namespace core {
         void LCMDeserializer::read(istream &in, core::data::Container &container){
         	(void) container;
         	// Magic number
-        			cout << "Starting with magic number " << endl;
-        			uint8_t magicBuf[4];
-        			in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
-        			int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
-        			if (magicNumber != 0x4c433032) {
-        				if (in.good()) {
-        					// Stream is good but still no magic number?
-        					clog << "Stream corrupt: magic number not found." << endl;
-        				}
-        				cout << "returning from magic number" <<endl;
-        				return;
-        			}
-        			cout<< "magic number" << magicNumber << endl;
-        			// Decoding the seq_number.
-        			uint8_t seqBuf[4];
-        			in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
-        			int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
-        			cout << "msg sequence "<<  msg_seq <<endl;
+        	cout << "Starting with magic number " << endl;
+        	uint8_t magicBuf[4];
+        	in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
+        	int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+        	if (magicNumber != 0x4c433032) {
+        		if (in.good()) {
+        			// Stream is good but still no magic number?
+        			clog << "Stream corrupt: magic number not found." << endl;
+        		}
+        		cout << "returning from magic number" <<endl;
+        		return;
+        	}
+        	cout<< "magic number" << magicNumber << endl;
+        	// Decoding the seq_number.
+        	uint8_t seqBuf[4];
+        	in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
+        	int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
+        	cout << "msg sequence "<<  msg_seq <<endl;
 
 
-        			// Decoding channel
-        			char channel[256];
-        			int channel_len = 0;
-        			char ch = 0;
-        			in.get(ch);
+        	// Decoding channel
+        	char channel[256];
+        	int channel_len = 0;
+        	char ch = 0;
+        	in.get(ch);
 
-        			while (ch != '0') {
-        				channel[channel_len++] = ch;
-        				in.get(ch);
-        			}
-
-        			channel[channel_len] = 0;
-				int containerDataType = (int) channel;
-        			cout << "channel name: " << channel << endl;
-				container.m_dataType = static_cast<core::data::Container::DATATYPE>(containerDataType);
-				cout << " container : " << container.toString()<<endl;
-        			uint8_t hashBuf[8];
-        			in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
-        			uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
-
-				container.m_payloadHash = hash;
-        			cout << "DEHASH: " << hash << endl;
-        			/*
-        			if (hash != 0x0e65ec258fc2e665LL) {
-        				return;
-        			}
-        			*/
+        	while (ch != '0') {
+        		channel[channel_len++] = ch;
+        		in.get(ch);
+        	}
+		stringstream ss;
+		ss << channel;
 	
-        			char c = 0;
-        			while (in.good()) {
-        				in.get(c);
-        				m_buffer.put(c);
-        			}
-        			cout << "string buffer " <<  m_buffer.str()<<endl;
-        			container.m_serializedData.str(m_buffer.str());
-				cout << "done " <<endl;
-				
+   
+		uint32_t containerDataType = 0;
+		ss >> containerDataType;
+        	cout << "channel name: " << channel << endl;
+		container.m_dataType = static_cast<core::data::Container::DATATYPE>(containerDataType);
+		
+		// Decoding Hash
+        	uint8_t hashBuf[8];
+        	in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
+        	uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
+
+		container.m_payloadHash = hash;
+  
+        	/*
+        	if (hash != 0x0e65ec258fc2e665LL) {
+        		return;
+        	}
+        	*/
+	
+        	char c = 0;
+        	while (in.good()) {
+        		in.get(c);
+        		m_buffer.put(c);
+        	}
+        	container.m_serializedData.str(m_buffer.str());
+		cout << "done " <<endl;
+	
 
         }
     }
