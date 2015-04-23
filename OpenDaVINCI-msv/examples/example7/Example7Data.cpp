@@ -60,7 +60,7 @@ namespace examples {
 	ostream& Example7Data::operator<<(ostream &out) const {
 		SerializationFactory sf;
 
-		Serializer &s = sf.getSerializer(out);
+		LCMSerializer &s = sf.getLCMSerializer(out);
 
 		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
 				m_numericalValue);
@@ -74,7 +74,7 @@ namespace examples {
 	istream& Example7Data::operator>>(istream &in) {
 		SerializationFactory sf;
 
-		Deserializer &d = sf.getDeserializer(in);
+		LCMDeserializer &d = sf.getLCMDeserializer(in);
 
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
 			   m_numericalValue);

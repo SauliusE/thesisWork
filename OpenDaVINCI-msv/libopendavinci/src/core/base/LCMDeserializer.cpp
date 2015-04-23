@@ -15,11 +15,17 @@ namespace core {
 		LCMDeserializer::LCMDeserializer(istream &in):
 			m_buffer(),
 			m_values() {
-			(void)in;
-			// Initialize the stringstream for getting valid positions when calling tellp().
-			// This MUST be a blank (Win32 has a *special* implementation...)!
-			
-		        }
+				
+				
+				char c = 0;
+				while (in.good()) {
+					in.get(c);
+					m_buffer.put(c);
+				}
+				
+				in.clear();
+				in.seekg(0, ios::beg);
+			}
 
         LCMDeserializer::~LCMDeserializer() {}
 
