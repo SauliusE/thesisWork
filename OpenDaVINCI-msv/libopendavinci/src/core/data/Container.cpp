@@ -18,15 +18,15 @@ namespace core {
         using namespace base;
 
         Container::Container() :
+				m_serializedData(),
                 m_dataType(UNDEFINEDDATA),
-                m_serializedData(),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
+				m_serializedData(),
                 m_dataType(dataType),
-                m_serializedData(),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {
@@ -50,8 +50,8 @@ namespace core {
 
         Container::Container(const Container &obj) :
                 Serializable(),
-                m_dataType(obj.getDataType()),
                 m_serializedData(),
+                m_dataType(obj.getDataType()),
                 m_payloadHash(),
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
@@ -70,20 +70,28 @@ namespace core {
 
         Container::~Container() {}
         
-        uint64_t Container::getHash() const {
-            return m_payloadHash;
+        string Container::getSerializedData() const {
+            return m_serializedData.str();
         }
         
-        void Container::setHash(const uint64_t &hash) {
-            m_payloadHash = hash;
+        void Container::setSerializedData(const string &s) {
+            m_serializedData.str(s);
         }
-
+        
         Container::DATATYPE Container::getDataType() const {
             return m_dataType;
         }
         
         void Container::setDataType(const DATATYPE &dataType) {
             m_dataType = dataType;
+        }
+        
+        uint64_t Container::getHash() const {
+            return m_payloadHash;
+        }
+        
+        void Container::setHash(const uint64_t &hash) {
+            m_payloadHash = hash;
         }
 
         const TimeStamp Container::getSentTimeStamp() const {

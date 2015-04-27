@@ -24,18 +24,16 @@ namespace core {
 				in.seekg(0, ios::beg);
 				
 				if (magicNumber == 0x4c433032) {
-					cout << "HAH" << endl;
+					//cout << "Magic Failed" << endl;
 					return;
 				}
-				
-				cout << "NOT" << endl;
 				
 				char c = 0;
 				while (in.good()) {
 					in.get(c);
-					//cout << c << "-";
 					m_buffer.put(c);
 				}
+				cout << endl;
 				in.clear();
 				in.seekg(0, ios_base::beg);
 			}
@@ -44,7 +42,6 @@ namespace core {
 
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
 			(void) id;
-			cout << "DESERRRR" << endl;
 			m_buffer >> s;
         }
 
@@ -81,14 +78,22 @@ namespace core {
 			(void) id;
 			uint8_t buf[4];
 			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(float));
-			f = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+			
+			int64_t *p = (int64_t*) &f;
+			*p = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
         }
 
         void LCMDeserializer::read(const uint32_t id, double &d) {
 			(void) id;
-			uint8_t buf[4];
+			uint8_t buf[8];
 			m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(double));
-			d = (((int64_t)buf[0])<<56) + (((int64_t)buf[1])<<48) + (((int64_t)buf[2])<<40) + (((int64_t)buf[3])<<32) + (((int64_t)buf[4])<<24) + (((int64_t)buf[5])<<16) + (((int64_t)buf[6])<<8) + ((int64_t)buf[7]);
+			
+			int64_t *p = (int64_t*) &d;
+			
+			int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
+			int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
+			*p = (a<<32) + (b&0xffffffff);
+			//d = (((int64_t)buf[0])<<56) + (((int64_t)buf[1])<<48) + (((int64_t)buf[2])<<40) + (((int64_t)buf[3])<<32) + (((int64_t)buf[4])<<24) + (((int64_t)buf[5])<<16) + (((int64_t)buf[6])<<8) + ((int64_t)buf[7]);
         }
 
         void LCMDeserializer::read(const uint32_t id, string &s) {
@@ -97,11 +102,9 @@ namespace core {
 			m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const int32_t));
 			int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
 			
-			cout << "STRING LENGTH: " << length << endl;
 			char *str = new char[length];
-			m_buffer.read(str, length);
-			s = string(str, length);
-			cout << "STRING: " << str << endl;
+			m_buffer.read(reinterpret_cast<char *>(str), length);
+			s = string(str);
         }
 
         void LCMDeserializer::read(const uint32_t id, void *data, uint32_t size) {
@@ -124,12 +127,12 @@ namespace core {
         		cout << "returning from magic number" <<endl;
         		return;
         	}
-        	cout<< "rec magic number: " << magicNumber << endl;
+        	//cout<< "rec magic number: " << magicNumber << endl;
         	// Decoding the seq_number.
         	uint8_t seqBuf[4];
         	in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
         	int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
-        	cout << "rec msg sequence: "<<  msg_seq <<endl;
+        	//cout << "rec msg sequence: "<<  msg_seq <<endl;
 			(void) msg_seq;
 
 
@@ -149,14 +152,14 @@ namespace core {
    
 		uint32_t containerDataType = 0;
 		ss >> containerDataType;
-        	cout << "rec channel name: " << channel << endl;
-		container.m_dataType = static_cast<core::data::Container::DATATYPE>(containerDataType);
+        	//cout << "rec channel name: " << channel << endl;
+		container.setDataType(static_cast<core::data::Container::DATATYPE>(containerDataType));
 		
 		// Decoding Hash
         	uint8_t hashBuf[8];
         	in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
         	uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
-			cout << "rec hash: " << hash << endl;
+			//cout << "rec hash: " << hash << endl;
 		container.setHash(hash);
   
         	/*
@@ -166,14 +169,13 @@ namespace core {
         	*/
 	
         	char c = 0;
-			cout << "!!!!" << endl;
+			//cout << "!!!!" << endl;
 			in.get(c);
         	while (in.good()) {
 				m_buffer.put(c);
         		in.get(c);
-				//cout << c << "-";
         	}
-        	container.m_serializedData.str(m_buffer.str());
+        	container.setSerializedData(m_buffer.str());
 		//cout << "done " <<endl;
 	
 
