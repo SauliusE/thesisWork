@@ -15,7 +15,6 @@ namespace core {
 	namespace base {
 		
 		using namespace std;
-	//	using namespace core::data;
 		
 		LCMSerializer::LCMSerializer(ostream& out) :
 			m_out(out),
@@ -23,12 +22,11 @@ namespace core {
 			m_hash(0x12345678) {}
 		
 		LCMSerializer::~LCMSerializer() {
-		//	cout << "hash " << getHash()<< endl
-		//	setHash(m_hash);
+			// Writes the payload which then will get written to the container stream
 			m_out << m_buffer.str();
-		} // end of deconstructor
+		}
 
-		//Set and get method for hash
+		// Set and get method for hash
 		void LCMSerializer::setHash(const int64_t hash){
 			m_hash = hash;
 		}
@@ -39,21 +37,13 @@ namespace core {
 
 		void LCMSerializer::write ( const uint32_t id, const Serializable& s ) {
 			(void) id;
-		//	uint32_t _id = id;
-		//	m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
-		//	m_hash = hash_string(m_hash, typeid(s).name());
-		//	cout << "lcm Serializable"<< endl;
 			stringstream buffer;
-		//	cout << "buffer << s " <<endl;
 			buffer << s;
-		//		cout << "buffer.str() " <<endl;
 			m_buffer << buffer.str();
-			
 		}
 	
 	
 		void LCMSerializer::write ( const uint32_t id, const bool& b ) {
-
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(b).name());
@@ -62,7 +52,6 @@ namespace core {
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const char& c ) {
-
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(c).name());
@@ -85,29 +74,24 @@ namespace core {
 			
 			uint8_t buf[4];
 			int32_t v = i;
-			
 			buf[0] = (v>>24)&0xff;
 			buf[1] = (v>>16)&0xff;
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
-			
 			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
 		}
 		
 		void LCMSerializer::write ( const uint32_t id, const uint32_t& ui ) {
-
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(ui).name());
 			
 			uint8_t buf[4];
 			int32_t v = ui;
-			
 			buf[0] = (v>>24)&0xff;
 			buf[1] = (v>>16)&0xff;
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
-			
 			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
 		}
 		
@@ -116,18 +100,18 @@ namespace core {
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(f).name());
 			
+			// This way of encoding is taken straight from LCM.
+			// Don't even know how and why it works myself
 			float _f = f;
 			float *ff = &_f;
 			int64_t *p = (int64_t*) ff;
 			
 			uint8_t buf[4];
 			int32_t v = p[0];
-			
 			buf[0] = (v>>24)&0xff;
 			buf[1] = (v>>16)&0xff;
 			buf[2] = (v>>8)&0xff;
 			buf[3] = (v & 0xff);
-			
 			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
 		}
 
@@ -136,13 +120,14 @@ namespace core {
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(d).name());
 			
+			// This way of encoding is taken straight from LCM.
+			// Don't even know how and why it works myself
 			double _d = d;
 			double *dd = &_d;
 			int64_t *p = (int64_t*) dd;
 			
 			uint8_t buf[8];
 			int64_t v = p[0];
-			
 			buf[0] = (v>>56)&0xff;
 			buf[1] = (v>>48)&0xff;
 			buf[2] = (v>>40)&0xff;
@@ -151,18 +136,14 @@ namespace core {
 			buf[5] = (v>>16)&0xff;
 			buf[6] = (v>>8)&0xff;
 			buf[7] = (v & 0xff);
-			
 			m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint64_t));
-
-
-
 		}
+		
 		void LCMSerializer::write ( const uint32_t id, const string& s ) {
-
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(s).name());
-
+			
 			char* cstr = (char *) s.c_str();
 			int32_t length = s.length() + 1;
 			
@@ -173,96 +154,80 @@ namespace core {
 			lengthBuf[2] = (v>>8)&0xff;
 			lengthBuf[3] = (v & 0xff);
 			m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const int32_t));
-<<<<<<< HEAD
-=======
-			
-			cout << "sent string: " << cstr << endl;
->>>>>>> 0e8a6fa5c190c01fd8324557f5a97045c7f7284a
 			m_buffer.write(reinterpret_cast<const char *>(cstr), length);
-
-
 		}
 
 		void LCMSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
-			
 			uint32_t _id = id;
 			m_hash = hash_string(m_hash, reinterpret_cast<char*>(&_id));
 			m_hash = hash_string(m_hash, typeid(data).name());
 			
 			m_buffer.write(reinterpret_cast<const char*>(&data), size);
-
 		}
 
 		void LCMSerializer::write(core::data::Container &container){
-
-			//cout << "serializing container" <<endl;
-
-			//cout <<"write magic number"<<endl;
-			  uint32_t magicNumber = 0x4c433032;
-			  //cout << "send magic number: " << magicNumber << endl;
-			  uint8_t mnbuf[4];
-			  mnbuf[0] = (magicNumber>>24)&0xff;
-			  mnbuf[1] = (magicNumber>>16)&0xff;
-			  mnbuf[2] = (magicNumber>>8)&0xff;
-			  mnbuf[3] = (magicNumber & 0xff);
-
-			  m_out.write(reinterpret_cast<const char *>(&mnbuf), sizeof(const uint32_t));
-
-			 // cout << "write sequence "<< endl;
-			  //sequence
-			  uint32_t sequence = 0;
-			  //cout << "send msg sequence: " << sequence << endl;
-			  uint8_t seqbuf[4];
-			  seqbuf[0] = (sequence>>24)&0xff;
-			  seqbuf[1] = (sequence>>16)&0xff;
-			  seqbuf[2] = (sequence>>8)&0xff;
-			  seqbuf[3] = (sequence & 0xff);
-
-			  m_out.write(reinterpret_cast<const char *>(&seqbuf), sizeof(const uint32_t));
-
-			  //cout << "channel name" <<endl;
-			   //Channel name
-			   string channel;
-			   stringstream ss;
-			   uint32_t chan = container.getDataType();
-			    ss << chan;
-			    channel = ss.str();
-// 			   char* cstr = (char*)  channel.c_str();
-// 			   int32_t length = strlen(cstr) + 1; //fix strlen
-// 				m_out.write(cstr, length);
-				//cout << "send channel name: " << channel <<endl;
-			      m_out << channel;
-				
-				//cout << "NULL terminator \0" <<endl;
-				// '0'
-				//const char* nullValue = '\0';
-				uint8_t zero = 0;
-				m_out.write(reinterpret_cast<const char *>(&zero), sizeof(const uint8_t));
-				//cout << " writing hash" <<endl;
-				// hash
-				uint8_t hashbuf[8];
-				m_hash = container.getHash();
-				//cout << "rec hash: " << m_hash << endl;
-				//cout << "m_hash" <<  m_hash<<endl;
-				hashbuf[0] = (m_hash>>56)&0xff;
-				hashbuf[1] = (m_hash>>48)&0xff;
-				hashbuf[2] = (m_hash>>40)&0xff;
-				hashbuf[3] = (m_hash>>32)&0xff;
-				hashbuf[4] = (m_hash>>24)&0xff;
-				hashbuf[5] = (m_hash>>16)&0xff;
-				hashbuf[6] = (m_hash>>8)&0xff;
-				hashbuf[7] = (m_hash & 0xff);
-
-				m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
-
-				//cout << "writing payload"<<endl;
-				// payload
-
-				m_out << container.getSerializedData();
-				
-				//cout << "end of  serializing container" <<endl;
+			/* 
+			 * Here we are writing the message to the outstream using LCM message structure
+			 * An LCM message has the following structure:
+			 * 
+			 * MagicNumber|SequenceNumber|ChannelName|0|Hash|Payload
+			 * 
+			 * MagicNumber is used to check if the message is an LCM message
+			 * SequenceNumber is not used since we only have non-fragmented messages
+			 * ChannelName is the channel which the message will appear in. In our case it is the container data type
+			 * The 0 is used to know when the ChannelName ends
+			 * Hash shows which variables have been encoded and in which order. It is not used in OpenDaVINCI
+			 * Payload is where the encoded data is
+			 */
+			
+			// Encoding and writing the magic number
+			uint32_t magicNumber = 0x4c433032;
+			uint8_t mnbuf[4];
+			mnbuf[0] = (magicNumber>>24)&0xff;
+			mnbuf[1] = (magicNumber>>16)&0xff;
+			mnbuf[2] = (magicNumber>>8)&0xff;
+			mnbuf[3] = (magicNumber & 0xff);
+			m_out.write(reinterpret_cast<const char *>(&mnbuf), sizeof(const uint32_t));
+			
+			// Sequence Number
+			uint32_t sequence = 0;
+			uint8_t seqbuf[4];
+			seqbuf[0] = (sequence>>24)&0xff;
+			seqbuf[1] = (sequence>>16)&0xff;
+			seqbuf[2] = (sequence>>8)&0xff;
+			seqbuf[3] = (sequence & 0xff);
+			m_out.write(reinterpret_cast<const char *>(&seqbuf), sizeof(const uint32_t));
+			
+			// Channel name
+			string channel;
+			stringstream ss;
+			uint32_t chan = container.getDataType();
+			ss << chan;
+			channel = ss.str();
+			m_out << channel;
+			
+			// 0
+			uint8_t zero = 0;
+			m_out.write(reinterpret_cast<const char *>(&zero), sizeof(const uint8_t));
+			
+			// Encoding and writing hash
+			m_hash = container.getHash();
+			uint8_t hashbuf[8];
+			hashbuf[0] = (m_hash>>56)&0xff;
+			hashbuf[1] = (m_hash>>48)&0xff;
+			hashbuf[2] = (m_hash>>40)&0xff;
+			hashbuf[3] = (m_hash>>32)&0xff;
+			hashbuf[4] = (m_hash>>24)&0xff;
+			hashbuf[5] = (m_hash>>16)&0xff;
+			hashbuf[6] = (m_hash>>8)&0xff;
+			hashbuf[7] = (m_hash & 0xff);
+			m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
+			
+			// Writing the payload
+			m_out << container.getSerializedData();
 		}
 		
+		// Functions taken from LCM for calculating hash
 		int64_t calculate_hash(int64_t v, char c) {
 			v = ((v<<8) ^ (v>>55)) + c;
 			
