@@ -171,7 +171,7 @@ namespace core {
 			m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const int32_t));
 			
 			cout << "sent string: " << cstr << endl;
-			m_buffer.write(reinterpret_cast<const char *>(&cstr), length);
+			m_buffer.write(reinterpret_cast<const char *>(cstr), length);
 
 
 		}
