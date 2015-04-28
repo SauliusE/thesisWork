@@ -18,34 +18,24 @@ namespace core {
         using namespace base;
 
         Container::Container() :
-				m_serializedData(),
+                m_serializedData(),
                 m_dataType(UNDEFINEDDATA),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
-				m_serializedData(),
+                m_serializedData(),
                 m_dataType(dataType),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)) {
-        	 //cout << "5 "<< endl;
-        	//Serializing payload
-
-        	SerializationFactory sf;
-        	//cout << "inside container constructor" << endl;
-        	LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
-
-        	lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
-        	m_payloadHash = lcm.getHash();
-        	//cout << "Printing hash inside container" << m_payloadHash << endl;
-            // Get data for container.
-        //	cout << "m_serializedData << serializableData " << endl;
-
-           // m_serializedData << serializableData;
-            //cout << "end of container:container" << endl;
-
+                    
+            SerializationFactory sf;
+            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+            
+            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+            m_payloadHash = lcm.getHash();
         }
 
         Container::Container(const Container &obj) :
@@ -55,8 +45,8 @@ namespace core {
                 m_payloadHash(),
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
+                    
             m_serializedData.str(obj.m_serializedData.str());
-            //cout << "3 "<< endl;
         }
 
         Container& Container::operator=(const Container &obj) {
