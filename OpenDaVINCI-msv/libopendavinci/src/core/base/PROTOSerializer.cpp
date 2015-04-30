@@ -146,18 +146,18 @@ namespace core {
         }
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {
 
-              PROTO_TYPE protoType = ( PROTO_TYPE )8;
-              WIRE_TYPE wireType = getWireType ( protoType) ;
+                PROTO_TYPE protoType = ( PROTO_TYPE )8;
+                WIRE_TYPE wireType = getWireType ( protoType) ;
             
-              uint32_t key = getKey ( id, wireType );
-              encode(m_buffer,key);
+                uint32_t key = getKey ( id, wireType );
+                encode(m_buffer,key);
               
-              uint32_t stringSize = 0;
-              stringSize = (s.size() + 1) ;
-              m_size += stringSize;
+                uint32_t stringSize = 0;
+                stringSize = (s.size() + 1) ;
+                m_size += stringSize;
               
-              encode( m_buffer,stringSize );
-              m_buffer.write ( s.c_str(), stringSize );  
+                encode( m_buffer,stringSize );
+                m_buffer.write ( s.c_str(), stringSize );  
 
 
         }
@@ -169,14 +169,14 @@ namespace core {
 
     void PROTOSerializer::write (core::data::Container &container){
    
-            uint16_t magicNumber = 0xAABB;
-            uint16_t dataType = container.getDataType();  
-            encode(m_out, magicNumber);
-            encode(m_out, dataType); 
+                uint16_t magicNumber = 0xAABB;
+                uint16_t dataType = container.getDataType();  
+                encode(m_out, magicNumber);
+                encode(m_out, dataType); 
             
-            uint32_t msgSize = container.m_message_size;
-            m_out << msgSize;
-            m_out << container.m_serializedData.str();
+                uint32_t msgSize = container.m_message_size;
+                m_out << msgSize;
+                m_out << container.m_serializedData.str();
 //                 Serializing container
 //                 -- write Message size -- uint32_t
 //                 -- write Payload
@@ -189,42 +189,43 @@ namespace core {
     
     void PROTOSerializer::encode( ostream &out, uint64_t value){
   
+                value = htole64( value);
+                
+                    do {
 
-           value = htole64( value);
-              do {
-
-            char byte = value & (uint8_t) 0x7F;
-                value >>= 7;
-    
-            if ( value) {
-            byte |= ( uint8_t ) 0x80;
-        }
-        out.put( byte );
-        
-        } while (value);
-    }
+                        char byte = value & (uint8_t) 0x7F;
+                        value >>= 7;
+            
+                        if ( value) {
+                            byte |= ( uint8_t ) 0x80;
+                        }
+                        out.put( byte );
+                
+                } while (value);
+            }
 
 
     uint8_t PROTOSerializer::getVarSize( uint64_t value){
-        uint8_t size = 0;
-        value = htole64(value);
-        do {
-            char byte = value & (uint8_t) 0x7F;
-            value >>=7;
+                uint8_t size = 0;
+                value = htole64(value);
+                
+                    do {
+                        
+                        char byte = value & (uint8_t) 0x7F;
+                        value >>=7;
 
-            if(value){
-                byte |= (uint8_t) 0x80;
-            }
-    
-            ++size;
-    
-        } while (value);
+                        if(value){
+                            byte |= (uint8_t) 0x80;
+                        }
+                        ++size;
+                
+                    } while (value);
 
-        return size;
-    }
+                    return size;
+                }
 
 
-        } 
+    } 
         
 base::PROTOSerializer::WIRE_TYPE base::PROTOSerializer::getWireType ( base::PROTOSerializer::PROTO_TYPE type )
 {
