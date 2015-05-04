@@ -4,7 +4,7 @@
  * This software is open source. Please see COPYING and AUTHORS for further information.
  */
 
-#include "core/base/PROTODeserializer.h"
+#include "core/base/ROSDeserializer.h"
 #include "core/base/Serializable.h"
 
 namespace core {
@@ -12,7 +12,7 @@ namespace core {
 
         using namespace std;
 uint32_t decodeVar ( istream &in, uint64_t &value );
-        PROTODeserializer::PROTODeserializer(istream &in) :
+        ROSDeserializer::ROSDeserializer(istream &in) :
                 m_buffer(),
                 m_values(),
                 m_size(0),
@@ -48,11 +48,11 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
         }
 
-        PROTODeserializer::~PROTODeserializer() { 
+        ROSDeserializer::~ROSDeserializer() { 
         }
        
 
-        void PROTODeserializer::read(const uint32_t id, Serializable &s) {
+        void ROSDeserializer::read(const uint32_t id, Serializable &s) {
           (void) id; //to be removed in the future
                 m_buffer >> s;
             }
@@ -60,7 +60,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
         
 
         
-        void PROTODeserializer::read(const uint32_t id, bool &b) {
+        void ROSDeserializer::read(const uint32_t id, bool &b) {
                 (void)id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -75,7 +75,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 b = v;
         }
 
-        void PROTODeserializer::read(const uint32_t id, char &c) {
+        void ROSDeserializer::read(const uint32_t id, char &c) {
                 (void)id;
                 
                     
@@ -90,7 +90,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 c =  v;
       }
 
-        void PROTODeserializer::read(const uint32_t id, unsigned char &uc) {          (void)id;
+        void ROSDeserializer::read(const uint32_t id, unsigned char &uc) {          (void)id;
 
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -104,7 +104,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
         }
 
-        void PROTODeserializer::read(const uint32_t id, int32_t &i) {
+        void ROSDeserializer::read(const uint32_t id, int32_t &i) {
                 (void)id;
 
                 uint64_t key;
@@ -119,7 +119,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
         }
 
-        void PROTODeserializer::read(const uint32_t id, uint32_t &ui) {
+        void ROSDeserializer::read(const uint32_t id, uint32_t &ui) {
                 (void)id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -133,7 +133,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 ui = (uint32_t) v;
         }
 
-        void PROTODeserializer::read(const uint32_t id, float &f) {
+        void ROSDeserializer::read(const uint32_t id, float &f) {
                 (void) id;  
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -148,7 +148,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
               
         }
 
-        void PROTODeserializer::read(const uint32_t id, double &d) {
+        void ROSDeserializer::read(const uint32_t id, double &d) {
                 (void) id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -162,7 +162,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 d = _d;
         }
 
-        void PROTODeserializer::read(const uint32_t id, string &s) {
+        void ROSDeserializer::read(const uint32_t id, string &s) {
                 (void) id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -178,11 +178,11 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 s = string(str, length);
         }
 
-        void PROTODeserializer::read(const uint32_t id, void *data, uint32_t size) {
+        void ROSDeserializer::read(const uint32_t id, void *data, uint32_t size) {
               cout << "Read data Deserializer" << "- ID value: " << id <<" |  data  value: " << data << " | size of data : "<< size <<endl;
 
         }
-        void PROTODeserializer::read(istream &in, core::data::Container &container) {
+        void ROSDeserializer::read(istream &in, core::data::Container &container) {
                 // Getting message size
                 // Decoding magic number
                 uint64_t value = 0;
@@ -217,7 +217,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                     readSize++;
                 }
                 
-                container.setSerializedData(m_buffer.str());
+                container.m_serializedData.str(m_buffer.str());
 
     }
      

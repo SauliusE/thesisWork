@@ -2,11 +2,11 @@
  * OpenDaVINCI.
  *
  * This software is open source. Please see COPYING and AUTHORS for further information
- * Header file for PROTOSerializer
+ * Header file for ROSSerializer
  */
 
-#ifndef OPENDAVINCI_CORE_BASE_PROTOSERIALIZER_H_
-#define OPENDAVINCI_CORE_BASE_PROTOSERIALIZER_H_
+#ifndef OPENDAVINCI_CORE_BASE_ROSSERIALIZER_H_
+#define OPENDAVINCI_CORE_BASE_ROSSERIALIZER_H_
 
 #include "core/platform.h"
 
@@ -20,7 +20,7 @@ namespace core{
 
         class SerializationFactory;
 
-        class PROTOSerializer : public Serializer{
+        class ROSSerializer : public Serializer{
             private:
                 //Only Serialization factory or its subclasses are allowed to create instances of this Serializer
                 friend class SerializationFactory;
@@ -30,7 +30,7 @@ namespace core{
                 *
                 *  @param out Output stream for the data
                 */
-                PROTOSerializer(ostream &out);
+                ROSSerializer(ostream &out);
 
             private:
                 /**
@@ -38,17 +38,17 @@ namespace core{
                 *  already at complie time for unwanted bugs cause by any misuse
                 *  of the copy constructor.
                 */
-                PROTOSerializer(const PROTOSerializer &);
+                ROSSerializer(const ROSSerializer &);
 
                 /**
                 *  Forbidden" copy constructor. Goal: The compiler should warn
                 *  already at complie time for unwanted bugs cause by any misuse
                 *  of the copy constructor.
                 */
-                PROTOSerializer& operator=(const PROTOSerializer &);
+                ROSSerializer& operator=(const ROSSerializer &);
 
             public:
-                virtual ~PROTOSerializer();
+                virtual ~ROSSerializer();
 
                 virtual void write( const uint32_t id, const Serializable &s );
 
@@ -70,27 +70,27 @@ namespace core{
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
 
-				void write(core::data::Container &container);
-				
-				uint8_t getMessageSize(){return m_size;}
+                                void write(core::data::Container &container);
+                                
+                                uint8_t getMessageSize(){return m_size;}
             private:
-			    enum WIRE_TYPE { VARINT = 0, BIT_64 = 1, LENGTH_DELIMITED = 2, BIT_32 = 5, OTHER = 255 };
-				enum PROTO_TYPE { DOUBLE = 5, FLOAT = 4, INT32 = 0, INT64 = 1, UINT32 = 2, UINT64 = 3, BOOL = 6, BYTES = 7, STRING = 8, UNKNOWN = 255 };
+                            enum WIRE_TYPE { VARINT = 0, BIT_64 = 1, LENGTH_DELIMITED = 2, BIT_32 = 5, OTHER = 255 };
+                                enum ROS_TYPE { DOUBLE = 5, FLOAT = 4, INT32 = 0, INT64 = 1, UINT32 = 2, UINT64 = 3, BOOL = 6, BYTES = 7, STRING = 8, UNKNOWN = 255 };
     
-				static WIRE_TYPE getWireType ( PROTO_TYPE type );
+                                static WIRE_TYPE getWireType ( ROS_TYPE type );
 
-				static  WIRE_TYPE getWireType(uint32_t key) { return (WIRE_TYPE) (key & 0x7); }
-				static  uint32_t getFieldNumber(uint32_t key) { return (key >> 3); }
-				static  uint32_t getKey(uint32_t fieldNumber, uint8_t wireType) { return (fieldNumber << 3) | wireType; }
-				void encode(ostream &out, uint64_t value);
-				uint8_t getVarSize(uint64_t value);
+                                static  WIRE_TYPE getWireType(uint32_t key) { return (WIRE_TYPE) (key & 0x7); }
+                                static  uint32_t getFieldNumber(uint32_t key) { return (key >> 3); }
+                                static  uint32_t getKey(uint32_t fieldNumber, uint8_t wireType) { return (fieldNumber << 3) | wireType; }
+                                void encode(ostream &out, uint64_t value);
+                                uint8_t getVarSize(uint64_t value);
                 ostream &m_out;
                 stringstream m_buffer;
-				uint8_t m_size;
+                                uint8_t m_size;
         };
     }
 } // core::base
 
-#endif /*OPENDAVINCI_CORE_BASE_PROTOSERIALIZER_H_*/
+#endif /*OPENDAVINCI_CORE_BASE_ROSSERIALIZER_H_*/
 
 

@@ -4,7 +4,7 @@
  * This software is open source. Please see COPYING and AUTHORS for further information.
  */
 
-#include "core/base/PROTOSerializer.h"
+#include "core/base/ROSSerializer.h"
 #include "core/base/Serializable.h"
 #include "endian.h"
 #include "core/data/Container.h"
@@ -17,13 +17,13 @@ namespace core {
         
         using namespace std;
         
-        PROTOSerializer::PROTOSerializer(ostream& out) :
+        ROSSerializer::ROSSerializer(ostream& out) :
                 m_out(out),
                 m_buffer(),
                 m_size(0){}
         
-        PROTOSerializer::~PROTOSerializer(){
-            // Here suppose to be finalized message based on PROTO approach, as far i know it is
+        ROSSerializer::~ROSSerializer(){
+            // Here suppose to be finalized message based on ROS approach, as far i know it is
             // It is : 
             // - > size of message
             // - > payload
@@ -32,7 +32,7 @@ namespace core {
        
         } // end of ~constructor
 
-        void PROTOSerializer::write ( const uint32_t id, const Serializable& s ) {
+        void ROSSerializer::write ( const uint32_t id, const Serializable& s ) {
              // writing serializable
             (void)id;
             stringstream buffer;
@@ -41,11 +41,11 @@ namespace core {
         }
     
     
-        void PROTOSerializer::write ( const uint32_t id, const bool& b ) {
+        void ROSSerializer::write ( const uint32_t id, const bool& b ) {
                 uint32_t sizeOFB = getVarSize(b);
                 m_size += sizeOFB;
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )6;
+                ROS_TYPE protoType = ( ROS_TYPE )6;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                 
                 uint32_t key = getKey ( id, wireType );
@@ -55,11 +55,11 @@ namespace core {
                 encode(m_buffer, b );
         }
         
-        void PROTOSerializer::write ( const uint32_t id, const char& c ) {
+        void ROSSerializer::write ( const uint32_t id, const char& c ) {
                
                 m_size += getVarSize(c);
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )6;
+                ROS_TYPE protoType = ( ROS_TYPE )6;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                 
                 uint32_t key = getKey ( id, wireType );           
@@ -69,11 +69,11 @@ namespace core {
                 encode(m_buffer,c );
         }
         
-        void PROTOSerializer::write ( const uint32_t id, const unsigned char& uc ) {
+        void ROSSerializer::write ( const uint32_t id, const unsigned char& uc ) {
                
                 m_size += getVarSize(uc);
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )6;
+                ROS_TYPE protoType = ( ROS_TYPE )6;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                 
                 uint32_t key = getKey ( id, wireType );
@@ -83,11 +83,11 @@ namespace core {
                 encode(m_buffer, uc );
         }
 
-        void PROTOSerializer::write ( const uint32_t id, const int32_t& i ) {
+        void ROSSerializer::write ( const uint32_t id, const int32_t& i ) {
               
                 m_size += getVarSize(i);
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )0;
+                ROS_TYPE protoType = ( ROS_TYPE )0;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                
                 uint32_t key = getKey ( id, wireType );
@@ -97,11 +97,11 @@ namespace core {
                 encode(m_buffer, i );
         }
         
-        void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
+        void ROSSerializer::write ( const uint32_t id, const uint32_t& ui ) {
 
                 m_size += getVarSize(ui);
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )2;
+                ROS_TYPE protoType = ( ROS_TYPE )2;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                
                 uint32_t key = getKey ( id, wireType );
@@ -113,12 +113,12 @@ namespace core {
 
         }
         
-        void PROTOSerializer::write ( const uint32_t id, const float& f ) {
+        void ROSSerializer::write ( const uint32_t id, const float& f ) {
        
                 float _f = f;
                 m_size += 4;
                 
-                PROTO_TYPE protoType = ( PROTO_TYPE )4;
+                ROS_TYPE protoType = ( ROS_TYPE )4;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                 
                 uint32_t key = getKey ( id, wireType );
@@ -128,12 +128,12 @@ namespace core {
                 m_buffer.write(reinterpret_cast<const char *>(&_f), 4);
        }
 
-        void PROTOSerializer::write ( const uint32_t id, const double& d ) {
+        void ROSSerializer::write ( const uint32_t id, const double& d ) {
 
                 double _d = d;
               
                 m_size += 8;
-                PROTO_TYPE protoType = ( PROTO_TYPE )5;
+                ROS_TYPE protoType = ( ROS_TYPE )5;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                
                 uint32_t key = getKey ( id, wireType );
@@ -144,9 +144,9 @@ namespace core {
 
 
         }
-        void PROTOSerializer::write ( const uint32_t id, const string& s ) {
+        void ROSSerializer::write ( const uint32_t id, const string& s ) {
 
-                PROTO_TYPE protoType = ( PROTO_TYPE )8;
+                ROS_TYPE protoType = ( ROS_TYPE )8;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
             
                 uint32_t key = getKey ( id, wireType );
@@ -162,21 +162,21 @@ namespace core {
 
         }
 
-        void PROTOSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
+        void ROSSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
             cout<< "Writing id: " << id << "of user data " << data << " size of it " << size << endl;
         }
     
 
-    void PROTOSerializer::write (core::data::Container &container){
+    void ROSSerializer::write (core::data::Container &container){
    
                 uint16_t magicNumber = 0xAABB;
                 uint16_t dataType = container.getDataType();  
                 encode(m_out, magicNumber);
                 encode(m_out, dataType); 
             
-                uint32_t msgSize = container.getMessageSize();
+                uint32_t msgSize = container.m_message_size;
                 m_out << msgSize;
-                m_out << container.getSerializedData();
+                m_out << container.m_serializedData.str();
 //                 Serializing container
 //                 -- write Message size -- uint32_t
 //                 -- write Payload
@@ -187,7 +187,7 @@ namespace core {
 
 
     
-    void PROTOSerializer::encode( ostream &out, uint64_t value){
+    void ROSSerializer::encode( ostream &out, uint64_t value){
   
                 value = htole64( value);
                 
@@ -205,7 +205,7 @@ namespace core {
             }
 
 
-    uint8_t PROTOSerializer::getVarSize( uint64_t value){
+    uint8_t ROSSerializer::getVarSize( uint64_t value){
                 uint8_t size = 0;
                 value = htole64(value);
                 
@@ -227,7 +227,7 @@ namespace core {
 
     } 
         
-base::PROTOSerializer::WIRE_TYPE base::PROTOSerializer::getWireType ( base::PROTOSerializer::PROTO_TYPE type )
+base::ROSSerializer::WIRE_TYPE base::ROSSerializer::getWireType ( base::ROSSerializer::ROS_TYPE type )
 {
 switch ( type ) {
      case INT32:
