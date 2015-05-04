@@ -69,7 +69,7 @@ namespace examples {
 			virtual istream& operator>>(istream &in);
 
 			virtual const string toString() const;
-			uint32_t m_numericalValue;
+			int32_t m_numericalValue;
 			string m_stringValue;
 			bool m_bool;
 			char m_char;
