@@ -20,7 +20,7 @@ namespace examples {
 
     Example7Receiver::Example7Receiver(const int32_t &argc, char **argv) :
         ConferenceClientModule(argc, argv, "Example7Receiver")
-		{}
+        {}
 
     Example7Receiver::~Example7Receiver() {}
 
@@ -33,20 +33,22 @@ namespace examples {
         uint32_t expected_sum = 0;
         uint32_t counter = 0;
 
-    	while (getModuleState() == ModuleState::RUNNING) {
-			Container c = getKeyValueDataStore().get(Container::USER_DATA_5);
-			Example7Data data = c.getData<Example7Data>();
+        while (getModuleState() == ModuleState::RUNNING) {
+            Container c = getKeyValueDataStore().get(Container::USER_DATA_5);
+            Example7Data data = c.getData<Example7Data>();
             sum += data.getNumericalValue();
-			cout << "Latest container from data type " << (uint32_t)c.getDataType() << ", content: " << data.toString() << ", sum = " << sum << endl;
-			cout << "Counter: " << counter << endl;
+            cout << "Latest container from data type " << (uint32_t)c.getDataType() << ", content: " << data.toString() << ", sum = " << sum << endl;
+            cout << "Counter: " << counter << endl;
             if (sum > 0) {
                 counter++;
                 expected_sum += counter;
                 cout << "Diff: " << (expected_sum - sum) << endl;
             }
-    	}
+            
+        }
 
-    	return ModuleState::OKAY;
+        return ModuleState::OKAY;
+        
     }
 
 } // examples

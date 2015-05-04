@@ -10,6 +10,7 @@
 #include "core/base/LCMSerializer.h"
 
 #include "Example7Data.h"
+//#include <inttypes.h>
 
 namespace examples {
 
@@ -58,7 +59,7 @@ namespace examples {
 
 	const string Example7Data::toString() const {
 		stringstream s;
-		s << "uint32_t : " ;
+		s << "int32_t : " ;
 		s << m_numericalValue;
 		s << " ";
 		s << "string: ";
@@ -67,12 +68,12 @@ namespace examples {
 		s << "Bool : ";
 		s << m_bool;
 		s << " "<<endl;
-		s << "char : ";
-		s << m_char;
-		s << " ";
-		s << "unsigned char : ";
-		s << m_uc;
-		s << " ";
+		//s << "char : ";
+		//s << m_char;
+		//s << " ";
+		//s << "unsigned char : ";
+		//s << m_uc;
+		//s << " ";
 		s << "float " ;
 		s << m_float;
 		s << " ";
@@ -84,45 +85,33 @@ namespace examples {
 	}
 
 	ostream& Example7Data::operator<<(ostream &out) const {
-		SerializationFactory sf;
+        SerializationFactory sf;
 
-		LCMSerializer &s = sf.getLCMSerializer(out);
+        LCMSerializer &s = sf.getLCMSerializer(out);
 
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
-				m_numericalValue);
+        s.write("m_numericalValue", m_numericalValue);
+        s.write("m_stringValue", m_stringValue);
+        s.write("m_bool", m_bool);
+        s.write("m_float", m_float);
+        s.write("m_double", m_double);
+        
+        //int64_t hash = s.getHash();
+        //printf("HASH17: %016"PRIx64"\n", hash);
 
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s', 't', 'r') >::RESULT,
-				m_stringValue);
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('a', 't', 'r') >::RESULT,
-				m_bool);
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('d', 't', 'r') >::RESULT,
-				m_char);
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('f', 't', 'r') >::RESULT,
-				m_uc);
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('z', 't', 'r') >::RESULT,
-				m_float);
-		s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('b', 't', 'r') >::RESULT,
-				m_double);
-
-		return out;
+        return out;
 	}
 
 	istream& Example7Data::operator>>(istream &in) {
 		SerializationFactory sf;
-
 		LCMDeserializer &d = sf.getLCMDeserializer(in);
-
+        cout << endl;
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
 			   m_numericalValue);
-
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s', 't', 'r') >::RESULT,
 			   m_stringValue);
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('a', 't', 'r') >::RESULT,
 				m_bool);
-		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('d', 't', 'r') >::RESULT,
-				m_char);
-		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('f', 't', 'r') >::RESULT,
-				m_uc);
+		//d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('d', 't', 'r') >::RESULT,m_char);
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('z', 't', 'r') >::RESULT,
 				m_float);
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('b', 't', 'r') >::RESULT,

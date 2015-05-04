@@ -24,6 +24,7 @@ namespace core {
                 m_sender(NULL),
                 m_receiver(NULL) {
             try {
+                cout << "THE PORT: " << port << endl;
                 m_sender = wrapper::UDPFactory::createUDPSender(address, port);
             } catch (string &s) {
                 OPENDAVINCI_CORE_THROW_EXCEPTION(ConferenceException, s);
