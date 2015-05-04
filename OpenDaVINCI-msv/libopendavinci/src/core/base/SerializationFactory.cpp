@@ -11,6 +11,8 @@
 #include "core/base/SerializationFactory.h"
 #include "core/base/LCMSerializer.h"
 #include "core/base/LCMDeserializer.h"
+#include "core/base/ROSSerializer.h"
+#include "core/base/ROSDeserializer.h"
 
 namespace core {
     namespace base {
@@ -19,15 +21,22 @@ namespace core {
 
         SerializationFactory::SerializationFactory() :
                 m_listOfSerializers(),
-                m_listOfDeserializers(),
+                m_listOfDeserializers(), 
                 m_listOfLCMSerializers(),
-                m_listOfLCMDeserializers(){}
+                m_listOfLCMDeserializers(),
+                m_listOfPROTOSerializers(),
+                m_listOfPROTODeserializers(),
+                m_listOfROSSerializers(),
+                m_listOfROSDeserializers()
+                {}
 
         SerializationFactory::~SerializationFactory() {
             m_listOfSerializers.clear();
             m_listOfDeserializers.clear();
             m_listOfLCMSerializers.clear();
             m_listOfLCMDeserializers.clear();
+            m_listOfROSSerializers.clear();
+            m_listOfROSDeserializers.clear();
 
         }
 
@@ -95,6 +104,33 @@ namespace core {
             }
             else {
                 lcmd = &(*(*(m_listOfPROTODeserializers.begin())));
+            }
+            return *lcmd;
+        }
+        
+        
+        
+                ROSSerializer& SerializationFactory::getROSSerializer(ostream &out) const {
+            ROSSerializer *lcms = NULL;
+            if (m_listOfROSSerializers.empty()){
+                lcms = new ROSSerializer(out);
+                m_listOfROSSerializers.push_back(SharedPointer<ROSSerializer>(lcms));
+            }
+            else {
+                lcms = &(*(*(m_listOfROSSerializers.begin()))); // The innermost * dereferences the iterator to SharedPointer<Serializer>, the second * returns the Serializer from within the SharedPointer, and the & turns it into a regular pointer.
+            }
+            return *lcms;
+        }
+
+
+        ROSDeserializer& SerializationFactory::getROSDeserializer(istream &in) const {
+            ROSDeserializer *lcmd = NULL;
+            if (m_listOfROSDeserializers.empty()) {
+                lcmd = new ROSDeserializer(in);
+                m_listOfROSDeserializers.push_back(SharedPointer<ROSDeserializer>(lcmd)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
+            }
+            else {
+                lcmd = &(*(*(m_listOfROSDeserializers.begin())));
             }
             return *lcmd;
         }

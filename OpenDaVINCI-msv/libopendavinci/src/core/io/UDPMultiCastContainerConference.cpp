@@ -11,7 +11,8 @@
 #include "core/wrapper/UDPFactory.h"
 #include "core/base/LCMSerializer.h"
 #include "core/base/SerializationFactory.h"
-
+#include "core/base/ROSSerializer.h"
+#include "core/base/ROSDeserializer.h"
 namespace core {
     namespace io {
 
@@ -62,7 +63,7 @@ namespace core {
                 Container container;
                 //cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
-                LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
+                ROSDeserializer &lcm = sf.getROSDeserializer(stringstreamData);
                 lcm.read(stringstreamData, container); //double stringstreamData variable
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
@@ -81,7 +82,7 @@ namespace core {
             stringstream stringstreamValue;
 
         	SerializationFactory sf;
-        	LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
+        	ROSSerializer &lcm = sf.getROSSerializer(stringstreamValue);
             container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
             lcm.write(container);

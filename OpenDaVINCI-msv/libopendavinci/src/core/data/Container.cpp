@@ -10,6 +10,8 @@
 #include "core/base/LCMSerializer.h"
 //#include "core/base/Serializer.h"
 #include "core/data/Container.h"
+#include "core/base/ROSSerializer.h"
+#include "core/base/ROSDeserializer.h"
 
 namespace core {
     namespace data {
@@ -34,10 +36,11 @@ namespace core {
                 m_message_size(){
                     
             SerializationFactory sf;
-            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
             
             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
-            m_payloadHash = lcm.getHash();
+           // m_payloadHash = lcm.getHash();
+         //   m_message_size = lcm.getMessageSize();
         }
 
         Container::Container(const Container &obj) :

@@ -28,6 +28,7 @@ namespace core {
             // - > size of message
             // - > payload
             // Writing size of message
+            m_out << m_size;
             m_out << m_buffer.str();
        
         } // end of ~constructor
@@ -89,6 +90,11 @@ namespace core {
             m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
 
        }
+void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
+{
+(void) id;(void)uc;
+}
+
 
         void ROSSerializer::write ( const uint32_t id, const double& d ) {
 
@@ -107,7 +113,7 @@ namespace core {
             m_size += static_cast<uint32_t>(sizeof(s));
             
             uint32_t stringLength = s.length();
-            uint32_t size = static_cast<uint32_t>(stringLength + sizeof(uint32_t));             
+        //    uint32_t size = static_cast<uint32_t>(stringLength + sizeof(uint32_t));             
 
             uint32_t _stringLength = stringLength;
             _stringLength = htonl(_stringLength);
@@ -132,9 +138,9 @@ namespace core {
                 dataType = htonl(dataType);
                 m_out.write(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
             
-                uint32_t msgSize = container.getMessageSize();
-                msgSize = htonl(msgSize);
-                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
+           //     uint32_t msgSize = container.getMessageSize();
+              //  msgSize = htonl(msgSize);
+                //m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
                 
                 m_out << container.getSerializedData();
 

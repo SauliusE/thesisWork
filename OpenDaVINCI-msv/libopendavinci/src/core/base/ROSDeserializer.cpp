@@ -19,22 +19,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 position(0){
             // Initialize the stringstream for getting valid positions when calling tellp().
             // This MUST be a blank (Win32 has a *special* implementation...)!
- 
-                  //Decoding magic number
-            uint64_t value = 0;
-            decodeVar(in,value);
-            //casting value to uint16
-            uint16_t magicNumber = (uint16_t) value;
-        
-            in.clear();
-            in.seekg(0, ios::beg);
-            if(magicNumber == 0xAABB){
-                return;
-            }
-        
-        
-        
-            char c = 0;
+  char c = 0;
             in.get(c);
         
             while(in.good() ){
@@ -71,6 +56,12 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                 (void)id;           
                 m_buffer.read(reinterpret_cast<char *>(&c), sizeof(char));
       }
+
+void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
+{
+ (void) id;
+ (void)uc;
+}
 
         void ROSDeserializer::read(const uint32_t id, int32_t &i) {
             
@@ -118,19 +109,19 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
         }
         void ROSDeserializer::read(istream &in, core::data::Container &container) {
                 
-                uint32_t headerLength = 4;                
-                headerLength = htonl(headerLength);
-                in.read(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
-                
-                uint32_t dataType = container.getDataType();
-                dataType = htonl(dataType);
-                in.read(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
+                uint32_t headerLength;                
+               
+                in.read(reinterpret_cast<char *>(&headerLength), sizeof(const uint32_t));
+                 headerLength = htonl(headerLength);
+                uint32_t dataType;
+                in.read(reinterpret_cast<char *>(&dataType), sizeof(const uint32_t));
+                            dataType = htonl(dataType);
+
+               uint32_t msgSize ;
             
-                uint32_t msgSize = container.getMessageSize();
-                msgSize = htonl(msgSize);
-                in.read(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
-                
-                in << container.getSerializedData();
+                in.read(reinterpret_cast<char *>(&msgSize), sizeof(const uint32_t));
+                    msgSize = htonl(msgSize);
+            //    in << container.getSerializedData();
                 
                 char c = 0;
                 in.get(c);
@@ -140,28 +131,11 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                     in.get(c);
                 }
                 
-                container.m_serializedData.str(m_buffer.str());
+                container.setSerializedData(m_buffer.str());
 
     }
      
-        uint32_t decodeVar ( istream &in, uint64_t &value )
-          {
-          uint32_t size = 0;
-              int shift = 0;
-              uint8_t c;
-              value = 0;
 
-              do {
-                    c = in.get();
-                    value |= ( uint64_t ) ( c & 0x7F ) << shift;
-                    shift += 7;
-                    ++size;
-              } while ( in.good() && ( c & 0x80 ) != 0 );
-
-              value = le64toh ( value );
-
-              return size;
-          }
 
     }
 } // core::base
