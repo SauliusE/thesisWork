@@ -174,9 +174,9 @@ namespace core {
                 encode(m_out, magicNumber);
                 encode(m_out, dataType); 
             
-                uint32_t msgSize = container.m_message_size;
+                uint32_t msgSize = container.getMessageSize();
                 m_out << msgSize;
-                m_out << container.m_serializedData.str();
+                m_out << container.getSerializedData();
 //                 Serializing container
 //                 -- write Message size -- uint32_t
 //                 -- write Payload

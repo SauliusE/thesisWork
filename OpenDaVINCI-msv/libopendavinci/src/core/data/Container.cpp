@@ -22,14 +22,16 @@ namespace core {
                 m_dataType(UNDEFINEDDATA),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)) {}
+                m_received(TimeStamp(0, 0)),
+                m_message_size(){}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
                 m_serializedData(),
                 m_dataType(dataType),
                 m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)) {
+                m_received(TimeStamp(0, 0)),
+                m_message_size(){
                     
             SerializationFactory sf;
             LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
@@ -60,6 +62,17 @@ namespace core {
 
         Container::~Container() {}
         
+        uint32_t Container::getMessageSize()
+        {
+            return m_message_size;
+        }
+
+
+        void Container::setMessageSize(uint32_t& size)
+        {
+            m_message_size = size;
+        }
+
         string Container::getSerializedData() const {
             return m_serializedData.str();
         }
@@ -107,7 +120,6 @@ namespace core {
 
             Serializer &s = sf.getSerializer(out);
 
-       //     cout << "CONTAINER operator << !!! I AM NOT SUPPOSE TO BE HERE "<< endl;
             // Write container data type.
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
@@ -129,7 +141,6 @@ namespace core {
         }
 
         istream& Container::operator>>(istream &in) {
-        //	cout<< "Container operator >>  2" << endl;
             string rawData = "";
 
             SerializationFactory sf;

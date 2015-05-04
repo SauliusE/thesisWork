@@ -107,11 +107,13 @@ namespace core {
                  *
                  * @return Data type of the data contained in this container.
                  */
-				DATATYPE getDataType() const;
-				void setDataType(const DATATYPE &dataType);
-				
-				uint64_t getHash() const;
-				void setHash(const uint64_t &hash);
+                DATATYPE getDataType() const;
+                void setDataType(const DATATYPE &dataType);	
+                uint64_t getHash() const;
+                void setHash(const uint64_t &hash);
+                
+                void setMessageSize(uint32_t &size);
+                uint32_t getMessageSize();
 
                 virtual ostream& operator<<(ostream &out) const;
                 virtual istream& operator>>(istream &in);
@@ -180,11 +182,12 @@ namespace core {
 
 
             private:
-				stringstream m_serializedData;
-				DATATYPE m_dataType;
-				uint64_t m_payloadHash;
+		stringstream m_serializedData;
+		DATATYPE m_dataType;
+		uint64_t m_payloadHash;
                 TimeStamp m_sent;
                 TimeStamp m_received;
+		uint32_t m_message_size;
         };
 
     }

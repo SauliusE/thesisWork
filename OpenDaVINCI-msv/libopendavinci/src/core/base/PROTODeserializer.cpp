@@ -217,7 +217,7 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
                     readSize++;
                 }
                 
-                container.m_serializedData.str(m_buffer.str());
+                container.setSerializedData(m_buffer.str());
 
     }
      
