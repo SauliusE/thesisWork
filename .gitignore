@@ -7,3 +7,4 @@ build*
 .cproject
 .project
 .settings
+*.kate-swp
