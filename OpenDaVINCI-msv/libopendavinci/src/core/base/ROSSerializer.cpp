@@ -42,122 +42,77 @@ namespace core {
     
     
         void ROSSerializer::write ( const uint32_t id, const bool& b ) {
-                uint32_t sizeOFB = getVarSize(b);
-                m_size += sizeOFB;
-                
-                ROS_TYPE protoType = ( ROS_TYPE )6;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-                
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-  
-                encode(m_buffer,key);
-                encode(m_buffer, b );
+            
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(b));
+            
+            m_buffer.write(reinterpret_cast<const char *>(&b), sizeof(const bool));
         }
         
         void ROSSerializer::write ( const uint32_t id, const char& c ) {
                
-                m_size += getVarSize(c);
-                
-                ROS_TYPE protoType = ( ROS_TYPE )6;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-                
-                uint32_t key = getKey ( id, wireType );           
-                m_size += getVarSize(key);
-                
-                encode(m_buffer,key);
-                encode(m_buffer,c );
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(c));
+            
+            m_buffer.write(&c, sizeof(const char));
         }
         
-        void ROSSerializer::write ( const uint32_t id, const unsigned char& uc ) {
-               
-                m_size += getVarSize(uc);
-                
-                ROS_TYPE protoType = ( ROS_TYPE )6;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-                
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-                
-                encode(m_buffer,key);
-                encode(m_buffer, uc );
-        }
 
         void ROSSerializer::write ( const uint32_t id, const int32_t& i ) {
-              
-                m_size += getVarSize(i);
-                
-                ROS_TYPE protoType = ( ROS_TYPE )0;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-               
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-                
-                encode(m_buffer,key);
-                encode(m_buffer, i );
+            
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(i));
+            
+            int32_t _i = i;
+            _i = htonl(_i);
+            m_buffer.write(reinterpret_cast<const char *>(&_i), sizeof(const uint32_t));
         }
         
         void ROSSerializer::write ( const uint32_t id, const uint32_t& ui ) {
 
-                m_size += getVarSize(ui);
-                
-                ROS_TYPE protoType = ( ROS_TYPE )2;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-               
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-
-                encode(m_buffer,key);
-                encode(m_buffer, ui );
-
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(ui));
+            
+            uint32_t _ui = ui;
+            _ui = htonl(_ui);
+            m_buffer.write(reinterpret_cast<const char *>(&_ui), sizeof(const uint32_t));
 
         }
         
         void ROSSerializer::write ( const uint32_t id, const float& f ) {
-       
-                float _f = f;
-                m_size += 4;
-                
-                ROS_TYPE protoType = ( ROS_TYPE )4;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-                
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-                
-                encode(m_buffer,key);
-                m_buffer.write(reinterpret_cast<const char *>(&_f), 4);
+            
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(f));
+            
+            float _f = f;
+            _f = Serializer::htonf(_f);
+            m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
+
        }
 
         void ROSSerializer::write ( const uint32_t id, const double& d ) {
 
-                double _d = d;
-              
-                m_size += 8;
-                ROS_TYPE protoType = ( ROS_TYPE )5;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
-               
-                uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-               
-                encode(m_buffer,key);
-                m_buffer.write(reinterpret_cast<const char *>(&_d), 8);
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(d));
+            
+            double _d = d;
+            _d = Serializer::htond(_d);
+            m_buffer.write(reinterpret_cast<const char *>(&_d), sizeof(const double));
 
 
         }
         void ROSSerializer::write ( const uint32_t id, const string& s ) {
-
-                ROS_TYPE protoType = ( ROS_TYPE )8;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
+               
+            (void) id;
+            m_size += static_cast<uint32_t>(sizeof(s));
             
-                uint32_t key = getKey ( id, wireType );
-                encode(m_buffer,key);
-              
-                uint32_t stringSize = 0;
-                stringSize = (s.size() + 1) ;
-                m_size += stringSize;
-              
-                encode( m_buffer,stringSize );
-                m_buffer.write ( s.c_str(), stringSize );  
+            uint32_t stringLength = s.length();
+            uint32_t size = static_cast<uint32_t>(stringLength + sizeof(uint32_t));             
+
+            uint32_t _stringLength = stringLength;
+            _stringLength = htonl(_stringLength);
+            m_buffer.write(reinterpret_cast<const char *>(&_stringLength), sizeof(uint32_t));
+            m_buffer.write(reinterpret_cast<const char *>(s.c_str()), stringLength);
 
 
         }
@@ -169,89 +124,25 @@ namespace core {
 
     void ROSSerializer::write (core::data::Container &container){
    
-                uint16_t magicNumber = 0xAABB;
-                uint16_t dataType = container.getDataType();  
-                encode(m_out, magicNumber);
-                encode(m_out, dataType); 
+                uint32_t headerLength = 4;                
+                headerLength = htonl(headerLength);
+                m_out.write(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
+                
+                uint32_t dataType = container.getDataType();
+                dataType = htonl(dataType);
+                m_out.write(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
             
-                uint32_t msgSize = container.m_message_size;
-                m_out << msgSize;
-                m_out << container.m_serializedData.str();
-//                 Serializing container
-//                 -- write Message size -- uint32_t
-//                 -- write Payload
-//                 ----encode Key -- uint32_t
-//                 ----encode value 
-    }
+                uint32_t msgSize = container.getMessageSize();
+                msgSize = htonl(msgSize);
+                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
+                
+                m_out << container.getSerializedData();
+
+        }
     
-
-
-    
-    void ROSSerializer::encode( ostream &out, uint64_t value){
-  
-                value = htole64( value);
-                
-                    do {
-
-                        char byte = value & (uint8_t) 0x7F;
-                        value >>= 7;
-            
-                        if ( value) {
-                            byte |= ( uint8_t ) 0x80;
-                        }
-                        out.put( byte );
-                
-                } while (value);
-            }
-
-
-    uint8_t ROSSerializer::getVarSize( uint64_t value){
-                uint8_t size = 0;
-                value = htole64(value);
-                
-                    do {
-                        
-                        char byte = value & (uint8_t) 0x7F;
-                        value >>=7;
-
-                        if(value){
-                            byte |= (uint8_t) 0x80;
-                        }
-                        ++size;
-                
-                    } while (value);
-
-                    return size;
-                }
-
 
     } 
         
-base::ROSSerializer::WIRE_TYPE base::ROSSerializer::getWireType ( base::ROSSerializer::ROS_TYPE type )
-{
-switch ( type ) {
-     case INT32:
-          return VARINT;
-     case INT64:
-          return VARINT;
-     case UINT32:
-          return VARINT;
-     case UINT64:
-          return VARINT;
-     case FLOAT:
-          return BIT_32;
-     case DOUBLE:
-          return BIT_64;
-     case BOOL:
-          return VARINT;
-     case STRING:
-     case BYTES:
-          return LENGTH_DELIMITED;
-     default:
-          return OTHER;
-     }
-
-}
 } // core:base
 
   

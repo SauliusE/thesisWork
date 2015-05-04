@@ -61,121 +61,55 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
         
         void ROSDeserializer::read(const uint32_t id, bool &b) {
-                (void)id;
-                uint64_t key;
-                decodeVar(m_buffer,key);
-           
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-                uint64_t v;
-                decodeVar(m_buffer,v);
-
-                b = v;
+               
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&b), sizeof(bool));
         }
 
         void ROSDeserializer::read(const uint32_t id, char &c) {
-                (void)id;
-                
-                    
-                uint64_t key;
-                decodeVar(m_buffer,key);                   
-                WIRE_TYPE wireType = getWireType(key);           
-                uint32_t fieldId = getFieldNumber(key);                   
-                (void) wireType;                  
-                (void) fieldId;                  
-                uint64_t v;                   
-                decodeVar(m_buffer,v);                   
-                c =  v;
+            
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&c), sizeof(char));
       }
 
-        void ROSDeserializer::read(const uint32_t id, unsigned char &uc) {          (void)id;
-
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-                uint64_t v;
-                decodeVar(m_buffer,v);
-                uc =  v;
-
-        }
-
         void ROSDeserializer::read(const uint32_t id, int32_t &i) {
-                (void)id;
-
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-                uint64_t v;
-                decodeVar(m_buffer,v);
-                i = (int32_t) v;
+            
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&i), sizeof(int32_t));
 
         }
 
         void ROSDeserializer::read(const uint32_t id, uint32_t &ui) {
-                (void)id;
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-                
-                uint64_t v;
-                decodeVar(m_buffer,v);
-                ui = (uint32_t) v;
+            
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&ui), sizeof(uint32_t));
         }
 
         void ROSDeserializer::read(const uint32_t id, float &f) {
-                (void) id;  
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-  
-                float _f =0;
-                m_buffer.read(reinterpret_cast<char *>(&_f), 4);
-                f= _f;
+            
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&f), sizeof(float));
               
         }
 
         void ROSDeserializer::read(const uint32_t id, double &d) {
-                (void) id;
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;                
-          
-                double _d =0;        
-                m_buffer.read(reinterpret_cast<char *>(&_d),8);        
-                d = _d;
+            
+                (void)id;           
+                m_buffer.read(reinterpret_cast<char *>(&d), sizeof(double));
         }
 
         void ROSDeserializer::read(const uint32_t id, string &s) {
-                (void) id;
-                uint64_t key;
-                decodeVar(m_buffer,key);
-                WIRE_TYPE wireType = getWireType(key);
-                uint32_t fieldId = getFieldNumber(key);
-                (void) wireType;
-                (void) fieldId;
-                uint64_t size;
-                decodeVar (m_buffer, size );
-                uint32_t length = (uint32_t) size;
-                char *str = new char[length];
-                m_buffer.read(str, length);
-                s = string(str, length);
+            
+                (void)id;           
+                uint32_t stringLength = 0;
+                m_buffer.read(reinterpret_cast<char *>(&stringLength), sizeof(uint32_t));
+                stringLength = ntohl(stringLength);
+                char *str = new char[stringLength+1];
+                m_buffer.read(reinterpret_cast<char *>(str), static_cast<uint32_t>(stringLength));
+                str[stringLength] = '\0';
+                // It is absolutely necessary to specify the size of the serialized string, otherwise, s contains only data until the first '\0' is read.
+                s = string(str, stringLength);
+                OPENDAVINCI_CORE_DELETE_ARRAY(str);
         }
 
         void ROSDeserializer::read(const uint32_t id, void *data, uint32_t size) {
@@ -183,38 +117,27 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
         }
         void ROSDeserializer::read(istream &in, core::data::Container &container) {
-                // Getting message size
-                // Decoding magic number
-                uint64_t value = 0;
-                decodeVar(in,value);
                 
-                // casting value to uint16
-                uint16_t magicNumber = (uint16_t) value;
-                if (magicNumber != 0xAABB){
-                   if (in.good()) {
-                    // Stream is good but still no magic number?
-                    clog << "Stream corrupt: magic number not found." << endl;
-                    }
-                return;                   
-                }
+                uint32_t headerLength = 4;                
+                headerLength = htonl(headerLength);
+                in.read(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
                 
-                value  = 0 ;    
-                decodeVar(in,value);
+                uint32_t dataType = container.getDataType();
+                dataType = htonl(dataType);
+                in.read(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
+            
+                uint32_t msgSize = container.getMessageSize();
+                msgSize = htonl(msgSize);
+                in.read(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
                 
-                uint16_t dataType = (uint16_t) value;
-                container.setDataType(static_cast<core::data::Container::DATATYPE>(dataType));
-                uint64_t size;
-                
-                decodeVar(in, size);
-                uint64_t readSize = 0;
+                in << container.getSerializedData();
                 
                 char c = 0;
                 in.get(c);
                 
-                while(in.good() && readSize < size){
+                while(in.good()){
                     m_buffer.put(c);
                     in.get(c);
-                    readSize++;
                 }
                 
                 container.m_serializedData.str(m_buffer.str());
