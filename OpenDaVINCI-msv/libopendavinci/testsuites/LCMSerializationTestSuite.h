@@ -153,7 +153,7 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
         }
         
-        void testArraySerialisation() {
+        void xtestArraySerialisation() {
             /*
             stringstream stream;
             uint32_t array[10];
