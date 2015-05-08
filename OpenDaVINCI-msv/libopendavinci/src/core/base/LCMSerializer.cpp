@@ -23,7 +23,7 @@ namespace core {
             m_hash(0x12345678) {}
         
         LCMSerializer::~LCMSerializer() {
-            // Writes the hash number and the payload to the ostream which will then get written to the container stream
+            // Calculates and writes the hash number and the payload to the ostream which will then get written to the container stream
             if (m_hash != 0x12345678) {
                 m_hash = (m_hash<<1) + ((m_hash>>63)&1);
                 
@@ -43,13 +43,6 @@ namespace core {
         }
 
         // Set and get method for hash
-        void LCMSerializer::setHash(const int64_t hash){
-            m_hash = hash;
-        }
-
-        int64_t LCMSerializer::getHash(){
-            return m_hash;
-        }
         
         /*
          * The write functions below are called to encode and write variables to a stringstream buffer.
@@ -71,64 +64,15 @@ namespace core {
             m_buffer << buffer.str();
         }
         
-        
-        // TO QUIET WARNINGS
-        
-        void LCMSerializer::write( const uint32_t id, const bool &b ) {
-            (void) id;
-            (void) b;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const char &c ) {
-            (void) id;
-            (void) c;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const unsigned char &uc ) {
-            (void) id;
-            (void) uc;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const int32_t &i ) {
-            (void) id;
-            (void) i;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const uint32_t &ui ) {
-            (void) id;
-            (void) ui;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const float &f ) {
-            (void) id;
-            (void) f;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const double &d ) {
-            (void) id;
-            (void) d;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const string &s ) {
-            (void) id;
-            (void) s;
-        }
-
-        void LCMSerializer::write( const uint32_t id, const void *data, const uint32_t &size ) {
-            (void) id;
-            (void) data;
-            (void) size;
-        }
-        
-        
-        
-        // REAL WRITE FUNCTIONS
-        
-        
         // Bool
-        void LCMSerializer::write ( const string id, const bool& b ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const bool& b ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "boolean");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -140,9 +84,14 @@ namespace core {
          * 
          * Not supported by LCM, but just keeping it here just incase.
          */
-        void LCMSerializer::write ( const string id, const char& c ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const char& c ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "char");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -154,9 +103,14 @@ namespace core {
          * 
          * Not supported by LCM, but just keeping it here just incase.
          */
-        void LCMSerializer::write ( const string id, const unsigned char& uc ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const unsigned char& uc ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "unsigned char");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -164,9 +118,14 @@ namespace core {
         }
         
         // int32_t
-        void LCMSerializer::write ( const string id, const int32_t& i ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const int32_t& i ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "int32_t");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -185,9 +144,14 @@ namespace core {
          * Not supported by LCM, but just keeping it here just incase.
          */
         
-        void LCMSerializer::write ( const string id, const uint32_t& ui ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const uint32_t& ui ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "uint32_t");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -200,15 +164,43 @@ namespace core {
             m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
         }
         
+        // int64_t
+        void LCMSerializer::write ( const uint32_t id, const int64_t& i ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
+            m_hash = hash_string(m_hash, "int64_t");
+            m_hash = calculate_hash(m_hash, 0);
+            
+            uint8_t buf[8];
+            int64_t v = i;
+            buf[0] = (v>>56)&0xff;
+            buf[1] = (v>>48)&0xff;
+            buf[2] = (v>>40)&0xff;
+            buf[3] = (v>>32)&0xff;
+            buf[4] = (v>>24)&0xff;
+            buf[5] = (v>>16)&0xff;
+            buf[6] = (v>>8)&0xff;
+            buf[7] = (v & 0xff);
+            m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint64_t));
+        }
+        
         // Float
-        void LCMSerializer::write ( const string id, const float& f ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const float& f ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "float");
             m_hash = calculate_hash(m_hash, 0);
             
-            // This way of encoding is taken straight from LCM.
-            // Don't even know how and why it works myself.
             float _f = f;
             float *ff = &_f;
             int64_t *p = (int64_t*) ff;
@@ -223,9 +215,14 @@ namespace core {
         }
         
         // Double
-        void LCMSerializer::write ( const string id, const double& d ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const double& d ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "double");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -255,9 +252,14 @@ namespace core {
          */
         
         // String
-        void LCMSerializer::write ( const string id, const string& s ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        void LCMSerializer::write ( const uint32_t id, const string& s ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "string");
             m_hash = calculate_hash(m_hash, 0);
             
@@ -274,14 +276,20 @@ namespace core {
             m_buffer.write(reinterpret_cast<const char *>(cstr), length);
         }
         
-        // This is for data types with no appropriate write function
-        void LCMSerializer::write ( const string id, const void* data, const uint32_t& size ) {
-            char* _id = (char *) id.c_str();
-            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(_id));
+        // This is for data with no appropriate write function. You need to specify the size of the data.
+        void LCMSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
+            string sid;
+            stringstream ss;
+            uint32_t _id = id;
+            ss << _id;
+            sid = ss.str();
+            char* cid = (char *) sid.c_str();
+            m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "void");
             m_hash = calculate_hash(m_hash, 0);
             
-            m_buffer.write(reinterpret_cast<const char*>(&data), size);
+            
+            m_buffer.write(reinterpret_cast<const char*>(data), size);
         }
 
         void LCMSerializer::write(core::data::Container &container){

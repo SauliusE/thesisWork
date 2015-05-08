@@ -52,10 +52,6 @@ namespace core{
             public:
                 virtual ~LCMSerializer();
                 
-                void setHash(int64_t hash);
-
-                int64_t getHash();
-                
                 /*
                  * The write functions below are called to encode and write variables to a stringstream buffer.
                  * The variables will be written to the buffer in the order the write functions are called.
@@ -78,6 +74,8 @@ namespace core{
                 virtual void write( const uint32_t id, const int32_t &i );
 
                 virtual void write( const uint32_t id, const uint32_t &ui );
+                
+                void write( const uint32_t id, const int64_t &i );
 
                 virtual void write( const uint32_t id, const float &f );
 
@@ -86,24 +84,6 @@ namespace core{
                 virtual void write( const uint32_t id, const string &s );
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
-
-                void write( const string id, const bool &b );
-
-                void write( const string id, const char &c );
-
-                void write( const string id, const unsigned char &uc );
-
-                void write( const string id, const int32_t &i );
-
-                void write( const string id, const uint32_t &ui );
-
-                void write( const string id, const float &f );
-
-                void write( const string id, const double &d );
-
-                void write( const string id, const string &s );
-
-                void write( const string id, const void *data, const uint32_t &size );
 
                 void write(core::data::Container &container );
 
