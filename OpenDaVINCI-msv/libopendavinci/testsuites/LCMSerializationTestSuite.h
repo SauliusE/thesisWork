@@ -4,8 +4,8 @@
  * This software is open source. Please see COPYING and AUTHORS for further information.
  */
 
-#ifndef CORE_SERIALIZATIONTESTSUITE_H_
-#define CORE_SERIALIZATIONTESTSUITE_H_
+#ifndef CORE_LCMSERIALIZATIONTESTSUITE_H_
+#define CORE_LCMSERIALIZATIONTESTSUITE_H_
 
 #include "cxxtest/TestSuite.h"
 
@@ -65,7 +65,14 @@ class SerializationTestSampleData : public core::base::Serializable {
                 m_string(""),
                 m_float(),
                 m_double() {}
-                
+       SerializationTestSampleData(const SerializationTestSampleData& o):
+          m_hash(o.m_hash),
+                m_bool(o.m_bool),
+                m_int(o.m_int),
+                m_string(o.m_string),
+                m_float(o.m_float),
+                m_double(o.m_double)
+                { }
         int64_t m_hash;
         bool m_bool;
         int32_t m_int;
@@ -153,6 +160,47 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
         }
         
+          void testDeserialization() {
+            // Create some data.
+            SerializationTestSampleData sd;
+            sd.m_bool = true;
+            sd.m_int = 42;
+            sd.m_string = "This is an example.";
+            sd.m_float = -321.456;
+            sd.m_double = -42.42;
+//             TimeStamp ts;
+            Container c(Container::USER_DATA_9,sd);
+
+            // Create a data sink.
+       
+           
+            stringstream inout;
+
+                SerializationFactory sf;
+                LCMSerializer &lcm = sf.getLCMSerializer(inout);
+            lcm.write(c);
+             inout.flush();
+            
+              Container c2;
+              LCMDeserializer &lcmd = sf.getLCMDeserializer(inout);
+              lcmd.read(inout, c2);
+            
+            // Read from the previously created data sink.
+            SerializationTestSampleData sd2 = c2.getData<SerializationTestSampleData>();
+//             inout >> sd2;
+            
+            cout << "m_hash Is: " << sd2.m_hash << ", Should: " << "dunno" << endl;
+            cout << "m_bool Is: " << sd2.m_bool << ", Should: " << false << endl;
+            TS_ASSERT(sd2.m_bool);
+            cout << "m_int Is: " << sd2.m_int << ", Should: " << 42 << endl;
+            TS_ASSERT(sd2.m_int == 42);
+            cout << "m_string Is: " << sd2.m_string << ", Should: " << "This is an example." << endl;
+            TS_ASSERT(sd2.m_string == "This is an example.");
+            cout << "m_float Is: " << sd2.m_float << ", Should: " << -321.456 << endl;
+            TS_ASSERT_DELTA(sd2.m_float, -321.456, 1e-5);
+            cout << "m_double Is: " << sd2.m_double << ", Should: " << -42.42 << endl;
+            TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
+        }
         void xtestArraySerialisation() {
             /*
             stringstream stream;
@@ -183,4 +231,4 @@ class SerializationTest : public CxxTest::TestSuite {
         
 };
 
-#endif /*CORE_SERIALIZATIONTESTSUITE_H_*/
+#endif /*CORE_LCMSERIALIZATIONTESTSUITE_H_*/
