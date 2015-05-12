@@ -90,10 +90,10 @@ namespace core {
             m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
 
        }
-void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
-{
-(void) id;(void)uc;
-}
+        void ROSSerializer::write(const uint32_t id, const unsigned char& uc) {
+            (void) id;
+            m_buffer.write(reinterpret_cast<const char *>(&uc), sizeof(const unsigned char));
+        }
 
 
         void ROSSerializer::write ( const uint32_t id, const double& d ) {
@@ -124,26 +124,28 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
         }
 
         void ROSSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
+            m_buffer.write(reinterpret_cast<const char*>(&data), size);
             cout<< "Writing id: " << id << "of user data " << data << " size of it " << size << endl;
         }
     
 
-    void ROSSerializer::write (core::data::Container &container){
+        void ROSSerializer::write (core::data::Container &container){
    
-                uint32_t headerLength = 4;                
-                headerLength = htonl(headerLength);
-                m_out.write(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
-                
-                uint32_t dataType = container.getDataType();
-                dataType = htonl(dataType);
-                m_out.write(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
+            uint32_t headerLength = 4;                
+            headerLength = htonl(headerLength);
+            m_out.write(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
             
-           //     uint32_t msgSize = container.getMessageSize();
-              //  msgSize = htonl(msgSize);
-                //m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
-                
-                m_out << container.getSerializedData();
-
+            uint32_t dataType = container.getDataType();
+            dataType = htonl(dataType);
+            m_out.write(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
+        
+            uint32_t msgSize = container.getMessageSize();
+            (void) msgSize;
+            //msgSize = htonl(msgSize);
+            //m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
+            
+            m_out << container.getSerializedData();
+            
         }
     
 

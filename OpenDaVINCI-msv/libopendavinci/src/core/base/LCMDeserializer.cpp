@@ -32,6 +32,11 @@ namespace core {
                     return;
                 }
                 
+                uint8_t hashBuf[8];
+                in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
+                uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
+                (void) hash;
+                
                 char c = 0;
                 while (in.good()) {
                     in.get(c);
@@ -158,6 +163,7 @@ namespace core {
             if (magicNumber != 0x4c433032) {
                 if (in.good()) {
                     // Stream is good but still no magic number?
+                    cout << magicNumber << endl;
                     clog << "Stream corrupt: magic number not found." << endl;
                 }
                 return;
@@ -184,13 +190,13 @@ namespace core {
             uint32_t containerDataType = 0;
             ss >> containerDataType;
             container.setDataType(static_cast<core::data::Container::DATATYPE>(containerDataType));
-            
+            /*
             // Decoding Hash
             uint8_t hashBuf[8];
             in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
             uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
             container.setHash(hash);
-            
+            */
             /* We are not using the hash for now
             if (hash != 0x0e65ec258fc2e665LL) {
                 return;

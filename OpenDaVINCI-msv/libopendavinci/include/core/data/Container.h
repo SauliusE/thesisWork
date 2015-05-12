@@ -109,8 +109,8 @@ namespace core {
                  */
                 DATATYPE getDataType() const;
                 void setDataType(const DATATYPE &dataType);	
-                uint64_t getHash() const;
-                void setHash(const uint64_t &hash);
+                int64_t getHash() const;
+                void setHash(const int64_t &hash);
                 
                 void setMessageSize(uint32_t &size);
                 uint32_t getMessageSize();

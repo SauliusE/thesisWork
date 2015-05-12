@@ -36,9 +36,13 @@ namespace core {
                 m_message_size(){
                     
             SerializationFactory sf;
-            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
+            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
             
+            lcm.setFirst(true);
             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+            setHash(lcm.getHash());
+            
+            
            // m_payloadHash = lcm.getHash();
          //   m_message_size = lcm.getMessageSize();
         }
@@ -92,11 +96,11 @@ namespace core {
             m_dataType = dataType;
         }
         
-        uint64_t Container::getHash() const {
+        int64_t Container::getHash() const {
             return m_payloadHash;
         }
         
-        void Container::setHash(const uint64_t &hash) {
+        void Container::setHash(const int64_t &hash) {
             m_payloadHash = hash;
         }
 

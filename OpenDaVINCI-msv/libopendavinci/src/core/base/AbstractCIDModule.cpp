@@ -75,8 +75,8 @@ namespace core {
                                                   "The conference group id has to be in range [2, 254].");
                 }
                 
-                m_mulitcastGroup = "225.0.0." + cmdArgumentCID.getValue<string>();
-                //m_mulitcastGroup = "239.255.76." + cmdArgumentCID.getValue<string>(); // LCM Address. --cid=67
+                //m_mulitcastGroup = "225.0.0." + cmdArgumentCID.getValue<string>();
+                m_mulitcastGroup = "239.255.76." + cmdArgumentCID.getValue<string>(); // LCM Address. --cid=67
             } else {
                 errno = 0;
                 OPENDAVINCI_CORE_THROW_EXCEPTION(InvalidArgumentException,

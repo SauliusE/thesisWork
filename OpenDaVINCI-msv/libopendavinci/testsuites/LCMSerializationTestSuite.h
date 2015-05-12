@@ -105,9 +105,6 @@ class SerializationTestSampleData : public Serializable {
 
             LCMDeserializer &d = sf.getLCMDeserializer(in);
             
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'h', 'a', 's', 'h') >::RESULT,
-                   m_hash);
-            
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                    m_bool);
             
@@ -120,7 +117,7 @@ class SerializationTestSampleData : public Serializable {
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL7('m', '_', 'f', 'l', 'o', 'a', 't') >::RESULT,
                    m_float);
             
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'd', 'o', 's', 't', 'e', 'd') >::RESULT,
                    m_double);
 
             return in;
@@ -149,8 +146,7 @@ class SerializationTest : public CxxTest::TestSuite {
             SerializationTestSampleData sd2;
             inout >> sd2;
             
-            cout << "m_hash Is: " << sd2.m_hash << ", Should: " << "dunno" << endl;
-            cout << "m_bool Is: " << sd2.m_bool << ", Should: " << false << endl;
+            cout << "m_bool Is: " << sd2.m_bool << ", Should: " << true << endl;
             TS_ASSERT(sd2.m_bool);
             cout << "m_int Is: " << sd2.m_int << ", Should: " << 42 << endl;
             TS_ASSERT(sd2.m_int == 42);
@@ -206,9 +202,9 @@ class SerializationTest : public CxxTest::TestSuite {
               cout << vc2.toString()<<endl;
 //               inout >> c2;
               TS_ASSERT(vc2.getBrakeLights());
-              cout << " brake lights are : " << vc2.getBrakeLights() << " Should " << vc.getBrakeLights()<<endl;
+              cout << "brake lights are: " << vc2.getBrakeLights() << " Should: " << vc.getBrakeLights()<<endl;
               TS_ASSERT_DELTA(vc2.getSpeed(),2.0,1e-5);
-              cout << "speed is : " << vc2.getSpeed() << " Should : " << vc.getSpeed() << endl;
+              cout << "speed is: " << vc2.getSpeed() << " Should: " << vc.getSpeed() << endl;
 //             // Read from the previously created data sink.
 //             SerializationTestSampleData sd2 = c2.getData<SerializationTestSampleData>();
 // //             inout >> sd2;

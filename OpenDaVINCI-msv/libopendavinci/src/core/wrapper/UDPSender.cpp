@@ -8,8 +8,8 @@
 
 namespace core {
     namespace wrapper {
-
+        
         UDPSender::~UDPSender() {}
-
+        
     }
 } // core::wrapper

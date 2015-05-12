@@ -9,9 +9,8 @@
 #define OPENDAVINCI_CORE_BASE_ROSSERIALIZER_H_
 
 #include "core/platform.h"
-
-#include "core/base/Serializer.h"
 #include "core/data/Container.h"
+#include "core/base/Serializer.h"
 
 namespace core{
     namespace base{

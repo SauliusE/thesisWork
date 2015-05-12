@@ -25,9 +25,9 @@ namespace core {
                 m_listOfLCMSerializers(),
                 m_listOfLCMDeserializers(),
                 m_listOfPROTOSerializers(),
-                m_listOfPROTODeserializers(),
-                m_listOfROSSerializers(),
-                m_listOfROSDeserializers()
+                m_listOfPROTODeserializers()
+                //m_listOfROSSerializers(),
+                //m_listOfROSDeserializers()
                 {}
 
         SerializationFactory::~SerializationFactory() {
@@ -35,18 +35,18 @@ namespace core {
             m_listOfDeserializers.clear();
             m_listOfLCMSerializers.clear();
             m_listOfLCMDeserializers.clear();
-            m_listOfROSSerializers.clear();
-            m_listOfROSDeserializers.clear();
+            //m_listOfROSSerializers.clear();
+            //m_listOfROSDeserializers.clear();
 
         }
-
+        
         Serializer& SerializationFactory::getSerializer(ostream &out) const {
             Serializer *s = NULL;
             //Serializer *temp = NULL;
             if (m_listOfSerializers.empty()) {
-                s = new QueryableNetstringsSerializer(out);
-              //  s = new PROTOSerializer(out);
-         //     s = new LCMSerializer(out);
+                //s = new QueryableNetstringsSerializer(out);
+                //s = new PROTOSerializer(out);
+                s = new LCMSerializer(out);
                 m_listOfSerializers.push_back(SharedPointer<Serializer>(s));
             }
             else {
@@ -54,32 +54,46 @@ namespace core {
             }
             return *s;
         }
-
+        
+        Deserializer& SerializationFactory::getDeserializer(istream &in) const {
+            Deserializer *d = NULL;
+            if (m_listOfDeserializers.empty()) {
+                //d = new QueryableNetstringsDeserializer(in);
+                //d = new  PROTODeserializer(in);
+                d = new LCMDeserializer(in);
+                    m_listOfDeserializers.push_back(SharedPointer<Deserializer>(d)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
+            }
+            else {
+                d = &(*(*(m_listOfDeserializers.begin())));
+            }
+            return *d;
+        }
+        
         //Thesis implementation
         LCMSerializer& SerializationFactory::getLCMSerializer(ostream &out) const {
-                LCMSerializer *lcms = NULL;
-                if (m_listOfLCMSerializers.empty()){
-                        lcms = new LCMSerializer(out);
-                        m_listOfLCMSerializers.push_back(SharedPointer<LCMSerializer>(lcms));
-                }
-                else {
-                    lcms = &(*(*(m_listOfLCMSerializers.begin()))); // The innermost * dereferences the iterator to SharedPointer<Serializer>, the second * returns the Serializer from within the SharedPointer, and the & turns it into a regular pointer.
-                }
-                return *lcms;
+            LCMSerializer *lcms = NULL;
+            if (m_listOfLCMSerializers.empty()){
+                    lcms = new LCMSerializer(out);
+                    m_listOfLCMSerializers.push_back(SharedPointer<LCMSerializer>(lcms));
+            }
+            else {
+                lcms = &(*(*(m_listOfLCMSerializers.begin()))); // The innermost * dereferences the iterator to SharedPointer<Serializer>, the second * returns the Serializer from within the SharedPointer, and the & turns it into a regular pointer.
+            }
+            return *lcms;
         }
 
 
         LCMDeserializer& SerializationFactory::getLCMDeserializer(istream &in) const {
-                        LCMDeserializer *lcmd = NULL;
-                        if (m_listOfLCMDeserializers.empty()) {
-                                lcmd = new LCMDeserializer(in);
-                                m_listOfLCMDeserializers.push_back(SharedPointer<LCMDeserializer>(lcmd)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
-                        }
-                        else {
-                                lcmd = &(*(*(m_listOfLCMDeserializers.begin())));
-                        }
-                        return *lcmd;
-                }
+            LCMDeserializer *lcmd = NULL;
+            if (m_listOfLCMDeserializers.empty()) {
+                    lcmd = new LCMDeserializer(in);
+                    m_listOfLCMDeserializers.push_back(SharedPointer<LCMDeserializer>(lcmd)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
+            }
+            else {
+                    lcmd = &(*(*(m_listOfLCMDeserializers.begin())));
+            }
+            return *lcmd;
+        }
 
                 
                 
@@ -109,7 +123,7 @@ namespace core {
         }
         
         
-        
+        /*
                 ROSSerializer& SerializationFactory::getROSSerializer(ostream &out) const {
             ROSSerializer *lcms = NULL;
             if (m_listOfROSSerializers.empty()){
@@ -135,20 +149,8 @@ namespace core {
             return *lcmd;
         }
         //End of thesis implementation
-
-        Deserializer& SerializationFactory::getDeserializer(istream &in) const {
-            Deserializer *d = NULL;
-            if (m_listOfDeserializers.empty()) {
-              d = new QueryableNetstringsDeserializer(in);
-              //d = new  PROTODeserializer(in);
-            //  d = new LCMDeserializer(in);
-                    m_listOfDeserializers.push_back(SharedPointer<Deserializer>(d)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.
-            }
-            else {
-                d = &(*(*(m_listOfDeserializers.begin())));
-            }
-            return *d;
-        }
+        */
+        
 
     }
 } // core::base

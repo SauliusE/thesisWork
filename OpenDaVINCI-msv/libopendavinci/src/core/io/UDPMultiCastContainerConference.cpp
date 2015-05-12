@@ -25,7 +25,6 @@ namespace core {
                 m_sender(NULL),
                 m_receiver(NULL) {
             try {
-                cout << "THE PORT: " << port << endl;
                 m_sender = wrapper::UDPFactory::createUDPSender(address, port);
             } catch (string &s) {
                 OPENDAVINCI_CORE_THROW_EXCEPTION(ConferenceException, s);
@@ -63,7 +62,7 @@ namespace core {
                 Container container;
                 //cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
-                ROSDeserializer &lcm = sf.getROSDeserializer(stringstreamData);
+                LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
                 lcm.read(stringstreamData, container); //double stringstreamData variable
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
@@ -82,7 +81,7 @@ namespace core {
             stringstream stringstreamValue;
 
         	SerializationFactory sf;
-        	ROSSerializer &lcm = sf.getROSSerializer(stringstreamValue);
+        	LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
             container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
             lcm.write(container);

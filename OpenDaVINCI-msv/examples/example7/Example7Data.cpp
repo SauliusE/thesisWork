@@ -87,21 +87,21 @@ namespace examples {
 	ostream& Example7Data::operator<<(ostream &out) const {
         SerializationFactory sf;
 
-       // LCMSerializer &s = sf.getLCMSerializer(out);
-/*
-        s.write("m_numericalValue", m_numericalValue);
-        s.write("m_stringValue", m_stringValue);
-        s.write("m_bool", m_bool);
-        s.write("m_float", m_float);
-        s.write("m_double", m_double);
-   */     
+        LCMSerializer &s = sf.getLCMSerializer(out);
+
+        s.write(0, m_numericalValue);
+        s.write(0, m_stringValue);
+        s.write(0, m_bool);
+        s.write(0, m_float);
+        s.write(0, m_double);
+   /*     
         ROSSerializer &s = sf.getROSSerializer(out);
         s.write(1, m_numericalValue);
         s.write(2,m_stringValue);
         s.write(3,m_bool);
         s.write(4, m_float);
         s.write(5, m_double);
-
+*/
         //int64_t hash = s.getHash();
         //printf("HASH17: %016"PRIx64"\n", hash);
 
@@ -111,8 +111,8 @@ namespace examples {
 	istream& Example7Data::operator>>(istream &in) {
 		SerializationFactory sf;
 	//	LCMDeserializer &d = sf.getLCMDeserializer(in);
-                ROSDeserializer &d = sf.getROSDeserializer(in);
-    
+                LCMDeserializer &d = sf.getLCMDeserializer(in);
+        cout << endl;
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
 			   m_numericalValue);
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s', 't', 'r') >::RESULT,

@@ -78,7 +78,7 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include PAT
 ###############################################################################
 # Enable CxxTest for all available testsuites.
 IF(CXXTEST_FOUND)
-	FILE(GLOB libopendavinci-testsuites "${CMAKE_CURRENT_SOURCE_DIR}/testsuites/LCMSerializationTestSuite.h")
+	FILE(GLOB libopendavinci-testsuites "${CMAKE_CURRENT_SOURCE_DIR}/testsuites/*.h")
 
    FOREACH(testsuite ${libopendavinci-testsuites})
        STRING(REPLACE "/" ";" testsuite-list ${testsuite})
