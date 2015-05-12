@@ -14,6 +14,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <boost/concept_check.hpp>
 
 #include "core/base/Hash.h"
 #include "core/base/Serializable.h"
@@ -119,16 +120,16 @@ class SerializationTestSampleData : public core::base::Serializable {
 class SerializationTest : public CxxTest::TestSuite {
     public:
         void testSerializationNested() {
-            cout << " testing nested data " << endl; 
+            std::cout << " testing nested data " << endl; 
            SerializationTestSampleData sd;
            sd.m_bool = true;
            sd.m_int = 42;
-//            sd.m_nestedData.m_double = -42.42;
+           sd.m_nestedData.m_double = -42.42;
            sd.m_string = "This is an example.";
            
             stringstream inout;
             inout << sd;
-          //  inout.flush();
+            inout.flush();
 
             // Read from the previously created data sink.
             SerializationTestSampleData sd2;
@@ -137,18 +138,18 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT(sd2.m_bool);
             TS_ASSERT(sd2.m_int == 42);
             TS_ASSERT(sd2.m_string == "This is an example.");
-//             TS_ASSERT_DELTA(sd2.m_nestedData.m_double, -42.42, 1e-5);
+            TS_ASSERT_DELTA(sd2.m_nestedData.m_double, -42.42, 1e-5);
             cout << sd2.m_bool <<endl;
             cout << sd2.m_string<<endl;;
             cout << sd2.m_int<<endl;;
-//             cout << sd2.m_nestedData.m_double<<endl;;
+            cout << sd2.m_nestedData.m_double<<endl;;
             cout << " end testing nested data " << endl; 
 
            
         }
         
           void testSerializationContainer() {
-              cout << " Test serializing  container " << endl;
+            cout << " Test serializing  container " << endl;
             // Create some data.
         
               
@@ -178,12 +179,12 @@ class SerializationTest : public CxxTest::TestSuite {
             VehicleControl vc2 = c2.getData<VehicleControl>();
             cout << vc2.toString()<<endl;
 
-              TS_ASSERT(vc.toString() == vc2.toString());
+            TS_ASSERT(vc.toString() == vc2.toString());
 
-                cout << " end test of container " << endl;
+            cout << " end test of container " << endl;
         }
         
-          void testPayload() {
+          void testSerializationPayload() {
             cout << " Test payload " << endl;
             
             VehicleControl vc;
@@ -209,34 +210,63 @@ class SerializationTest : public CxxTest::TestSuite {
             cout << " end  Test payload " << endl;
        }
         
-        void xtestArraySerialisation() {
-            /*
-            stringstream stream;
-            uint32_t array[10];
-            for (uint32_t i=0; i<10; ++i) {
-                array[i] = i;
-            }
-
-            SerializationFactory sf;
-            LCMSerializer& s = sf.getLCMSerializer(stream);
-            s.write(550, &array, 10);
-            
-            stream.clear();
-            stream.seekg(0, ios_base::beg);
-            
-            LCMDeserializer& d = sf.getLCMDeserializer(stream);
-            //int64_t hash;
-            //d.read(0, hash);
-            uint32_t deserializedArray[10];
-            d.read(1, &deserializedArray, 10);
-
-            for (uint32_t i=0; i<10; ++i) {
-                TS_WARN(deserializedArray[i] == i);
-                cout << "Is: " << deserializedArray[i] << ", Should: " << i << endl;
-            }
-            */
+        void xtestProtoSerialisation() {
+          cout << " Proto serialisation test " << endl;
+          
+          stringstream rawData = "holder for raw data from the proto framework";
+             
+           VehicleControl vc;
+           vc.setSpeed(2.0);
+           vc.setAcceleration(1.6);
+           vc.setSteeringWheelAngle(32);
+           vc.setBrakeLights(true);
+           vc.setLeftFlashingLights(false);
+           vc.setRightFlashingLights(true);
+           
+           stringstream inout;
+          
+           Container c(Container::VEHICLECONTROL,vc);
+           
+           SerializationFactory sf;
+           PROTOSerializer &protos = sf.getPROTOSerializer(inout);
+           
+           protos.write(c);
+           
+           TS_ASSERT(rawData.str() == inout.str());
+          
+           cout << " End of the proto serialisation test " << endl;
+        
         }
         
+        void xtestProtoDeserialisation() {
+            
+           cout << " Proto Deserialisation test " << endl;
+           stringstream rawData = "holder for raw data from the proto framework";
+             
+           VehicleControl vc;
+           vc.setSpeed(2.0);
+           vc.setAcceleration(1.6);
+           vc.setSteeringWheelAngle(32);
+           vc.setBrakeLights(true);
+           vc.setLeftFlashingLights(false);
+           vc.setRightFlashingLights(true);
+           
+           cout << vc.toString() << endl;
+           
+           SerializationFactory sf;
+           PROTODeserializer &protod = sf.getPROTODeserializer(rawData);
+           Container c;
+           protod(rawData,c);
+           
+           VehicleControl vc2 = c.getData<VehicleControl>();
+           cout << vc2.toString()<<endl;
+
+           TS_ASSERT(vc.toString() == vc2.toString());
+          
+           cout << " End of proto Deserialisation test" <<endl;
+        }
+        
+        void xtestContainerNestedDataSerialisation() {}
 };
 
 #endif /*CORE_PROTOSERIALIZATIONTESTSUITE_H_*/
