@@ -25,12 +25,13 @@
 #include "core/base/Thread.h"
 #include "core/data/Container.h"
 #include "core/data/TimeStamp.h"
-
+#include "core/data/control/VehicleControl.h"
 using namespace std;
 using namespace core::base;
 using namespace core::data;
+using namespace core::data::control;
 
-class SerializationTestNestedData : public core::base::Serializable {
+class SerializationTestNestedData : public Serializable {
     public:
         SerializationTestNestedData() :
                 m_double(0) {}
@@ -56,8 +57,14 @@ class SerializationTestNestedData : public core::base::Serializable {
         }
 };
 
-class SerializationTestSampleData : public core::base::Serializable {
+class SerializationTestSampleData : public Serializable {
     public:
+         int64_t m_hash;
+        bool m_bool;
+        int32_t m_int;
+        string m_string;
+        float m_float;
+        double m_double;
         SerializationTestSampleData() :
                 m_hash(),
                 m_bool(false),
@@ -73,13 +80,8 @@ class SerializationTestSampleData : public core::base::Serializable {
                 m_float(o.m_float),
                 m_double(o.m_double)
                 { }
-        int64_t m_hash;
-        bool m_bool;
-        int32_t m_int;
-        string m_string;
-        float m_float;
-        double m_double;
-
+       
+     
         ostream& operator<<(ostream &out) const {
             SerializationFactory sf;
 
@@ -161,16 +163,31 @@ class SerializationTest : public CxxTest::TestSuite {
         }
         
           void testDeserialization() {
+              cout << "Testing Container " << endl;
             // Create some data.
-            SerializationTestSampleData sd;
-            sd.m_bool = true;
-            sd.m_int = 42;
-            sd.m_string = "This is an example.";
-            sd.m_float = -321.456;
-            sd.m_double = -42.42;
+//             SerializationTestSampleData sd;
+//             sd.m_bool = true;
+//             sd.m_int = 42;
+//             sd.m_string = "This is an example.";
+//             sd.m_float = -321.456;
+//             sd.m_double = -42.42;
 //             TimeStamp ts;
-            Container c(Container::USER_DATA_9,sd);
-
+              
+              VehicleControl vc;
+              vc.setSpeed(2.0);
+              vc.setAcceleration(5.0);
+              vc.setSteeringWheelAngle(23.0);
+              vc.setBrakeLights(true);
+            cout << vc.toString() <<endl;
+              
+            Container c(Container::VEHICLECONTROL,vc);
+            
+            stringstream inout2;
+            inout2 << vc;
+            
+            VehicleControl vc3 ;
+            inout2 >> vc3;
+            cout << vc3.toString()<<endl;
             // Create a data sink.
        
            
@@ -185,22 +202,51 @@ class SerializationTest : public CxxTest::TestSuite {
               LCMDeserializer &lcmd = sf.getLCMDeserializer(inout);
               lcmd.read(inout, c2);
             
-            // Read from the previously created data sink.
-            SerializationTestSampleData sd2 = c2.getData<SerializationTestSampleData>();
-//             inout >> sd2;
-            
-            cout << "m_hash Is: " << sd2.m_hash << ", Should: " << "dunno" << endl;
-            cout << "m_bool Is: " << sd2.m_bool << ", Should: " << false << endl;
-            TS_ASSERT(sd2.m_bool);
-            cout << "m_int Is: " << sd2.m_int << ", Should: " << 42 << endl;
-            TS_ASSERT(sd2.m_int == 42);
-            cout << "m_string Is: " << sd2.m_string << ", Should: " << "This is an example." << endl;
-            TS_ASSERT(sd2.m_string == "This is an example.");
-            cout << "m_float Is: " << sd2.m_float << ", Should: " << -321.456 << endl;
-            TS_ASSERT_DELTA(sd2.m_float, -321.456, 1e-5);
-            cout << "m_double Is: " << sd2.m_double << ", Should: " << -42.42 << endl;
-            TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
+              VehicleControl vc2 = c2.getData<VehicleControl>();
+              cout << vc2.toString()<<endl;
+//               inout >> c2;
+              TS_ASSERT(vc2.getBrakeLights());
+              cout << " brake lights are : " << vc2.getBrakeLights() << " Should " << vc.getBrakeLights()<<endl;
+              TS_ASSERT_DELTA(vc2.getSpeed(),2.0,1e-5);
+              cout << "speed is : " << vc2.getSpeed() << " Should : " << vc.getSpeed() << endl;
+//             // Read from the previously created data sink.
+//             SerializationTestSampleData sd2 = c2.getData<SerializationTestSampleData>();
+// //             inout >> sd2;
+//             
+//             cout << "m_hash Is: " << sd2.m_hash << ", Should: " << "dunno" << endl;
+//             cout << "m_bool Is: " << sd2.m_bool << ", Should: " << false << endl;
+//             TS_ASSERT(sd2.m_bool);
+//             cout << "m_int Is: " << sd2.m_int << ", Should: " << 42 << endl;
+//             TS_ASSERT(sd2.m_int == 42);
+//             cout << "m_string Is: " << sd2.m_string << ", Should: " << "This is an example." << endl;
+//             TS_ASSERT(sd2.m_string == "This is an example.");
+//             cout << "m_float Is: " << sd2.m_float << ", Should: " << -321.456 << endl;
+//             TS_ASSERT_DELTA(sd2.m_float, -321.456, 1e-5);
+//             cout << "m_double Is: " << sd2.m_double << ", Should: " << -42.42 << endl;
+//             TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
         }
+        
+          void testPayload() {
+              cout << " Test payload " << endl;
+              VehicleControl vc;
+              vc.setSpeed(2.0);
+              vc.setAcceleration(5.0);
+              vc.setSteeringWheelAngle(23.0);
+              vc.setBrakeLights(true);
+            cout << vc.toString() <<endl;
+              
+            
+            stringstream inout2;
+            inout2 << vc;
+            
+            VehicleControl vc3 ;
+            inout2 >> vc3;
+            cout << vc3.toString()<<endl;
+            // Create a data sink.
+            TS_ASSERT(vc.toString() == vc3.toString());
+             cout << " end  Test payload " << endl;
+       }
+        
         void xtestArraySerialisation() {
             /*
             stringstream stream;
