@@ -28,6 +28,7 @@ namespace core {
             // - > size of message
             // - > payload
             // Writing size of message
+            m_out << m_size;
             m_out << m_buffer.str();
        
         } // end of ~constructor

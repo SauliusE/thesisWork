@@ -106,9 +106,6 @@ class SerializationTestSampleData : public Serializable {
 
             PROTODeserializer &d = sf.getPROTODeserializer(in);
             
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'h', 'a', 's', 'h') >::RESULT,
-                   m_hash);
-            
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                    m_bool);
             
@@ -131,7 +128,7 @@ class SerializationTestSampleData : public Serializable {
 
 class SerializationTest : public CxxTest::TestSuite {
     public:
-        void testSerializationPayload() {
+        void xtestSerializationPayload() {
             // Data to be serialized
             VehicleControl vc;
             vc.setSpeed(2.0);
@@ -160,76 +157,52 @@ class SerializationTest : public CxxTest::TestSuite {
         }
         
           void testSerializationContainer() {
-              cout << "Testing Container " << endl;
+              cout << " Test serializing  container " << endl;
             // Create some data.
-//             SerializationTestSampleData sd;
-//             sd.m_bool = true;
-//             sd.m_int = 42;
-//             sd.m_string = "This is an example.";
-//             sd.m_float = -321.456;
-//             sd.m_double = -42.42;
-//             TimeStamp ts;
+        
               
-              VehicleControl vc;
-              vc.setSpeed(2.0);
-              vc.setAcceleration(5.0);
-              vc.setSteeringWheelAngle(23.0);
-              vc.setBrakeLights(true);
+            VehicleControl vc;
+            vc.setSpeed(2.0);
+            vc.setAcceleration(1.6);
+            vc.setSteeringWheelAngle(32);
+            vc.setBrakeLights(true);
+            vc.setLeftFlashingLights(false);
+            vc.setRightFlashingLights(true);
             cout << vc.toString() <<endl;
               
             Container c(Container::VEHICLECONTROL,vc);
-            
-            stringstream inout2;
-            inout2 << vc;
-            
-            VehicleControl vc3 ;
-            inout2 >> vc3;
-            cout << vc3.toString()<<endl;
-            // Create a data sink.
-       
-           
+          
+
             stringstream inout;
 
-                SerializationFactory sf;
-                LCMSerializer &lcm = sf.getLCMSerializer(inout);
-            lcm.write(c);
-             inout.flush();
+            SerializationFactory sf;
+            PROTOSerializer &protos = sf.getPROTOSerializer(inout);
+            protos.write(c);
+            inout.flush();
             
-              Container c2;
-              LCMDeserializer &lcmd = sf.getLCMDeserializer(inout);
-              lcmd.read(inout, c2);
-            
-              VehicleControl vc2 = c2.getData<VehicleControl>();
-              cout << vc2.toString()<<endl;
-//               inout >> c2;
-              TS_ASSERT(vc2.getBrakeLights());
-              cout << " brake lights are : " << vc2.getBrakeLights() << " Should " << vc.getBrakeLights()<<endl;
-              TS_ASSERT_DELTA(vc2.getSpeed(),2.0,1e-5);
-              cout << "speed is : " << vc2.getSpeed() << " Should : " << vc.getSpeed() << endl;
-//             // Read from the previously created data sink.
-//             SerializationTestSampleData sd2 = c2.getData<SerializationTestSampleData>();
-// //             inout >> sd2;
-//             
-//             cout << "m_hash Is: " << sd2.m_hash << ", Should: " << "dunno" << endl;
-//             cout << "m_bool Is: " << sd2.m_bool << ", Should: " << false << endl;
-//             TS_ASSERT(sd2.m_bool);
-//             cout << "m_int Is: " << sd2.m_int << ", Should: " << 42 << endl;
-//             TS_ASSERT(sd2.m_int == 42);
-//             cout << "m_string Is: " << sd2.m_string << ", Should: " << "This is an example." << endl;
-//             TS_ASSERT(sd2.m_string == "This is an example.");
-//             cout << "m_float Is: " << sd2.m_float << ", Should: " << -321.456 << endl;
-//             TS_ASSERT_DELTA(sd2.m_float, -321.456, 1e-5);
-//             cout << "m_double Is: " << sd2.m_double << ", Should: " << -42.42 << endl;
-//             TS_ASSERT_DELTA(sd2.m_double, -42.42, 1e-5);
+            Container c2;
+            PROTODeserializer &protod = sf.getPROTODeserializer(inout);
+            protod.read(inout, c2);
+
+            VehicleControl vc2 = c2.getData<VehicleControl>();
+            cout << vc2.toString()<<endl;
+
+              TS_ASSERT(vc.toString() == vc2.toString());
+
+                cout << " end test of container " << endl;
         }
         
           void testPayload() {
-              cout << " Test payload " << endl;
-              VehicleControl vc;
-              vc.setSpeed(2.0);
-              vc.setAcceleration(5.0);
-              vc.setSteeringWheelAngle(23.0);
-              vc.setBrakeLights(true);
+            cout << " Test payload " << endl;
+            
+            VehicleControl vc;
+            vc.setSpeed(2.0);
+            vc.setAcceleration(1.6);
+            vc.setSteeringWheelAngle(32);
+            vc.setBrakeLights(true);
+            vc.setLeftFlashingLights(false);
+            vc.setRightFlashingLights(true);
+            
             cout << vc.toString() <<endl;
               
             
@@ -239,9 +212,10 @@ class SerializationTest : public CxxTest::TestSuite {
             VehicleControl vc3 ;
             inout2 >> vc3;
             cout << vc3.toString()<<endl;
-            // Create a data sink.
-            TS_ASSERT(vc.toString() == vc3.toString());
-             cout << " end  Test payload " << endl;
+
+             TS_ASSERT(vc.toString() == vc3.toString());
+
+            cout << " end  Test payload " << endl;
        }
         
         void xtestArraySerialisation() {
