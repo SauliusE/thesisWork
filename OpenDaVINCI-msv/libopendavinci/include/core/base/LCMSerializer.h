@@ -52,6 +52,14 @@ namespace core{
             public:
                 virtual ~LCMSerializer();
                 
+                int64_t getHash();
+                
+                void setHash(int64_t hash);
+                
+                bool getFirst();
+                
+                void setFirst(bool f);
+                
                 /*
                  * The write functions below are called to encode and write variables to a stringstream buffer.
                  * The variables will be written to the buffer in the order the write functions are called.
@@ -95,6 +103,8 @@ namespace core{
                 ostream &m_out; // Buffer that will be sent
                 stringstream m_buffer; // Buffer where all encoded variables will be stored to later be written to m_out
                 int64_t m_hash; // The variable where the hash will be stored
+                int64_t m_hashn; // This is where hash from nested data is stored.
+                bool m_first; // Boolean to know if the Serializer was created from Container. If it was, it will write the hash along with the payload.
         };
         // Functions taken from LCM for calculating hash
         int64_t calculate_hash(int64_t v, char c);
