@@ -20,11 +20,20 @@ namespace core {
         LCMSerializer::LCMSerializer(ostream& out) :
             m_out(out),
             m_buffer(),
-            m_hash(0x12345678) {}
+            m_hash(0x12345678),
+            m_hashn(0),
+            m_first(false) {}
         
         LCMSerializer::~LCMSerializer() {
-            // Calculates and writes the hash number and the payload to the ostream which will then get written to the container stream
-            if (m_hash != 0x12345678) {
+            /* 
+             * Calculates and writes the hash number and the payload to the ostream which will then get written to the container stream.
+             * If this is the Serializer from the container (m_first is true), the hash will be serialized and written along with the payload.
+             * Otherwise, if it is not the serializer where the write(container) function is called, the hash will be written along with the payload without serialization.
+             * This is to be able to get the hash from the serializer that is created in "buffer << s" in write(Serializable).
+             */
+            /*
+            if (m_first) {
+                //m_hash = 0xf90d295ef96ee460;
                 m_hash = (m_hash<<1) + ((m_hash>>63)&1);
                 
                 uint8_t hashbuf[8];
@@ -36,13 +45,46 @@ namespace core {
                 hashbuf[5] = (m_hash>>16)&0xff;
                 hashbuf[6] = (m_hash>>8)&0xff;
                 hashbuf[7] = (m_hash & 0xff);
-                m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const int64_t));   
+                m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
+            } else if (m_hash != 0x12345678) {
+                int64_t hash = m_hash + m_hashn;
+                m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             }
+            */
+            
+            int64_t hash;
+            if (m_hash != 0x12345678) {
+                if (m_first) {
+                    hash = m_hash;
+                } else {
+                    hash = (m_hash<<1) + ((m_hash>>63)&1) + (m_hashn<<1) + ((m_hashn>>63)&1);
+                    m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
+                }
+            } else {
+                hash = (m_hashn<<1) + ((m_hashn>>63)&1);
+                m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
+            }
+            
             
             m_out << m_buffer.str();
         }
-
-        // Set and get method for hash
+        
+        // Set and get methods
+        int64_t LCMSerializer::getHash() {
+            return m_hash;
+        }
+        
+        void LCMSerializer::setHash(int64_t hash) {
+            m_hash = hash;
+        }
+        
+        bool LCMSerializer::getFirst() {
+            return m_first;
+        }
+        
+        void LCMSerializer::setFirst(bool f) {
+            m_first = f;
+        }
         
         /*
          * The write functions below are called to encode and write variables to a stringstream buffer.
@@ -56,12 +98,32 @@ namespace core {
          */
         
         
-        // This is for nested data, that is, data which is also part of "serializableData"
+        // This is for nested data, that is, data which has its own data fields.
         void LCMSerializer::write ( const uint32_t id, const Serializable& s ) {
             (void) id;
             stringstream buffer;
             buffer << s;
-            m_buffer << buffer.str();
+            buffer.clear();
+            buffer.seekg(0, ios_base::beg);
+            int64_t hash;
+            buffer.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
+            
+            // If this is not the serializer from the container, this is a serialization of nested data. The hash will be stored in a separate hash variable.
+            // This hash will then be added to the calculated hash of the other variables.
+            if (!m_first) {
+                m_hashn = hash;
+            } else {
+                //hash = (hash<<1) + ((hash>>63)&1);
+                m_hash = hash;
+            }
+            
+            char c = 0;
+            buffer.get(c);
+            while (buffer.good()) {
+                m_buffer.put(c);
+                buffer.get(c);
+            }
+            //m_buffer << buffer.str();
         }
         
         // Bool
@@ -339,7 +401,21 @@ namespace core {
             uint8_t zero = 0;
             m_out.write(reinterpret_cast<const char *>(&zero), sizeof(const uint8_t));
             
-            // Writing the hash and the payload
+            // Writing the hash
+            int64_t hash = container.getHash();
+            uint8_t hashbuf[8];
+            hashbuf[0] = (hash>>56)&0xff;
+            hashbuf[1] = (hash>>48)&0xff;
+            hashbuf[2] = (hash>>40)&0xff;
+            hashbuf[3] = (hash>>32)&0xff;
+            hashbuf[4] = (hash>>24)&0xff;
+            hashbuf[5] = (hash>>16)&0xff;
+            hashbuf[6] = (hash>>8)&0xff;
+            hashbuf[7] = (hash & 0xff);
+            m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
+            
+            
+            // Writing the payload
             m_out << container.getSerializedData();
         }
         
