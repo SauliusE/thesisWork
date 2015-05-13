@@ -68,7 +68,8 @@ class SerializationTestSampleData : public core::base::Serializable {
                 m_bool(false),
                 m_int(0),
                 m_string(""),
-                m_nestedData() {}
+                m_nestedData() 
+                {}
 
         bool m_bool;
         int32_t m_int;
@@ -99,18 +100,18 @@ class SerializationTestSampleData : public core::base::Serializable {
             SerializationFactory sf;
 
             Deserializer &d = sf.getDeserializer(in);
-
+     
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
+                   m_bool);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
                    m_nestedData);
-
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
+                   m_int);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
                    m_string);
 
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
-                   m_int);
-
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
-                   m_bool);
+// 
+            
 
             return in;
         }
@@ -120,7 +121,7 @@ class SerializationTestSampleData : public core::base::Serializable {
 class SerializationTest : public CxxTest::TestSuite {
     public:
         void testSerializationNested() {
-            std::cout << " testing nested data " << endl; 
+            std::cout << " --- testing nested data --- " << endl; 
            SerializationTestSampleData sd;
            sd.m_bool = true;
            sd.m_int = 42;
@@ -139,17 +140,17 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT(sd2.m_int == 42);
             TS_ASSERT(sd2.m_string == "This is an example.");
             TS_ASSERT_DELTA(sd2.m_nestedData.m_double, -42.42, 1e-5);
-            cout << sd2.m_bool <<endl;
-            cout << sd2.m_string<<endl;;
-            cout << sd2.m_int<<endl;;
-            cout << sd2.m_nestedData.m_double<<endl;;
-            cout << " end testing nested data " << endl; 
+            cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
+            cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
+            cout << "m_int : " << sd2.m_int << "expected : " << sd.m_int <<endl;
+            cout << "m_nestedData : " << sd2.m_nestedData.m_double<< " expected : " <<sd.m_nestedData.m_double <<endl;;
+            cout << " --- end testing nested data --- " << endl; 
 
            
         }
         
           void testSerializationContainer() {
-            cout << " Test serializing  container " << endl;
+            cout << " --- Test serializing  container --- " << endl;
             // Create some data.
         
               
@@ -181,11 +182,11 @@ class SerializationTest : public CxxTest::TestSuite {
 
             TS_ASSERT(vc.toString() == vc2.toString());
 
-            cout << " end test of container " << endl;
+            cout << " --- end test of container ---" << endl;
         }
         
           void testSerializationPayload() {
-            cout << " Test payload " << endl;
+            cout << " --- Test payload --- " << endl;
             
             VehicleControl vc;
             vc.setSpeed(2.0);
@@ -207,13 +208,13 @@ class SerializationTest : public CxxTest::TestSuite {
 
              TS_ASSERT(vc.toString() == vc3.toString());
 
-            cout << " end  Test payload " << endl;
+            cout << " --- end  Test payload --- " << endl;
        }
         
         void xtestProtoSerialisation() {
-          cout << " Proto serialisation test " << endl;
+          cout << " --- Proto serialisation test --- " << endl;
           
-          stringstream rawData = "holder for raw data from the proto framework";
+          stringstream rawData ;
              
            VehicleControl vc;
            vc.setSpeed(2.0);
@@ -234,14 +235,14 @@ class SerializationTest : public CxxTest::TestSuite {
            
            TS_ASSERT(rawData.str() == inout.str());
           
-           cout << " End of the proto serialisation test " << endl;
+           cout << " --- End of the proto serialisation test ---" << endl;
         
         }
         
         void xtestProtoDeserialisation() {
             
-           cout << " Proto Deserialisation test " << endl;
-           stringstream rawData = "holder for raw data from the proto framework";
+           cout << " --- Proto Deserialisation test ---" << endl;
+           stringstream rawData;
              
            VehicleControl vc;
            vc.setSpeed(2.0);
@@ -256,14 +257,14 @@ class SerializationTest : public CxxTest::TestSuite {
            SerializationFactory sf;
            PROTODeserializer &protod = sf.getPROTODeserializer(rawData);
            Container c;
-           protod(rawData,c);
+           protod.read(rawData,c);
            
            VehicleControl vc2 = c.getData<VehicleControl>();
            cout << vc2.toString()<<endl;
 
            TS_ASSERT(vc.toString() == vc2.toString());
           
-           cout << " End of proto Deserialisation test" <<endl;
+           cout << " --- End of proto Deserialisation test ---" <<endl;
         }
         
         void xtestContainerNestedDataSerialisation() {}

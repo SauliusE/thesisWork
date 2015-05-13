@@ -34,13 +34,14 @@ namespace core {
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)),
                 m_message_size(){
-                    
-            SerializationFactory sf;
-            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
-            
-            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
-           // m_payloadHash = lcm.getHash();
-         //   m_message_size = lcm.getMessageSize();
+                    m_serializedData << serializableData;
+//             SerializationFactory sf;
+//             PROTOSerializer &protos = sf.getPROTOSerializer(m_serializedData);
+//             
+//             protos.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+//            // m_payloadHash = lcm.getHash();
+//             m_message_size = protos.getMessageSize();
+//             cout << "message size " << m_message_size <<endl;
         }
 
         Container::Container(const Container &obj) :
@@ -49,7 +50,8 @@ namespace core {
                 m_dataType(obj.getDataType()),
                 m_payloadHash(),
                 m_sent(obj.m_sent),
-                m_received(obj.m_received) {
+                m_received(obj.m_received),
+                m_message_size(obj.m_message_size){
                     
             m_serializedData.str(obj.m_serializedData.str());
         }

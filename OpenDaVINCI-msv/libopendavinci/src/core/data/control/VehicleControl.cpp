@@ -112,22 +112,22 @@ namespace core {
 
                 Serializer &s = sf.getSerializer(out);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('s', 'p', 'e', 'e', 'd') >::RESULT,
+                s.write(1,
                         m_speed);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('a', 'c', 'c', 'e', 'l') >::RESULT,
+                s.write(2,
                         m_acceleration);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('s', 't', 'e', 'e', 'r') >::RESULT,
+                s.write(3,
                         m_steeringWheelAngle);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('b', 'r', 'l', 'i', 't') >::RESULT,
+                s.write(4,
                         m_brakeLights);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('l', 'e', 'f', 't') >::RESULT,
+                s.write(5,
                         m_flashingLightsLeft);
 
-                s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'i', 'g', 'h', 't') >::RESULT,
+                s.write(6,
                         m_flashingLightsRight);
 
                 return out;
@@ -137,10 +137,10 @@ namespace core {
                 SerializationFactory sf;
 
                 Deserializer &d = sf.getDeserializer(in);
-
+             
                 d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('s', 'p', 'e', 'e', 'd') >::RESULT,
                        m_speed);
-
+               
                 d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('a', 'c', 'c', 'e', 'l') >::RESULT,
                        m_acceleration);
 

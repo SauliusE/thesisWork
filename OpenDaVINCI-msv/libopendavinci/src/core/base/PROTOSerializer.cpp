@@ -28,8 +28,35 @@ namespace core {
             // - > size of message
             // - > payload
             // Writing size of message
-            m_out << m_size;
-            m_out << m_buffer.str();
+            
+            //if m_size != 0 so we wrote something 
+            // else it was write container
+            if(m_size !=0 ){
+//                 m_out.write(reinterpret_cast<const char *>(&m_size),sizeof(uint32_t));
+//                 cout << "encoding m_size : " << m_size <<endl;
+//                 uint64_t test = static_cast<uint64_t>(m_size);
+//                 cout << "test " << test << endl;
+//                 uint32_t encodesize = getVarSize(m_size);
+                
+//                 cout << " encode size " << encodesize << endl;
+                stringstream ss ;
+              encode(ss,m_size);
+//             cout << "decoding m_size " << endl;
+//             uint64_t value;
+            
+            
+//              m_buffer.clear();
+//             m_out.seekg(0,ios_base::beg);
+//            uint32_t decodesize = decodeVar(ss,value);
+//            cout << " decode size " << decodesize << endl;
+//            cout << " decode value " << value << endl;
+//             m_size = static_cast<uint32_t>(value);
+//             cout << " decoded value m_buffer " << m_size         << endl;
+                m_out << ss.str();
+                m_out << m_buffer.str();
+                 cout << " message size in proto serializer when m_size != 0" <<m_size<< endl;
+            }  
+             cout << " message size in proto serializer" <<m_size<< endl;
        
         } // end of ~constructor
 
@@ -38,21 +65,33 @@ namespace core {
             (void)id;
             stringstream buffer;
             buffer << s;
-            m_buffer << buffer.str();
+            uint64_t size = 0;
+            decodeVar(buffer,size);
+//             buffer.read(reinterpret_cast<char*>(&size),sizeof(uint32_t));
+            m_size += static_cast<uint32_t>(size);
+             cout << "serializable msg size " << size << " m_size : "<< size<< endl;
+           
+            char c = 0;
+            buffer.get(c);
+            if(buffer.good()){
+                m_buffer.put(c);
+                buffer.get(c);
+            }
+            
         }
     
     
         void PROTOSerializer::write ( const uint32_t id, const bool& b ) {
                 uint32_t sizeOFB = getVarSize(b);
                 m_size += sizeOFB;
-                
+                (void)id;
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
-                WIRE_TYPE wireType = getWireType ( protoType) ;
+                WIRE_TYPE wireType = getWireType( protoType) ;
                 
                 uint32_t key = getKey ( id, wireType );
                 m_size += getVarSize(key);
   
-                encode(m_buffer,key);
+                 encode(m_buffer,key);
                 encode(m_buffer, b );
         }
         
@@ -130,17 +169,19 @@ namespace core {
        }
 
         void PROTOSerializer::write ( const uint32_t id, const double& d ) {
-
                 double _d = d;
-              
+              (void)id;
                 m_size += 8;
                 PROTO_TYPE protoType = ( PROTO_TYPE )5;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
-               
+//                cout << "seri protoType " << protoType << " WIRE_TYPE "<< wireType <<endl;
                 uint32_t key = getKey ( id, wireType );
-                m_size += getVarSize(key);
-               
+//                 cout <<"message size "  << m_size<<endl;
+                m_size += static_cast<uint32_t>(getVarSize(key));
+//                 cout << " key size serializable ; " << static_cast<uint32_t>(getVarSize(key))<<endl; 
+//                cout << " key  serializer" << key<< endl;
                 encode(m_buffer,key);
+//                 cout << "double valuue "<< _d<<endl;
                 m_buffer.write(reinterpret_cast<const char *>(&_d), 8);
 
 
@@ -151,14 +192,17 @@ namespace core {
                 WIRE_TYPE wireType = getWireType ( protoType) ;
             
                 uint32_t key = getKey ( id, wireType );
+//               cout << " String key " << key << endl;
                 encode(m_buffer,key);
+                m_size += getVarSize(key);
               
                 uint32_t stringSize = 0;
-                stringSize = (s.size() + 1) ;
+                stringSize = s.length() ;
                 m_size += stringSize;
-              
+//                cout << " string size " << stringSize << endl;
                 encode( m_buffer,stringSize );
-                m_buffer.write ( s.c_str(), stringSize );  
+//                  cout << " string " << s.c_str() <<endl;
+                m_buffer.write ( reinterpret_cast<const char *>(s.c_str()), stringSize );  
 
 
         }
@@ -171,13 +215,33 @@ namespace core {
     void PROTOSerializer::write (core::data::Container &container){
    
                 uint16_t magicNumber = 0xAABB;
-                uint16_t dataType = container.getDataType();  
+//                 cout << " magic number " <<magicNumber<<endl;
+                uint32_t dataType = container.getDataType(); 
+//                 cout << " data type " << dataType << endl;
                 encode(m_out, magicNumber);
                 encode(m_out, dataType); 
             
-                uint32_t msgSize = container.getMessageSize();
-                m_out << msgSize;
-                m_out << container.getSerializedData();
+//                 uint32_t msgSize;
+//                 stringstream ss;
+//                 ss<< container.getSerializedData();
+//                 ss.read(reinterpret_cast<char *>(&msgSize),sizeof(uint32_t));
+//                 uint64_t value = 0;
+//                 decodeVar(ss,value);
+//                 msgSize = static_cast<uint32_t>
+//                 cout << "encoding msg size " <<  msgSize <<endl;
+//                 encode(m_out,msgSize);
+//                 char c = 0;
+//                 ss.get(c);
+//                 int cs = 0;
+//                 while(ss.good()){
+//                     m_out.put(c);
+//                     ss.get(c);
+//                     cs++;
+//                 }
+//                 cout <<"lol"<< cs<<endl;
+           m_out << container.getSerializedData();
+                m_size = 0;
+//                 cout << " END OF WRITING CONTAINER " <<endl;
 //                 Serializing container
 //                 -- write Message size -- uint32_t
 //                 -- write Payload
@@ -227,6 +291,29 @@ namespace core {
 
 
     } 
+    
+    
+uint32_t base::PROTOSerializer::decodeVar(std::istream& in, uint64_t& value)
+{
+ 
+          uint32_t size = 0;
+              int shift = 0;
+              uint8_t c;
+              value = 0;
+
+              do {
+                    c = in.get();
+                    value |= ( uint64_t ) ( c & 0x7F ) << shift;
+                    shift += 7;
+                    ++size;
+              } while ( in.good() && ( c & 0x80 ) != 0 );
+
+              value = le64toh ( value );
+
+              return size;
+         
+}
+
         
 base::PROTOSerializer::WIRE_TYPE base::PROTOSerializer::getWireType ( base::PROTOSerializer::PROTO_TYPE type )
 {

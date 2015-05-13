@@ -89,7 +89,8 @@ namespace core {
 				static  WIRE_TYPE getWireType(uint32_t key) { return (WIRE_TYPE) (key & 0x7); }
 				static  uint32_t getFieldNumber(uint32_t key) { return (key >> 3); }
 				static  uint32_t getKey(uint32_t fieldNumber, uint8_t wireType) { return (fieldNumber << 3) | wireType; }
-				uint32_t decodevar(istream &in, uint64_t &value);
+				uint32_t decodeVar(istream &in, uint64_t &value);
+                                void encode(ostream &out, uint64_t value);
 				uint8_t getVarSize(uint64_t value);
                 stringstream m_buffer;
                 map<uint32_t, streampos> m_values;
