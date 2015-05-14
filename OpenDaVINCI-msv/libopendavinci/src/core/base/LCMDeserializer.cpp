@@ -13,7 +13,8 @@ namespace core {
         using namespace std;
         
         LCMDeserializer::LCMDeserializer(istream &in):
-            m_buffer() {
+            m_buffer(),
+            m_in(in) {
                 /* 
                  * Checks whether the instream has a magic number or not.
                  * If it has, the read(istream, container) will later be called to get the payload.
@@ -32,22 +33,26 @@ namespace core {
                     return;
                 }
                 
-                uint8_t hashBuf[8];
-                in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
-                uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
-                (void) hash;
+                
+                int64_t hash;
+                in.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
                 
                 char c = 0;
+                in.get(c);
                 while (in.good()) {
-                    in.get(c);
                     m_buffer.put(c);
+                    in.get(c);
                 }
                 
                 in.clear();
                 in.seekg(0, ios_base::beg);
             }
 
-        LCMDeserializer::~LCMDeserializer() {}
+        LCMDeserializer::~LCMDeserializer() {
+            int pos = m_buffer.tellg();
+            m_in.clear();
+            m_in.seekg(pos, ios_base::beg);
+        }
         
         /*
          * The read functions below are called to decode and get the variables from the payload.
@@ -61,7 +66,24 @@ namespace core {
         // This is for nested data
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
             (void) id;
-            m_buffer >> s;
+            stringstream ss;
+            int64_t hash = 1234;
+            ss.write(reinterpret_cast<const char *>(&hash), sizeof(const uint64_t));
+            
+            int pos = m_buffer.tellg();
+            
+            char c = 0;
+            m_buffer.get(c);
+            while (m_buffer.good()) {
+                ss.put(c);
+                m_buffer.get(c);
+            }
+            
+            ss >> s;
+            
+            pos += ss.tellg();
+            m_buffer.clear();
+            m_buffer.seekg(pos, ios_base::beg);
         }
         
         // Bool
@@ -163,7 +185,6 @@ namespace core {
             if (magicNumber != 0x4c433032) {
                 if (in.good()) {
                     // Stream is good but still no magic number?
-                    cout << magicNumber << endl;
                     clog << "Stream corrupt: magic number not found." << endl;
                 }
                 return;

@@ -74,7 +74,8 @@ namespace core {
         class CRC32_RECURSIVE {
             public:
                 enum { RES = CRC32_COMPUTING<c, res>::RESULT };
-                enum { RESULT = RES + CRC32_RECURSIVE<T::value, RES, typename T::tail>::RESULT };
+                //enum { RESULT = RES + CRC32_RECURSIVE<T::value, RES, typename T::tail>::RESULT };
+                enum { RESULT = RES };
         };
 
         /**

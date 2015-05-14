@@ -43,7 +43,7 @@ class SerializationTestNestedData : public core::base::Serializable {
             SerializationFactory sf;
 
             Serializer &s = sf.getSerializer(out);
-
+            
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'd', 'o', 'u', 'b', 'l', 'e') >::RESULT,
                     m_double);
 
@@ -54,7 +54,7 @@ class SerializationTestNestedData : public core::base::Serializable {
             SerializationFactory sf;
 
             Deserializer &d = sf.getDeserializer(in);
-
+            
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'd', 'o', 'u', 'b', 'l', 'e') >::RESULT,
                    m_double);
 
@@ -79,10 +79,12 @@ class SerializationTestSampleData : public core::base::Serializable {
             SerializationFactory sf;
 
             Serializer &s = sf.getSerializer(out);
+            
+            
 
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                     m_bool);
-
+            
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
                     m_nestedData);
 
@@ -91,27 +93,33 @@ class SerializationTestSampleData : public core::base::Serializable {
 
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
                     m_string);
+            
+            
 
             return out;
         }
 
         istream& operator>>(istream &in) {
             SerializationFactory sf;
-
+            
             Deserializer &d = sf.getDeserializer(in);
-
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
-                   m_nestedData);
-
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
-                   m_string);
-
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
-                   m_int);
-
+            
+            
+            
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                    m_bool);
-
+            
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
+                   m_nestedData);
+            
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
+                   m_int);
+            
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
+                   m_string);
+            
+            
+            
             return in;
         }
 };
@@ -120,13 +128,13 @@ class SerializationTestSampleData : public core::base::Serializable {
 class SerializationTest : public CxxTest::TestSuite {
     public:
         void testSerializationNested() {
-            std::cout << " testing nested data " << endl; 
-           SerializationTestSampleData sd;
-           sd.m_bool = true;
-           sd.m_int = 42;
-           sd.m_nestedData.m_double = -42.42;
-           sd.m_string = "This is an example.";
-           
+            cout << "Testing nested data" << endl;
+            SerializationTestSampleData sd;
+            sd.m_bool = true;
+            sd.m_int = 42;
+            sd.m_nestedData.m_double = -42.42;
+            sd.m_string = "This is an example.";
+            
             stringstream inout;
             inout << sd;
             inout.flush();
@@ -134,22 +142,24 @@ class SerializationTest : public CxxTest::TestSuite {
             // Read from the previously created data sink.
             SerializationTestSampleData sd2;
             inout >> sd2;
-
+            
+            cout << "Is: " << sd2.m_nestedData.m_double << " Should: " << -42.42 << endl;
+            cout << "Is: " << sd2.m_bool << " Should: " << true << endl;
+            cout << "Is: " << sd2.m_string << " Should: " << "This is an example." << endl;
+            cout << "Is: " << sd2.m_int << " Should: " << 42 << endl;
+            
             TS_ASSERT(sd2.m_bool);
             TS_ASSERT(sd2.m_int == 42);
             TS_ASSERT(sd2.m_string == "This is an example.");
             TS_ASSERT_DELTA(sd2.m_nestedData.m_double, -42.42, 1e-5);
-            cout << sd2.m_bool <<endl;
-            cout << sd2.m_string<<endl;;
-            cout << sd2.m_int<<endl;;
-            cout << sd2.m_nestedData.m_double<<endl;;
-            cout << " end testing nested data " << endl; 
+            
+            cout << "end Testing nested data" << endl; 
 
            
         }
         
           void testSerializationContainer() {
-            cout << " Test serializing  container " << endl;
+            cout << "Test serializing container" << endl;
             // Create some data.
         
               
@@ -181,11 +191,11 @@ class SerializationTest : public CxxTest::TestSuite {
 
             TS_ASSERT(vc.toString() == vc2.toString());
 
-            cout << " end test of container " << endl;
+            cout << "end Test of container" << endl;
         }
         
           void testSerializationPayload() {
-            cout << " Test payload " << endl;
+            cout << "Test payload" << endl;
             
             VehicleControl vc;
             vc.setSpeed(2.0);
@@ -207,7 +217,7 @@ class SerializationTest : public CxxTest::TestSuite {
 
              TS_ASSERT(vc.toString() == vc3.toString());
 
-            cout << " end  Test payload " << endl;
+            cout << "end Test payload" << endl;
        }
         
         void xtestLcmSerialisation() {
