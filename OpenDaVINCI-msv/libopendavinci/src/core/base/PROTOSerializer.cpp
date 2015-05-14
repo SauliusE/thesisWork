@@ -9,6 +9,10 @@
 #include "endian.h"
 #include "core/data/Container.h"
 #include <typeinfo>
+#include <boost/graph/graph_concepts.hpp>
+
+
+
 
 
 
@@ -20,7 +24,8 @@ namespace core {
         PROTOSerializer::PROTOSerializer(ostream& out) :
                 m_out(out),
                 m_buffer(),
-                m_size(0){}
+                m_size(0){
+                }
         
         PROTOSerializer::~PROTOSerializer(){
             // Here suppose to be finalized message based on PROTO approach, as far i know it is
@@ -31,6 +36,8 @@ namespace core {
             
             //if m_size != 0 so we wrote something 
             // else it was write container
+           
+             stringstream asd ;
             if(m_size !=0 ){
 //                 m_out.write(reinterpret_cast<const char *>(&m_size),sizeof(uint32_t));
 //                 cout << "encoding m_size : " << m_size <<endl;
@@ -41,9 +48,10 @@ namespace core {
 //                 cout << " encode size " << encodesize << endl;
                 stringstream ss ;
               encode(ss,m_size);
+//               ss.clear();
 //             cout << "decoding m_size " << endl;
 //             uint64_t value;
-            
+           
             
 //              m_buffer.clear();
 //             m_out.seekg(0,ios_base::beg);
@@ -53,10 +61,13 @@ namespace core {
 //             m_size = static_cast<uint32_t>(value);
 //             cout << " decoded value m_buffer " << m_size         << endl;
                 m_out << ss.str();
+//                 cout << " payload lenght lenght " << ss.str().length()<<endl;
                 m_out << m_buffer.str();
-                 cout << " message size in proto serializer when m_size != 0" <<m_size<< endl;
+//                  cout << "m_buffer lenght " << m_buffer.str().length()<<endl;
+//                  cout << " message size in proto serializer when m_size != 0" <<m_size<< endl;
             }  
-             cout << " message size in proto serializer" <<m_size<< endl;
+       
+//               cout << " message size in proto serializer" <<m_size<< endl;
        
         } // end of ~constructor
 
@@ -69,20 +80,22 @@ namespace core {
             decodeVar(buffer,size);
 //             buffer.read(reinterpret_cast<char*>(&size),sizeof(uint32_t));
             m_size += static_cast<uint32_t>(size);
-             cout << "serializable msg size " << size << " m_size : "<< size<< endl;
-           
             char c = 0;
             buffer.get(c);
-            if(buffer.good()){
+            uint32_t counter = 0;
+            while(buffer.good() && counter<size){
                 m_buffer.put(c);
                 buffer.get(c);
+                counter++;
             }
+            
             
         }
     
     
         void PROTOSerializer::write ( const uint32_t id, const bool& b ) {
                 uint32_t sizeOFB = getVarSize(b);
+//                 cout << " m_size in begining of bool " << m_size<< endl;
                 m_size += sizeOFB;
                 (void)id;
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
@@ -93,6 +106,7 @@ namespace core {
   
                  encode(m_buffer,key);
                 encode(m_buffer, b );
+//                 cout << " m_size in bool " << m_size <<endl;
         }
         
         void PROTOSerializer::write ( const uint32_t id, const char& c ) {
@@ -138,15 +152,17 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
-
+//                 cout << " Writing uint32_t " << ui <<endl;
+//                 cout << " m_size in begning " << m_size <<endl;
                 m_size += getVarSize(ui);
-                
+//                 cout << " m_size after UI " << m_size << endl;
                 PROTO_TYPE protoType = ( PROTO_TYPE )2;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                
                 uint32_t key = getKey ( id, wireType );
+//                 cout << " key is : " << key << endl;
                 m_size += getVarSize(key);
-
+//                 cout << " size after key << " <<m_size <<endl;
                 encode(m_buffer,key);
                 encode(m_buffer, ui );
 
@@ -157,7 +173,7 @@ namespace core {
        
                 float _f = f;
                 m_size += 4;
-                
+//                 cout << " funcin float 2" <<endl;
                 PROTO_TYPE protoType = ( PROTO_TYPE )4;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
                 
@@ -170,20 +186,22 @@ namespace core {
 
         void PROTOSerializer::write ( const uint32_t id, const double& d ) {
                 double _d = d;
-              (void)id;
+//               (void)id;
                 m_size += 8;
                 PROTO_TYPE protoType = ( PROTO_TYPE )5;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
-//                cout << "seri protoType " << protoType << " WIRE_TYPE "<< wireType <<endl;
+//                  cout << "Double - protoType " << protoType << " WIRE_TYPE "<< wireType << "field id " << id<<endl;
                 uint32_t key = getKey ( id, wireType );
 //                 cout <<"message size "  << m_size<<endl;
                 m_size += static_cast<uint32_t>(getVarSize(key));
 //                 cout << " key size serializable ; " << static_cast<uint32_t>(getVarSize(key))<<endl; 
 //                cout << " key  serializer" << key<< endl;
+//                 cout << " Double  key " << key << endl;
                 encode(m_buffer,key);
 //                 cout << "double valuue "<< _d<<endl;
                 m_buffer.write(reinterpret_cast<const char *>(&_d), 8);
-
+//         cout << " m_size in double " << m_size<<endl;
+//                 cout << " M_buffer lenght after double stuff " << m_size << " m_buffer.lenght : " <<m_buffer.str().length() <<endl;
 
         }
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {

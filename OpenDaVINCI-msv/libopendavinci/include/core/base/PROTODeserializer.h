@@ -94,9 +94,10 @@ namespace core {
 				uint8_t getVarSize(uint64_t value);
                 stringstream m_buffer;
                 map<uint32_t, streampos> m_values;
-                uint8_t m_size;
-                uint8_t position;
+                uint32_t m_size;
+                uint32_t position;
 				uint32_t decode(istream &in, uint64_t &value);
+                                istream &m_in;
         };
 
     }
