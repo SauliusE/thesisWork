@@ -7,9 +7,9 @@
 #include <sstream>
 
 #include "core/base/Hash.h"
-#include "core/base/LCMDeserializer.h"
+#include "core/base/Deserializer.h"
 #include "core/base/SerializationFactory.h"
-#include "core/base/LCMSerializer.h"
+#include "core/base/Serializer.h"
 #include "core/data/control/VehicleControl.h"
 
 namespace core {
@@ -110,7 +110,7 @@ namespace core {
             ostream& VehicleControl::operator<<(ostream &out) const {
                 SerializationFactory sf;
 
-                LCMSerializer &s = sf.getLCMSerializer(out);
+                Serializer &s = sf.getSerializer(out);
 
                 s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('s', 'p', 'e', 'e', 'd') >::RESULT,
                         m_speed);
@@ -136,7 +136,7 @@ namespace core {
             istream& VehicleControl::operator>>(istream &in) {
                 SerializationFactory sf;
 
-                LCMDeserializer &d = sf.getLCMDeserializer(in);
+                Deserializer &d = sf.getDeserializer(in);
 
                 d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('s', 'p', 'e', 'e', 'd') >::RESULT,
                        m_speed);

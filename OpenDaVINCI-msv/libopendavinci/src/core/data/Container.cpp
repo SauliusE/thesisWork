@@ -5,13 +5,10 @@
  */
 
 #include "core/base/Hash.h"
-#include "core/base/LCMDeserializer.h"
+#include "core/base/Deserializer.h"
 #include "core/base/SerializationFactory.h"
-#include "core/base/LCMSerializer.h"
-//#include "core/base/Serializer.h"
+#include "core/base/Serializer.h"
 #include "core/data/Container.h"
-#include "core/base/ROSSerializer.h"
-#include "core/base/ROSDeserializer.h"
 
 namespace core {
     namespace data {
@@ -20,37 +17,26 @@ namespace core {
         using namespace base;
 
         Container::Container() :
-                m_serializedData(),
                 m_dataType(UNDEFINEDDATA),
-                m_payloadHash(),
+                m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)),
-                m_message_size(){}
+                m_received(TimeStamp(0, 0)) {}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
-                m_serializedData(),
                 m_dataType(dataType),
-                m_payloadHash(),
+                m_serializedData(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)),
-                m_message_size(){
-                    
-            SerializationFactory sf;
-            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
-            
-            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
-           // m_payloadHash = lcm.getHash();
-         //   m_message_size = lcm.getMessageSize();
+                m_received(TimeStamp(0, 0)) {
+            // Get data for container.
+            m_serializedData << serializableData;
         }
 
         Container::Container(const Container &obj) :
                 Serializable(),
-                m_serializedData(),
                 m_dataType(obj.getDataType()),
-                m_payloadHash(),
+                m_serializedData(),
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
-                    
             m_serializedData.str(obj.m_serializedData.str());
         }
 
@@ -64,40 +50,9 @@ namespace core {
         }
 
         Container::~Container() {}
-        
-        uint32_t Container::getMessageSize()
-        {
-            return m_message_size;
-        }
 
-
-        void Container::setMessageSize(uint32_t& size)
-        {
-            m_message_size = size;
-        }
-
-        string Container::getSerializedData() const {
-            return m_serializedData.str();
-        }
-        
-        void Container::setSerializedData(const string &s) {
-            m_serializedData.str(s);
-        }
-        
         Container::DATATYPE Container::getDataType() const {
             return m_dataType;
-        }
-        
-        void Container::setDataType(const DATATYPE &dataType) {
-            m_dataType = dataType;
-        }
-        
-        uint64_t Container::getHash() const {
-            return m_payloadHash;
-        }
-        
-        void Container::setHash(const uint64_t &hash) {
-            m_payloadHash = hash;
         }
 
         const TimeStamp Container::getSentTimeStamp() const {
@@ -116,8 +71,6 @@ namespace core {
             m_received = receivedTimeStamp;
         }
 
-
-
         ostream& Container::operator<<(ostream &out) const {
             SerializationFactory sf;
 
@@ -127,7 +80,7 @@ namespace core {
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
-            //cout << "serialized data " << dataType<<endl;
+
             // Write container data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                     m_serializedData.str());
@@ -148,9 +101,9 @@ namespace core {
 
             SerializationFactory sf;
             Deserializer &d = sf.getDeserializer(in);
-         //   d.read();
+
             // Read container data type.
-           uint32_t dataType = 0;
+            uint32_t dataType = 0;
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                    dataType);
 
