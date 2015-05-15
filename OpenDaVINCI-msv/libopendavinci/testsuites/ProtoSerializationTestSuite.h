@@ -36,10 +36,12 @@ class SerializationTestNestedData : public core::base::Serializable {
     public:
         SerializationTestNestedData() :
                 m_int(0),
-                m_double(0){}
+                m_double(0),
+                m_string(""){}
 
        uint32_t m_int;
        double m_double;
+       string m_string;
 
         ostream& operator<<(ostream &out) const {
             SerializationFactory sf;
@@ -48,6 +50,7 @@ class SerializationTestNestedData : public core::base::Serializable {
 
             s.write(1,m_int);
             s.write(2,m_double);
+            s.write(3,m_string);
 
             return out;
         }
@@ -59,6 +62,7 @@ class SerializationTestNestedData : public core::base::Serializable {
 
             d.read(2, m_int);
             d.read(3,m_double);
+            d.read(4,m_string);
 
             return in;
         }
@@ -139,6 +143,7 @@ class SerializationTest : public CxxTest::TestSuite {
            sd.m_string = "This is an example.";
            sd.m_float = 123.32;
            sd.m_double = 1999.354;
+           sd.m_nestedData.m_string = "Nested one.";
             stringstream inout;
             inout << sd;
             inout.flush();
@@ -155,11 +160,12 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT_DELTA(sd2.m_double, 1999.354, 1e-5);
             TS_ASSERT_DELTA(sd2.m_nestedData.m_double,1234.32, 1e-5);
             TS_ASSERT(sd2.m_nestedData.m_int == 1234);
-
-            cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
-             cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
-            cout << "m_int : " << sd2.m_int << "expected : " << sd.m_int <<endl;
-             cout << "m_nestedData : " << sd2.m_nestedData.m_double<< " expected : " <<sd.m_nestedData.m_double <<endl;;
+              TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
+// 
+//             cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
+//              cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
+//             cout << "m_int : " << sd2.m_int << "expected : " << sd.m_int <<endl;
+              cout << "m_nestedData : " << sd2.m_nestedData.m_string<< " expected : " <<sd.m_nestedData.m_string <<endl;;
             cout << " --- end testing nested data --- " << endl; 
 
            
@@ -177,7 +183,7 @@ class SerializationTest : public CxxTest::TestSuite {
             vc.setBrakeLights(true);
             vc.setLeftFlashingLights(false);
             vc.setRightFlashingLights(true);
-            cout << vc.toString() <<endl;
+//             cout << vc.toString() <<endl;
               
             Container c(Container::VEHICLECONTROL,vc);
           
@@ -194,7 +200,7 @@ class SerializationTest : public CxxTest::TestSuite {
             protod.read(inout, c2);
 
             VehicleControl vc2 = c2.getData<VehicleControl>();
-            cout << vc2.toString()<<endl;
+//             cout << vc2.toString()<<endl;
 
             TS_ASSERT(vc.toString() == vc2.toString());
 
@@ -212,7 +218,7 @@ class SerializationTest : public CxxTest::TestSuite {
             vc.setLeftFlashingLights(false);
             vc.setRightFlashingLights(true);
             
-            cout << vc.toString() <<endl;
+//             cout << vc.toString() <<endl;
               
             
             stringstream inout2;
@@ -220,7 +226,7 @@ class SerializationTest : public CxxTest::TestSuite {
             
             VehicleControl vc3 ;
             inout2 >> vc3;
-            cout << vc3.toString()<<endl;
+//             cout << vc3.toString()<<endl;
 
              TS_ASSERT(vc.toString() == vc3.toString());
 

@@ -25,6 +25,7 @@ namespace core {
                 m_out(out),
                 m_buffer(),
                 m_size(0){
+                    cout << "constructor " << endl;;
                 }
         
         PROTOSerializer::~PROTOSerializer(){
@@ -36,35 +37,13 @@ namespace core {
             
             //if m_size != 0 so we wrote something 
             // else it was write container
-           
+           cout << "bye bye " << endl;
              stringstream asd ;
             if(m_size !=0 ){
-//                 m_out.write(reinterpret_cast<const char *>(&m_size),sizeof(uint32_t));
-//                 cout << "encoding m_size : " << m_size <<endl;
-//                 uint64_t test = static_cast<uint64_t>(m_size);
-//                 cout << "test " << test << endl;
-//                 uint32_t encodesize = getVarSize(m_size);
-                
-//                 cout << " encode size " << encodesize << endl;
-                stringstream ss ;
+              stringstream ss ;
               encode(ss,m_size);
-//               ss.clear();
-//             cout << "decoding m_size " << endl;
-//             uint64_t value;
-           
-            
-//              m_buffer.clear();
-//             m_out.seekg(0,ios_base::beg);
-//            uint32_t decodesize = decodeVar(ss,value);
-//            cout << " decode size " << decodesize << endl;
-//            cout << " decode value " << value << endl;
-//             m_size = static_cast<uint32_t>(value);
-//             cout << " decoded value m_buffer " << m_size         << endl;
-                m_out << ss.str();
-//                 cout << " payload lenght lenght " << ss.str().length()<<endl;
-                m_out << m_buffer.str();
-//                  cout << "m_buffer lenght " << m_buffer.str().length()<<endl;
-//                  cout << " message size in proto serializer when m_size != 0" <<m_size<< endl;
+              m_out << ss.str();
+              m_out << m_buffer.str();
             }  
        
 //               cout << " message size in proto serializer" <<m_size<< endl;
@@ -73,6 +52,7 @@ namespace core {
 
         void PROTOSerializer::write ( const uint32_t id, const Serializable& s ) {
              // writing serializable
+            cout << "Writing serializable << " <<endl;
             (void)id;
             stringstream buffer;
             buffer << s;
@@ -83,17 +63,18 @@ namespace core {
             char c = 0;
             buffer.get(c);
             uint32_t counter = 0;
-            while(buffer.good() && counter<size){
+            while(buffer.good() ){
                 m_buffer.put(c);
                 buffer.get(c);
                 counter++;
             }
             
-            
+            cout << " DONE WITH Serializable << " <<endl;
         }
     
     
         void PROTOSerializer::write ( const uint32_t id, const bool& b ) {
+           cout << "writing bool " << b<<endl;
                 uint32_t sizeOFB = getVarSize(b);
 //                 cout << " m_size in begining of bool " << m_size<< endl;
                 m_size += sizeOFB;
@@ -110,7 +91,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const char& c ) {
-               
+                cout << "writing char " << c << endl;
                 m_size += getVarSize(c);
                 
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
@@ -124,7 +105,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const unsigned char& uc ) {
-               
+               cout << " writing uc " << uc <<endl;
                 m_size += getVarSize(uc);
                 
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
@@ -138,7 +119,7 @@ namespace core {
         }
 
         void PROTOSerializer::write ( const uint32_t id, const int32_t& i ) {
-              
+              cout << " writing i " << i <<  endl;
                 m_size += getVarSize(i);
                 
                 PROTO_TYPE protoType = ( PROTO_TYPE )0;
@@ -152,6 +133,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
+            cout << " writing ui " << ui << endl; 
 //                 cout << " Writing uint32_t " << ui <<endl;
 //                 cout << " m_size in begning " << m_size <<endl;
                 m_size += getVarSize(ui);
@@ -170,7 +152,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const float& f ) {
-       
+            cout << " writing float " <<  f << endl;
                 float _f = f;
                 m_size += 4;
 //                 cout << " funcin float 2" <<endl;
@@ -185,6 +167,7 @@ namespace core {
        }
 
         void PROTOSerializer::write ( const uint32_t id, const double& d ) {
+            cout << "writing double " << d << endl;
                 double _d = d;
 //               (void)id;
                 m_size += 8;
@@ -205,7 +188,7 @@ namespace core {
 
         }
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {
-
+                cout << " writing string " << s << endl;
                 PROTO_TYPE protoType = ( PROTO_TYPE )8;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
             
@@ -217,7 +200,7 @@ namespace core {
                 uint32_t stringSize = 0;
                 stringSize = s.length() ;
                 m_size += stringSize;
-//                cout << " string size " << stringSize << endl;
+               cout << " string size " << stringSize << endl;
                 encode( m_buffer,stringSize );
 //                  cout << " string " << s.c_str() <<endl;
                 m_buffer.write ( reinterpret_cast<const char *>(s.c_str()), stringSize );  
@@ -227,6 +210,7 @@ namespace core {
 
         void PROTOSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
             cout<< "Writing id: " << id << "of user data " << data << " size of it " << size << endl;
+            cout << " NOOOOOOOOOOOOOOOOOOOOO WRITING CUSTOM USER DATA !!!!!!!!!!! " << endl;
         }
     
 

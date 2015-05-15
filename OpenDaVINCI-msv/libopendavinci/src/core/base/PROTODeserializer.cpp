@@ -26,15 +26,16 @@ namespace core {
 //                 m_buffer.str("");
 //                     in.tellg();
 //                       cout << "buffer write possition " <<in.tellp();
-//                   cout << " buffer read position " << in.tellg() << endl;
-                   position = in.tellg();
+             
+                position = in.tellg();
+//                      cout << " buffer read position in CONSTRUCTOR " << position << endl;
                 uint64_t value = 0;
                 decodeVar(in,value);
                 //casting value to uint16
                 uint16_t magicNumber = static_cast<uint16_t>(value);
 //                  cout << " magic number " << magicNumber <<endl;
-                in.clear();
-                in.seekg(position,ios_base::beg);
+                 in.clear();
+                in.seekg(0,ios_base::beg);
 //                       cout << " after clear buffer read position " << in.tellg() << endl;
                 if(magicNumber == 0xAABB){
 //                      cout << " found magic number " << endl;
@@ -42,14 +43,13 @@ namespace core {
                 
             }
 //             cout << " once " << endl;
+value = 0;
             decodeVar(in,value);
-//             uint32_t msgSize =static_cast<uint32_t>(value);
-//              cout<<"msg size " <<msgSize<<endl;
+             uint16_t msgSize =static_cast<uint16_t>(value);
+              cout<<"msg size " <<msgSize<<endl;
             char c = 0;
             in.get(c);
-//       in.get(c);
-//       in.get(c);
-//       in.get(c);
+
       // check size encoding
             uint32_t readSize = 0;
             while(in.good() ){
@@ -57,7 +57,7 @@ namespace core {
                 in.get(c);
                 readSize++;
             }
-          //  m_size = msgSize;
+            m_size = msgSize;
             
 //              cout << " MESSSAGE SIZE IN CONSTRUCTOR " <<m_size << endl;
 //              cout << " readSize : " << readSize << endl;
@@ -68,6 +68,7 @@ namespace core {
         }
 
         PROTODeserializer::~PROTODeserializer() {
+            cout << " deconstructor " << endl;;
              int pos = m_buffer.tellg();
             m_in.clear();
             m_in.seekg(pos, ios_base::beg);
@@ -76,53 +77,15 @@ namespace core {
 
         void PROTODeserializer::read(const uint32_t id, Serializable &s) {
           (void) id; //to be removed in the future
-// //           cout << " i am here " <<endl;
-//                 stringstream ss;
-//       /*          stringstream fi;
-        /*        (void) s;
-               cout << "Serializable m_size " <<  m_size<<endl;
-                  const string &temp = m_buffer.str();
-                  cout << "buffer write possition " << m_buffer.tellp();
-                  cout << " buffer read position " << m_buffer.tellg() <<endl;
-                 position =  m_buffer.tellg();
-                  m_buffer.seekp(0);
-                  encode(m_buffer,m_size);
-                  m_buffer.clear();
-                  m_buffer << temp;
-                  m_buffer.clear();
-                   m_buffer.seekp(0);*/
-//                    ss.clear();
-//                     ss.seekg(0,ios_base::beg);
-//                    ss << m_buffer.str();
-//                  ss >> s;
-//                  ss.flush();
-//                ss.str() = m_buffer.str();
-                 
-//                   uint64_t value;
-//                    decodeVar(m_buffer,value);
-//              uint32_t msgSize =static_cast<uint32_t>(value);
-//               cout<<"msg size " <<msgSize<<endl;
-//               
-//                 decodeVar(m_buffer,value);
-//                 uint32_t key = static_cast<uint32_t>(value);
-//                 cout << " decoded nested data key : " << key<< endl;
-//                 value = 0;
-//                 decodeVar(m_buffer,value);
-// //                 cout << " decodede value  of uint32 " << v << endl; 
-// //                 m_size -= size;
-//                 uint32_t inte = static_cast<uint32_t>(value);
-//                 cout << " decoded nested data : " << inte << endl;
-                 
-//                ss.clear();
-//                 cout << "Serializable m_size " <<  m_size<<endl;
-                
-//                cout << " m_buffer lenght " << m_buffer.str().length() <<endl;
-//                 fi << ss.str()<< m_buffer.str();
-              //  ss << m_buffer.str();
-//                 m_buffer.str()= fi.str();
-//                 cout << "decoding nested DATA " << endl;
                 stringstream ss;
-                encode(ss,m_size);
+//                 cout << " SS write and read pointers in the begining " << ss.tellp() << " " << ss.tellg() << endl;
+//                cout << " s m_size " <<  m_size << endl;
+                uint64_t tempSize = static_cast<uint64_t>(m_size);
+//                 cout << " tempSize " << tempSize << endl;
+                encode(ss,tempSize);
+//                 cout << " m_size takes to encode " <<  <<endl;
+//                 ss.clear();
+//                 cout << " SS write and read pointers in the begining " << ss.tellp() << " " << ss.tellg() << endl;
               int pos = m_buffer.tellg();
                 char c = 0;
                 m_buffer.get(c);
@@ -130,11 +93,23 @@ namespace core {
                 ss.put(c);
                 m_buffer.get(c);
                 }
+//                 cout << " SS write and read pointers in the begining " << ss.tellp() << " " << ss.tellg() << endl;
+                cout << " Going to nested data  " << endl;
+//                 cout << " Read position in Serializable " << pos <<endl;
+                
+//                 cout << " ss read pointer " << ss.tellg() << endl;
+//                 (void) s ;
+//                 uint64_t value;
+//                 uint32_t decodedValue;
+//                 decodeVar(ss,value);
+//                 cout << " SS write and read pointers in the begining " << ss.tellp() << " " << ss.tellg() << endl;
+//                 decodedValue = static_cast<uint32_t>(value);
+//                 cout << " directly decoded size " <<decodedValue<< endl;
                 ss >> s;
                 pos += ss.tellg();
                 m_buffer.clear();
                 m_buffer.seekg(pos, ios_base::beg);
-                
+                cout << " End of Serializable " << pos<< endl;
 //                  cout << " m_buffer lenght " << m_buffer.str().length() <<endl;
             }
 
@@ -143,6 +118,7 @@ namespace core {
         
         void PROTODeserializer::read(const uint32_t id, bool &b) {
                 (void)id;
+//                    cout << " b m_size " <<  m_size << endl;
 //                    cout << " bool " << endl;
 //                 cout << " msize begining of boold " << m_size<<endl;
                 uint32_t size ;
@@ -160,13 +136,14 @@ namespace core {
 //                 cout << " bool size was " <<size<<endl;
                 m_size -= size;
                 b = v;
+                cout << "decoded b " << b <<endl;
 //                 cout << "m size after bool " << m_size<<endl;
                
         }
 
         void PROTODeserializer::read(const uint32_t id, char &c) {
                 (void)id;
-                
+//                    cout << " c m_size " <<  m_size << endl;
                     
                 uint64_t key;
                 decodeVar(m_buffer,key);                   
@@ -179,10 +156,12 @@ namespace core {
                 size  = decodeVar(m_buffer,v);
                 m_size -= size;                  
                 c =  v;
+                                cout << "decoded c " << c <<endl;
+
       }
 
         void PROTODeserializer::read(const uint32_t id, unsigned char &uc) {          (void)id;
-
+//    cout << "uc  m_size " <<  m_size << endl;
                 uint64_t key;
                 decodeVar(m_buffer,key);
                 WIRE_TYPE wireType = getWireType(key);
@@ -194,11 +173,14 @@ namespace core {
                 size  = decodeVar(m_buffer,v);
                 m_size -= size;
                 uc =  v;
+                                cout << "decoded uc " << uc <<endl;
 
         }
 
         void PROTODeserializer::read(const uint32_t id, int32_t &i) {
                 (void)id;
+// //                 
+//                    cout << "i m_size " <<  m_size << endl;
 //                 cout << " read int " << m_size << endl;
                 uint32_t size ;
                 uint64_t key;
@@ -217,6 +199,8 @@ namespace core {
                 m_size -= size;
 //                  cout << " decoded int  m_size" << m_size <<endl;
                 i = static_cast<int32_t>(v);
+                                                cout << "decoded i " << i <<endl;
+
 //                 cout << "decoded int : " << i << endl;
 
         }
@@ -225,7 +209,7 @@ namespace core {
                 (void)id;
                 uint64_t key;
                 
-                
+//                    cout << "ui m_size " <<  m_size << endl;
                 decodeVar(m_buffer,key);
 //                 cout << " m_size position begining " << m_size <<endl;
                 WIRE_TYPE wireType = getWireType(key);
@@ -240,9 +224,12 @@ namespace core {
 //                 cout << " decodede value  of uint32 " << v << endl; 
                 m_size -= size;
                 ui = static_cast<uint32_t>(v);
+                                                cout << "decoded ui " << ui <<endl;
+
         }
 
         void PROTODeserializer::read(const uint32_t id, float &f) {
+               cout << " flaot m_size " <<  m_size << endl;
                 (void) id;  
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -254,13 +241,16 @@ namespace core {
                 float _f =0;
                 m_buffer.read(reinterpret_cast<char *>(&_f), 4);
                 f= _f;
+//                    cout << " f end m_size " <<  m_size << endl;
+                                                   cout << "decoded f " <<f <<endl;
+
               
         }
 
         void PROTODeserializer::read(const uint32_t id, double &d) {
                 (void) id;
                 uint64_t key;
-                uint32_t size ;
+                uint32_t size ;   cout << "d m_size " <<  m_size << endl;
 //                                 cout << " next will be 3 " << endl;
 //                 cout <<  " m size in double " << m_size <<endl;
                 size = decodeVar(m_buffer,key);
@@ -276,13 +266,14 @@ namespace core {
               m_size -=8;
                 m_buffer.read(reinterpret_cast<char *>(&d),8); 
 // cout <<  " m size in double end " << m_size <<endl;
-//                 cout << " dd " <<_d<<endl;
+                 cout << " dd " <<d<<endl;
             //    d = _d;
         }
 
         void PROTODeserializer::read(const uint32_t id, string &s) {
                 (void) id;
                 uint64_t key;
+                   cout << "s m_size " <<  m_size << endl;
                 decodeVar(m_buffer,key);
 //                 cout << "decoded string key " << key <<endl;
                 WIRE_TYPE wireType = getWireType(key);
@@ -301,7 +292,8 @@ namespace core {
                 str[length] = '\0';
 //                 cout << " raw string " << str <<endl;
                 s = string(str, length);
-//                 cout << " string string " << s << endl;
+                cout << " string string " << s << endl;
+//                    cout << "s end m_size " <<  m_size << endl;
         }
 
         void PROTODeserializer::read(const uint32_t id, void *data, uint32_t size) {
