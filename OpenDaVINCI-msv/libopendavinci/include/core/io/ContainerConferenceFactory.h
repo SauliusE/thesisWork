@@ -25,7 +25,6 @@ namespace core {
             public:
                 enum {
                     MULTICAST_PORT = 12175 // Mariposa Rd, Victorville.
-                    //MULTICAST_PORT = 7667 // LCM PORT
                 };
 
             private:

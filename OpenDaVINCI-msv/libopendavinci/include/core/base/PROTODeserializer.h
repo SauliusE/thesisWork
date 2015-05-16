@@ -102,3 +102,4 @@ namespace core {
 } // core::base
 
 #endif /*OPENDAVINCI_CORE_BASE_PROTODESERIALIZER_H_*/
+

@@ -94,3 +94,4 @@ namespace core{
 #endif /*OPENDAVINCI_CORE_BASE_PROTOSERIALIZER_H_*/
 
 
+

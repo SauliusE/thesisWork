@@ -93,3 +93,4 @@ namespace core {
 } // core::base
 
 #endif /*OPENDAVINCI_CORE_BASE_ROSDESERIALIZER_H_*/
+

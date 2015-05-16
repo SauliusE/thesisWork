@@ -139,3 +139,4 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
 
     }
 } // core::base
+

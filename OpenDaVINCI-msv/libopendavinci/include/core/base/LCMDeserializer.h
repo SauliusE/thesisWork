@@ -86,7 +86,7 @@ namespace core {
 
                 virtual void read(const uint32_t id, uint32_t &ui);
                 
-                void read(const uint32_t id, int64_t &i);
+                virtual void read(const uint32_t id, int64_t &i);
 
                 virtual void read(const uint32_t id, float &f);
 
@@ -100,9 +100,11 @@ namespace core {
 
             private:
                 stringstream m_buffer; // Buffer where the payload is stored to then get decoded
+                istream &m_in;
         };
 
     }
 } // core::base
 
 #endif /*OPENDAVINCI_CORE_BASE_LCMDESERIALIZER_H_*/
+

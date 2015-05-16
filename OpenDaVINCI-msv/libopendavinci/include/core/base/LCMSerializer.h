@@ -101,10 +101,10 @@ namespace core{
 
             private:
                 ostream &m_out; // Buffer that will be sent
-                stringstream m_buffer; // Buffer where all encoded variables will be stored to later be written to m_out
-                int64_t m_hash; // The variable where the hash will be stored
+                stringstream m_buffer; // Buffer where all encoded variables will be stored to later be written to m_out.
+                int64_t m_hash; // The variable where the hash will be stored.
                 int64_t m_hashn; // This is where hash from nested data is stored.
-                bool m_first; // Boolean to know if the Serializer was created from Container. If it was, it will write the hash along with the payload.
+                bool m_first; // Boolean to know if the Serializer was created from Container.
         };
         // Functions taken from LCM for calculating hash
         int64_t calculate_hash(int64_t v, char c);
@@ -115,5 +115,6 @@ namespace core{
 
 
 #endif /*OPENDAVINCI_CORE_BASE_LCMSERIALIZER_H_*/
+
 
 

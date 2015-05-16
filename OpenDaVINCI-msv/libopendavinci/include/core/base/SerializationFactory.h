@@ -20,8 +20,8 @@
 #include "core/base/LCMDeserializer.h"
 #include "core/base/PROTOSerializer.h"
 #include "core/base/PROTODeserializer.h"
-#include "core/base/ROSSerializer.h"
-#include "core/base/ROSDeserializer.h"
+//#include "core/base/ROSSerializer.h"
+//#include "core/base/ROSDeserializer.h"
 
 
 namespace core {
@@ -78,8 +78,8 @@ namespace core {
                 LCMDeserializer& getLCMDeserializer(istream &in) const;
                 PROTOSerializer& getPROTOSerializer(ostream &out) const;
                 PROTODeserializer& getPROTODeserializer(istream &in) const;
-                ROSSerializer& getROSSerializer(ostream &out) const;
-                ROSDeserializer& getROSDeserializer(istream &in) const;
+                //ROSSerializer& getROSSerializer(ostream &out) const;
+                //ROSDeserializer& getROSDeserializer(istream &in) const;
 
             private:
                 mutable vector<SharedPointer<Serializer> > m_listOfSerializers;
@@ -89,8 +89,8 @@ namespace core {
                 mutable vector<SharedPointer<LCMDeserializer> > m_listOfLCMDeserializers;
                  mutable vector<SharedPointer<PROTOSerializer> > m_listOfPROTOSerializers;
                 mutable vector<SharedPointer<PROTODeserializer> > m_listOfPROTODeserializers;
-                  mutable vector<SharedPointer<ROSSerializer> > m_listOfROSSerializers;
-                mutable vector<SharedPointer<ROSDeserializer> > m_listOfROSDeserializers;
+                  //mutable vector<SharedPointer<ROSSerializer> > m_listOfROSSerializers;
+                //mutable vector<SharedPointer<ROSDeserializer> > m_listOfROSDeserializers;
 
 
         };
@@ -99,3 +99,5 @@ namespace core {
 } // core::base
 
 #endif /*OPENDAVINCI_CORE_BASE_SERIALIZATIONFACTORY_H_*/
+
+

@@ -34,11 +34,16 @@ namespace core {
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)),
                 m_message_size(){
-                    
-            SerializationFactory sf;
-            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
             
+            SerializationFactory sf;
+            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+            
+            lcm.setFirst(true);
             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+            setHash(lcm.getHash());
+            
+            //m_serializedData << serializableData;
+            
            // m_payloadHash = lcm.getHash();
          //   m_message_size = lcm.getMessageSize();
         }
@@ -92,11 +97,11 @@ namespace core {
             m_dataType = dataType;
         }
         
-        uint64_t Container::getHash() const {
+        int64_t Container::getHash() const {
             return m_payloadHash;
         }
         
-        void Container::setHash(const uint64_t &hash) {
+        void Container::setHash(const int64_t &hash) {
             m_payloadHash = hash;
         }
 
@@ -127,11 +132,11 @@ namespace core {
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
-            //cout << "serialized data " << dataType<<endl;
+            
             // Write container data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                     m_serializedData.str());
-
+            
             // Write sent time stamp data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('s', 'e', 'n', 't') >::RESULT,
                     m_sent);
@@ -157,7 +162,7 @@ namespace core {
             // Read container data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                    rawData);
-
+            
             // Read sent time stamp data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('s', 'e', 'n', 't') >::RESULT,
                    m_sent);
@@ -165,7 +170,7 @@ namespace core {
             // Read received time stamp data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'e', 'c', 'v', 'd') >::RESULT,
                    m_received);
-
+            
             // Set data.
             m_dataType = static_cast<DATATYPE>(dataType);
             m_serializedData.str(rawData);
@@ -260,3 +265,5 @@ namespace core {
         }
     }
 } // core::data
+
+

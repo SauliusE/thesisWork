@@ -25,7 +25,6 @@ namespace core {
                 m_sender(NULL),
                 m_receiver(NULL) {
             try {
-                cout << "THE PORT: " << port << endl;
                 m_sender = wrapper::UDPFactory::createUDPSender(address, port);
             } catch (string &s) {
                 OPENDAVINCI_CORE_THROW_EXCEPTION(ConferenceException, s);
@@ -57,18 +56,18 @@ namespace core {
 
         void UDPMultiCastContainerConference::nextString(const string &s) {
             if (hasContainerListener()) {
-            	//cout << "starting next string" <<endl;
+                //cout << "starting next string" <<endl;
                 stringstream stringstreamData(s);
-		//cout << "string data " << s << endl;
+        //cout << "string data " << s << endl;
                 Container container;
                 //cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
-                ROSDeserializer &lcm = sf.getROSDeserializer(stringstreamData);
+                LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
                 lcm.read(stringstreamData, container); //double stringstreamData variable
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
              //   container.setReceivedTimeStamp(TimeStamp());
-	  
+      
                 // Use superclass to distribute any received containers.
                 //cout << "receive container"<< endl;
                 receive(container);
@@ -78,21 +77,21 @@ namespace core {
 
         void UDPMultiCastContainerConference::send(Container &container) const {
             // Set sending time stamp.
-        	//thesis implementation
+            //thesis implementation
             stringstream stringstreamValue;
 
-        	SerializationFactory sf;
-        	ROSSerializer &lcm = sf.getROSSerializer(stringstreamValue);
+            SerializationFactory sf;
+            LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
             container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
             lcm.write(container);
         //    stringstreamValue << container;
             //cout << "after stringstream << container" << endl;
             string stringValue = stringstreamValue.str();
-	      //cout << "sending data"<< endl;
+          //cout << "sending data"<< endl;
             // Send data.
             m_sender->send(stringValue);
-	    //cout << "----  done ! -----"<<endl;
+        //cout << "----  done ! -----"<<endl;
         }
 
     }

@@ -242,3 +242,5 @@ uint32_t decodeVar ( istream &in, uint64_t &value );
 
     }
 } // core::base
+
+

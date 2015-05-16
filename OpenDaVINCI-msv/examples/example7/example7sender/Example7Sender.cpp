@@ -40,12 +40,7 @@ namespace examples {
     		// Create user data.
     		Example7Data data;
     		data.setNumericalValue(counter++);
-    		data.setStringValue("LCMTEST");
-		data.m_bool = false;
-		data.m_char = 'E';
-		data.m_double = 3.1415;
-		data.m_float = 1234.63;
-		data.m_uc = 'S';
+    		data.setStringValue("Example7Sender");
 
     		// Create container with user data type ID 5.
     		Container c(Container::USER_DATA_5, data);

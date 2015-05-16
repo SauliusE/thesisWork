@@ -56,15 +56,24 @@ namespace core {
             if (m_hash != 0x12345678) {
                 if (m_first) {
                     hash = m_hash;
+                    uint8_t hashbuf[8];
+                    hashbuf[0] = (hash>>56)&0xff;
+                    hashbuf[1] = (hash>>48)&0xff;
+                    hashbuf[2] = (hash>>40)&0xff;
+                    hashbuf[3] = (hash>>32)&0xff;
+                    hashbuf[4] = (hash>>24)&0xff;
+                    hashbuf[5] = (hash>>16)&0xff;
+                    hashbuf[6] = (hash>>8)&0xff;
+                    hashbuf[7] = (hash & 0xff);
+                    m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
                 } else {
-                    hash = (m_hash<<1) + ((m_hash>>63)&1) + (m_hashn<<1) + ((m_hashn>>63)&1);
+                    hash = m_hash + ((m_hashn<<1) + ((m_hashn>>63)&1));
                     m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
                 }
-            } else {
+            } else if (!m_first) {
                 hash = (m_hashn<<1) + ((m_hashn>>63)&1);
                 m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             }
-            
             
             m_out << m_buffer.str();
         }
@@ -103,18 +112,16 @@ namespace core {
             (void) id;
             stringstream buffer;
             buffer << s;
-            buffer.clear();
-            buffer.seekg(0, ios_base::beg);
             int64_t hash;
             buffer.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
             
             // If this is not the serializer from the container, this is a serialization of nested data. The hash will be stored in a separate hash variable.
             // This hash will then be added to the calculated hash of the other variables.
-            if (!m_first) {
-                m_hashn = hash;
+            
+            if (m_first) {
+                m_hash = (hash<<1) + ((hash>>63)&1);
             } else {
-                //hash = (hash<<1) + ((hash>>63)&1);
-                m_hash = hash;
+                m_hashn = hash;
             }
             
             char c = 0;
@@ -123,7 +130,6 @@ namespace core {
                 m_buffer.put(c);
                 buffer.get(c);
             }
-            //m_buffer << buffer.str();
         }
         
         // Bool
@@ -144,7 +150,7 @@ namespace core {
         /*
          * Char
          * 
-         * Not supported by LCM, but just keeping it here just incase.
+         * Not supported by LCM. Used by OpenDaVINCI.
          */
         void LCMSerializer::write ( const uint32_t id, const char& c ) {
             string sid;
@@ -163,7 +169,7 @@ namespace core {
         /*
          * Unsigned Char
          * 
-         * Not supported by LCM, but just keeping it here just incase.
+         * Not supported by LCM. Used by OpenDaVINCI.
          */
         void LCMSerializer::write ( const uint32_t id, const unsigned char& uc ) {
             string sid;
@@ -190,7 +196,6 @@ namespace core {
             m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "int32_t");
             m_hash = calculate_hash(m_hash, 0);
-            
             uint8_t buf[4];
             int32_t v = i;
             buf[0] = (v>>24)&0xff;
@@ -203,7 +208,7 @@ namespace core {
         /*
          * uint32_t
          * 
-         * Not supported by LCM, but just keeping it here just incase.
+         * Not supported by LCM. Used by OpenDaVINCI.
          */
         
         void LCMSerializer::write ( const uint32_t id, const uint32_t& ui ) {
@@ -400,7 +405,7 @@ namespace core {
             // 0
             uint8_t zero = 0;
             m_out.write(reinterpret_cast<const char *>(&zero), sizeof(const uint8_t));
-            
+            /*
             // Writing the hash
             int64_t hash = container.getHash();
             uint8_t hashbuf[8];
@@ -413,10 +418,13 @@ namespace core {
             hashbuf[6] = (hash>>8)&0xff;
             hashbuf[7] = (hash & 0xff);
             m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
-            
+            */
             
             // Writing the payload
             m_out << container.getSerializedData();
+            
+            //Preventing any hash from being written
+            m_first = true;
         }
         
         // Functions taken from LCM for calculating hash
@@ -437,4 +445,5 @@ namespace core {
 
     } 
 } // core:base
+
 

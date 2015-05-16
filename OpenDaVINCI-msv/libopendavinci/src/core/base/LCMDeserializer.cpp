@@ -13,7 +13,8 @@ namespace core {
         using namespace std;
         
         LCMDeserializer::LCMDeserializer(istream &in):
-            m_buffer() {
+            m_buffer(),
+            m_in(in) {
                 /* 
                  * Checks whether the instream has a magic number or not.
                  * If it has, the read(istream, container) will later be called to get the payload.
@@ -32,17 +33,26 @@ namespace core {
                     return;
                 }
                 
+                
+                int64_t hash;
+                in.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
+                
                 char c = 0;
+                in.get(c);
                 while (in.good()) {
-                    in.get(c);
                     m_buffer.put(c);
+                    in.get(c);
                 }
                 
                 in.clear();
                 in.seekg(0, ios_base::beg);
             }
 
-        LCMDeserializer::~LCMDeserializer() {}
+        LCMDeserializer::~LCMDeserializer() {
+            int pos = m_buffer.tellg();
+            m_in.clear();
+            m_in.seekg(pos, ios_base::beg);
+        }
         
         /*
          * The read functions below are called to decode and get the variables from the payload.
@@ -56,7 +66,23 @@ namespace core {
         // This is for nested data
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
             (void) id;
-            m_buffer >> s;
+            stringstream ss;
+            int64_t hash = 1234;
+            ss.write(reinterpret_cast<const char *>(&hash), sizeof(const uint64_t));
+            
+            int pos = m_buffer.tellg();
+            char c = 0;
+            m_buffer.get(c);
+            while (m_buffer.good()) {
+                ss.put(c);
+                m_buffer.get(c);
+            }
+            
+            ss >> s;
+            
+            pos += ss.tellg();
+            m_buffer.clear();
+            m_buffer.seekg(pos, ios_base::beg);
         }
         
         // Bool
@@ -81,7 +107,7 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, int32_t &i) {
             (void) id;
             uint8_t buf[4];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(int32_t));
+            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
             i = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
         }
         
@@ -131,12 +157,12 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, string &s) {
             (void) id;
             uint8_t lengthBuf[4];
-            m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const int32_t));
+            m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const uint32_t));
             int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
             
             char *str = new char[length];
             m_buffer.read(reinterpret_cast<char *>(str), length);
-            s = string(str);
+            s = string(str, length);
         }
         
         // This is for data types with no appropriate read function
@@ -184,13 +210,13 @@ namespace core {
             uint32_t containerDataType = 0;
             ss >> containerDataType;
             container.setDataType(static_cast<core::data::Container::DATATYPE>(containerDataType));
-            
+            /*
             // Decoding Hash
             uint8_t hashBuf[8];
             in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
             uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
             container.setHash(hash);
-            
+            */
             /* We are not using the hash for now
             if (hash != 0x0e65ec258fc2e665LL) {
                 return;
@@ -209,3 +235,4 @@ namespace core {
         }
     }
 } // core::base
+
