@@ -5,10 +5,13 @@
  */
 
 #include "core/base/Hash.h"
-#include "core/base/Deserializer.h"
+#include "core/base/LCMDeserializer.h"
 #include "core/base/SerializationFactory.h"
-#include "core/base/Serializer.h"
+#include "core/base/LCMSerializer.h"
+//#include "core/base/Serializer.h"
 #include "core/data/Container.h"
+#include "core/base/ROSSerializer.h"
+#include "core/base/ROSDeserializer.h"
 
 namespace core {
     namespace data {
@@ -17,26 +20,42 @@ namespace core {
         using namespace base;
 
         Container::Container() :
-                m_dataType(UNDEFINEDDATA),
                 m_serializedData(),
+                m_dataType(UNDEFINEDDATA),
+                m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)) {}
+                m_received(TimeStamp(0, 0)),
+                m_message_size(){}
 
         Container::Container(const DATATYPE &dataType, const SerializableData &serializableData) :
-                m_dataType(dataType),
                 m_serializedData(),
+                m_dataType(dataType),
+                m_payloadHash(),
                 m_sent(TimeStamp(0, 0)),
-                m_received(TimeStamp(0, 0)) {
-            // Get data for container.
-            m_serializedData << serializableData;
+                m_received(TimeStamp(0, 0)),
+                m_message_size(){
+            
+            SerializationFactory sf;
+            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+            
+            lcm.setFirst(true);
+            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+            setHash(lcm.getHash());
+            
+            //m_serializedData << serializableData;
+            
+           // m_payloadHash = lcm.getHash();
+         //   m_message_size = lcm.getMessageSize();
         }
 
         Container::Container(const Container &obj) :
                 Serializable(),
-                m_dataType(obj.getDataType()),
                 m_serializedData(),
+                m_dataType(obj.getDataType()),
+                m_payloadHash(),
                 m_sent(obj.m_sent),
                 m_received(obj.m_received) {
+                    
             m_serializedData.str(obj.m_serializedData.str());
         }
 
@@ -50,9 +69,40 @@ namespace core {
         }
 
         Container::~Container() {}
+        
+        uint32_t Container::getMessageSize()
+        {
+            return m_message_size;
+        }
 
+
+        void Container::setMessageSize(uint32_t& size)
+        {
+            m_message_size = size;
+        }
+
+        string Container::getSerializedData() const {
+            return m_serializedData.str();
+        }
+        
+        void Container::setSerializedData(const string &s) {
+            m_serializedData.str(s);
+        }
+        
         Container::DATATYPE Container::getDataType() const {
             return m_dataType;
+        }
+        
+        void Container::setDataType(const DATATYPE &dataType) {
+            m_dataType = dataType;
+        }
+        
+        int64_t Container::getHash() const {
+            return m_payloadHash;
+        }
+        
+        void Container::setHash(const int64_t &hash) {
+            m_payloadHash = hash;
         }
 
         const TimeStamp Container::getSentTimeStamp() const {
@@ -71,6 +121,8 @@ namespace core {
             m_received = receivedTimeStamp;
         }
 
+
+
         ostream& Container::operator<<(ostream &out) const {
             SerializationFactory sf;
 
@@ -80,11 +132,11 @@ namespace core {
             uint32_t dataType = getDataType();
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
-
+            
             // Write container data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                     m_serializedData.str());
-
+            
             // Write sent time stamp data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('s', 'e', 'n', 't') >::RESULT,
                     m_sent);
@@ -101,16 +153,16 @@ namespace core {
 
             SerializationFactory sf;
             Deserializer &d = sf.getDeserializer(in);
-
+         //   d.read();
             // Read container data type.
-            uint32_t dataType = 0;
+           uint32_t dataType = 0;
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                    dataType);
 
             // Read container data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'a', 't', 'a') >::RESULT,
                    rawData);
-
+            
             // Read sent time stamp data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL4('s', 'e', 'n', 't') >::RESULT,
                    m_sent);
@@ -118,7 +170,7 @@ namespace core {
             // Read received time stamp data.
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'e', 'c', 'v', 'd') >::RESULT,
                    m_received);
-
+            
             // Set data.
             m_dataType = static_cast<DATATYPE>(dataType);
             m_serializedData.str(rawData);
@@ -213,3 +265,5 @@ namespace core {
         }
     }
 } // core::data
+
+

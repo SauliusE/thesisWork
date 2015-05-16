@@ -31,7 +31,6 @@ class ContainerTest : public CxxTest::TestSuite {
             s >> c2;
             TimeStamp ts2;
             ts2 = c2.getData<TimeStamp>();
-
             TS_ASSERT(ts.toString() == ts2.toString());
         }
 

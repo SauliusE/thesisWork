@@ -80,7 +80,7 @@ namespace core {
                  * @param dataType Type of data inside this container.
                  * @param serializableData Data to be serialized.
                  */
-                Container(const DATATYPE &dataType, const SerializableData &serializableData);
+                Container(const DATATYPE &dataType, const SerializableData &serializableData)	;
 
                 /**
                  * Copy constructor.
@@ -98,13 +98,22 @@ namespace core {
                  * @return Reference to this instance.
                  */
                 Container& operator=(const Container &obj);
-
+				
+				string getSerializedData() const;
+				void setSerializedData(const string &s);
+				
                 /**
                  * This method returns the data type inside this container.
                  *
                  * @return Data type of the data contained in this container.
                  */
                 DATATYPE getDataType() const;
+                void setDataType(const DATATYPE &dataType);	
+                int64_t getHash() const;
+                void setHash(const int64_t &hash);
+                
+                void setMessageSize(uint32_t &size);
+                uint32_t getMessageSize();
 
                 virtual ostream& operator<<(ostream &out) const;
                 virtual istream& operator>>(istream &in);
@@ -168,15 +177,21 @@ namespace core {
                  */
                 const string toString() const;
 
-            private:
-                DATATYPE m_dataType;
-                stringstream m_serializedData;
+                
+				
 
+
+            private:
+		stringstream m_serializedData;
+		DATATYPE m_dataType;
+		uint64_t m_payloadHash;
                 TimeStamp m_sent;
                 TimeStamp m_received;
+		uint32_t m_message_size;
         };
 
     }
 } // core::data
 
 #endif /*OPENDAVINCI_CORE_DATA_CONTAINER_H_*/
+
