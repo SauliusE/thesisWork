@@ -125,10 +125,11 @@ namespace core {
             uint8_t buf[8];
             m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(int64_t));
             
-            int64_t *p = (int64_t*) &i;
+            //int64_t *p = (int64_t*) &i;
             int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
             int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
-            *p = (a<<32) + (b&0xffffffff);
+            i = (a<<32) + (b&0xffffffff);
+            
         }
         
         // Float
@@ -139,6 +140,7 @@ namespace core {
             
             int64_t *p = (int64_t*) &f;
             *p = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+            
         }
         
         // Double
@@ -151,6 +153,7 @@ namespace core {
             int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
             int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
             *p = (a<<32) + (b&0xffffffff);
+            
         }
         
         // String
@@ -160,9 +163,12 @@ namespace core {
             m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const uint32_t));
             int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
             
-            char *str = new char[length];
+            char *str = new char[length + 1];
             m_buffer.read(reinterpret_cast<char *>(str), length);
+            str[length] = '\0';
             s = string(str, length);
+            OPENDAVINCI_CORE_DELETE_ARRAY(str);
+            
         }
         
         // This is for data types with no appropriate read function

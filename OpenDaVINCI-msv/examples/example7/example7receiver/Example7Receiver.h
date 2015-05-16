@@ -59,3 +59,4 @@ namespace examples {
 } // examples
 
 #endif /*EXAMPLE7RECEIVER_H_*/
+

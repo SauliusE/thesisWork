@@ -55,7 +55,9 @@ namespace core {
             int64_t hash;
             if (m_hash != 0x12345678) {
                 if (m_first) {
-                    hash = m_hash;
+                    //hash = m_hash;
+                    int64_t hashh = 0xf90d295ef96ee460;
+                    hash = (hashh<<1) + ((hashh>>63)&1);
                     uint8_t hashbuf[8];
                     hashbuf[0] = (hash>>56)&0xff;
                     hashbuf[1] = (hash>>48)&0xff;
@@ -163,6 +165,7 @@ namespace core {
             m_hash = hash_string(m_hash, "char");
             m_hash = calculate_hash(m_hash, 0);
             
+            
             m_buffer.write(&c, sizeof(const char));
         }
         
@@ -182,6 +185,7 @@ namespace core {
             m_hash = hash_string(m_hash, "unsigned char");
             m_hash = calculate_hash(m_hash, 0);
             
+            
             m_buffer.write(reinterpret_cast<const char *>(&uc), sizeof(const unsigned char));
         }
         
@@ -196,6 +200,8 @@ namespace core {
             m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "int32_t");
             m_hash = calculate_hash(m_hash, 0);
+            
+            
             uint8_t buf[4];
             int32_t v = i;
             buf[0] = (v>>24)&0xff;
@@ -222,6 +228,7 @@ namespace core {
             m_hash = hash_string(m_hash, "uint32_t");
             m_hash = calculate_hash(m_hash, 0);
             
+            
             uint8_t buf[4];
             int32_t v = ui;
             buf[0] = (v>>24)&0xff;
@@ -242,6 +249,7 @@ namespace core {
             m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "int64_t");
             m_hash = calculate_hash(m_hash, 0);
+            
             
             uint8_t buf[8];
             int64_t v = i;
@@ -268,6 +276,7 @@ namespace core {
             m_hash = hash_string(m_hash, "float");
             m_hash = calculate_hash(m_hash, 0);
             
+            
             float _f = f;
             float *ff = &_f;
             int64_t *p = (int64_t*) ff;
@@ -292,6 +301,7 @@ namespace core {
             m_hash = hash_string(m_hash, reinterpret_cast<const char *>(cid));
             m_hash = hash_string(m_hash, "double");
             m_hash = calculate_hash(m_hash, 0);
+            
             
             // This way of encoding is taken straight from LCM.
             // Don't even know how and why it works myself.
@@ -330,8 +340,9 @@ namespace core {
             m_hash = hash_string(m_hash, "string");
             m_hash = calculate_hash(m_hash, 0);
             
-            char* cstr = (char *) s.c_str();
-            int32_t length = s.length() + 1;
+            
+            //char* cstr = (char *) s.c_str();
+            uint32_t length = s.length();
             
             uint8_t lengthBuf[4];
             int32_t v = length;
@@ -339,8 +350,8 @@ namespace core {
             lengthBuf[1] = (v>>16)&0xff;
             lengthBuf[2] = (v>>8)&0xff;
             lengthBuf[3] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const int32_t));
-            m_buffer.write(reinterpret_cast<const char *>(cstr), length);
+            m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const uint32_t));
+            m_buffer.write(reinterpret_cast<const char *>(s.c_str()), length);
         }
         
         // This is for data with no appropriate write function. You need to specify the size of the data.
