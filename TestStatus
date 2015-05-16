@@ -1,0 +1,18 @@
+The following tests FAILED:
+          5 - ConferenceClientModuleTestSuite.h-TestSuite (Failed)
+          9 - ControlFlowTestSuite.h-TestSuite (Failed)
+         11 - DMCPDiscovererTestSuite.h-TestSuite (Failed)
+         12 - DataStoreTestSuite.h-TestSuite (Failed)
+         14 - FalseSerializationTestSuite.h-TestSuite (Failed)
+         20 - RuntimeControlContainerMultipleAppsTestSuite.h-TestSuite (Failed)
+         21 - RuntimeControlContainerTestSuite.h-TestSuite (Failed)
+         22 - RuntimeControlTestSuite.h-TestSuite (Failed)
+         23 - SerializationTestSuite.h-TestSuite (Failed)
+         34 - UDPTestSuite.h-TestSuite (Failed)
+         39 - SupercomponentClientModuleTestSuite.h-TestSuite (Failed)
+         40 - PlayerTestSuite.h-TestSuite (Failed)
+         42 - RecorderTestSuite.h-TestSuite (Failed)
+         43 - SplitTestSuite.h-TestSuite (Failed)
+         51 - LaneDetectorTestSuite.h-TestSuite (SEGFAULT)
+         53 - VCRTestSuite.h-TestSuite (Timeout)
+ 
