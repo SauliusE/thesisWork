@@ -342,7 +342,7 @@ namespace core {
             
             
             //char* cstr = (char *) s.c_str();
-            uint32_t length = s.length();
+            uint32_t length = s.length() + 1;
             
             uint8_t lengthBuf[4];
             int32_t v = length;

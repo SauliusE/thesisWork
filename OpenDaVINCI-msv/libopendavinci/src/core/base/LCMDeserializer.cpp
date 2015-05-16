@@ -163,10 +163,9 @@ namespace core {
             m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const uint32_t));
             int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
             
-            char *str = new char[length + 1];
+            char *str = new char[length];
             m_buffer.read(reinterpret_cast<char *>(str), length);
-            str[length] = '\0';
-            s = string(str, length);
+            s = string(str, length - 1);
             OPENDAVINCI_CORE_DELETE_ARRAY(str);
             
         }
