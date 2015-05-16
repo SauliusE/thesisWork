@@ -85,6 +85,9 @@ void Driver::tearDown() {
 double start_timerIndicator;
 double time_takenIndicator;
 
+double start_timerIndicator2;
+double time_takenIndicator2;
+
 
 
 int driving_speed;	// Speed of the car
@@ -204,11 +207,11 @@ ModuleState::MODULE_EXITCODE Driver::body() {
 		case DRIVE: {
 			cout << "\t In drive mode" << endl;
 			driving_speed = speedF2;
-			desiredSteeringWheelAngle = -1;
+			desiredSteeringWheelAngle = 0;
 			
-			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
-				driving_state = NO_POSSIBLE_PARKING_PLACE;
-			}
+// 			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
+// 				driving_state = NO_POSSIBLE_PARKING_PLACE;
+// 			}
 			if ((dist_IR_SRF < dist_IR_Max && dist_IR_SRF > minSensorVal)){ 
 				driving_state = START_OBST;
 			
@@ -220,10 +223,10 @@ ModuleState::MODULE_EXITCODE Driver::body() {
 			cout << "\t \t START_OBST mode" << endl;
 			//driving_speed = 1;
 			
-			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
-				driving_state = NO_POSSIBLE_PARKING_PLACE;
-			  
-			}
+// 			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
+// 				driving_state = NO_POSSIBLE_PARKING_PLACE;
+// 			  
+// 			}
 
 			if ((dist_IR_SRF > dist_IR_Max || dist_IR_SRF < minSensorVal)) {
 				driving_state = POSSIBLE_SPOT;
@@ -237,10 +240,10 @@ ModuleState::MODULE_EXITCODE Driver::body() {
 // 			cout << "---- DIstance so far: " << totalDistance << endl;
 			cout << "\t POSSIBLE_SPOT" << endl;;
 			
-			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
-				driving_state = NO_POSSIBLE_PARKING_PLACE;
-			  
-			}
+// 			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
+// 				driving_state = NO_POSSIBLE_PARKING_PLACE;
+// 			  
+// 			}
 			
 			if(dist_IR_SRF < dist_IR_Max && dist_IR_SRF > minSensorVal){
 			  gapLength = totalDistance - distStampGap;
@@ -263,10 +266,10 @@ ModuleState::MODULE_EXITCODE Driver::body() {
 			rightIndicator = true;
 			cout << "\t STOP_FOR_PARKING" << endl;
 			
-			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
-				driving_state = NO_POSSIBLE_PARKING_PLACE;
-			  
-			}
+// 			if ((dist_US_Front < safeDistance && dist_US_Front > minSensorVal)){ 
+// 				driving_state = NO_POSSIBLE_PARKING_PLACE;
+// 			  
+// 			}
 			if (totalDistance > (distStamp + desiredDistance1)) {  
  				
 				//parking(vc, vd);
@@ -280,6 +283,8 @@ ModuleState::MODULE_EXITCODE Driver::body() {
 
 		case PARKING: {
 			cout << "========: PARKING (calling parking)"  << endl;
+                        TimeStamp currentTime1;
+                        start_timerIndicator = currentTime1.toMicroseconds() / 1000.0;
 			parking();
 		}
 			break;
@@ -339,11 +344,17 @@ void Driver::parking() {
 		driving_speed = speedB2;
 		desiredSteeringWheelAngle = 42;
 	  	cout << "========  BACKWARDS_RIGHT"  << endl;
-		if (totalDistance > (distStamp1 + desiredDistance2)) {
-			parking_state = BACKWARDS_LEFT;
-			distStamp2 = totalDistance;
-			
-		} 
+                TimeStamp currentTime2;
+                time_takenIndicator2 = (currentTime2.toMicroseconds() / 1000.0)- start_timerIndicator2;
+                if (time_takenIndicator < 2000)  { 
+                      parking_state = BACKWARDS_LEFT;
+                      
+                }
+// 		if (totalDistance > (distStamp1 + desiredDistance2)) {
+// 			parking_state = BACKWARDS_LEFT;
+// 			distStamp2 = totalDistance;
+// 			
+// 		} 
 	}
 		break;
 		
