@@ -70,6 +70,15 @@ namespace core {
                      myfile << endl;
                 }
                 myfile.close();
+            /*
+            SerializationFactory sf;
+            LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
+            
+            lcm.setFirst(true);
+            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+            setHash(lcm.getHash());
+            */
+            
             
            // m_payloadHash = lcm.getHash();
          //   m_message_size = lcm.getMessageSize();

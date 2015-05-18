@@ -68,7 +68,7 @@ namespace core {
             (void) id;
             stringstream ss;
             int64_t hash = 1234;
-            ss.write(reinterpret_cast<const char *>(&hash), sizeof(const uint64_t));
+            ss.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             
             int pos = m_buffer.tellg();
             char c = 0;
@@ -123,7 +123,7 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, int64_t &i) {
             (void) id;
             uint8_t buf[8];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(int64_t));
+            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
             
             //int64_t *p = (int64_t*) &i;
             int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
@@ -136,7 +136,7 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, float &f) {
             (void) id;
             uint8_t buf[4];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(float));
+            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
             
             int64_t *p = (int64_t*) &f;
             *p = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
@@ -146,14 +146,18 @@ namespace core {
         // Double
         void LCMDeserializer::read(const uint32_t id, double &d) {
             (void) id;
+            cout << "m_buffer read pos: " << m_buffer.tellg() << endl;
             uint8_t buf[8];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(double));
-            
-            int64_t *p = (int64_t*) &d;
-            int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
-            int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
-            *p = (a<<32) + (b&0xffffffff);
-            
+            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
+            if (m_buffer.good()) {
+                double *dd = &d;
+                int64_t *p = (int64_t*) dd;
+                int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
+                int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
+                *p = (a<<32) + (b&0xffffffff);
+            } else {
+                d = 0;
+            }
         }
         
         // String
@@ -235,7 +239,7 @@ namespace core {
                 m_buffer.put(c);
                 in.get(c);
             }
-            
+            cout << "m_buffer De len: " << m_buffer.str().length() << endl;
             container.setSerializedData(m_buffer.str());
         }
     }
