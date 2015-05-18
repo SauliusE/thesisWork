@@ -72,6 +72,7 @@ namespace core {
         
         //Thesis implementation
         LCMSerializer& SerializationFactory::getLCMSerializer(ostream &out) const {
+            cout << " NOT SUPPOSE TO DO THIS " << endl;
                 LCMSerializer *lcms = NULL;
                 if (m_listOfLCMSerializers.empty()){
                         lcms = new LCMSerializer(out);
@@ -85,6 +86,8 @@ namespace core {
 
 
         LCMDeserializer& SerializationFactory::getLCMDeserializer(istream &in) const {
+                        cout << " NOT SUPPOSE TO DO THIS " << endl;
+
                         LCMDeserializer *lcmd = NULL;
                         if (m_listOfLCMDeserializers.empty()) {
                                 lcmd = new LCMDeserializer(in);
@@ -126,6 +129,8 @@ namespace core {
         
         
                 ROSSerializer& SerializationFactory::getROSSerializer(ostream &out) const {
+                                cout << " NOT SUPPOSE TO DO THIS " << endl;
+
             ROSSerializer *lcms = NULL;
             if (m_listOfROSSerializers.empty()){
                 lcms = new ROSSerializer(out);
@@ -140,6 +145,8 @@ namespace core {
 
         ROSDeserializer& SerializationFactory::getROSDeserializer(istream &in) const {
             ROSDeserializer *lcmd = NULL;
+                        cout << " NOT SUPPOSE TO DO THIS " << endl;
+
             if (m_listOfROSDeserializers.empty()) {
                 lcmd = new ROSDeserializer(in);
                 m_listOfROSDeserializers.push_back(SharedPointer<ROSDeserializer>(lcmd)); // The innermost * dereferences the iterator to SharedPointer<Deserializer>, the second * returns the Deserializer from within the SharedPointer, and the & turns it into a regular pointer.

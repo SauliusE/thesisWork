@@ -35,7 +35,34 @@ namespace core {
                 m_received(TimeStamp(0, 0)),
                 m_message_size(){
                     
+                TimeStamp start;   
                 m_serializedData << serializableData;
+                TimeStamp end;
+                uint32_t data = getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/ContainerWriteSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/ContainerWriteVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/ContainerWriteVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+  
 //             SerializationFactory sf;
 //             PROTOSerializer &protos = sf.getPROTOSerializer(m_serializedData);
 //             
