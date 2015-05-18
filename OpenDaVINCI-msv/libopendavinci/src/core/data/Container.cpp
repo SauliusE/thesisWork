@@ -34,7 +34,8 @@ namespace core {
                 m_sent(TimeStamp(0, 0)),
                 m_received(TimeStamp(0, 0)),
                 m_message_size(){
-                    m_serializedData << serializableData;
+                    
+                m_serializedData << serializableData;
 //             SerializationFactory sf;
 //             PROTOSerializer &protos = sf.getPROTOSerializer(m_serializedData);
 //             

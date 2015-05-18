@@ -25,7 +25,7 @@ namespace core {
                 m_out(out),
                 m_buffer(),
                 m_size(0){
-                    cout << "constructor " << endl;;
+//                     cout << "constructor " << endl;;
                 }
         
         PROTOSerializer::~PROTOSerializer(){
@@ -37,7 +37,7 @@ namespace core {
             
             //if m_size != 0 so we wrote something 
             // else it was write container
-           cout << "bye bye " << endl;
+//            cout << "bye bye " << endl;
              stringstream asd ;
             if(m_size !=0 ){
               stringstream ss ;
@@ -52,7 +52,7 @@ namespace core {
 
         void PROTOSerializer::write ( const uint32_t id, const Serializable& s ) {
              // writing serializable
-            cout << "Writing serializable << " <<endl;
+//             cout << "Writing serializable << " <<endl;
             (void)id;
             stringstream buffer;
             buffer << s;
@@ -69,12 +69,12 @@ namespace core {
                 counter++;
             }
             
-            cout << " DONE WITH Serializable << " <<endl;
+//             cout << " DONE WITH Serializable << " <<endl;
         }
     
     
         void PROTOSerializer::write ( const uint32_t id, const bool& b ) {
-           cout << "writing bool " << b<<endl;
+//            cout << "writing bool " << b<<endl;
                 uint32_t sizeOFB = getVarSize(b);
 //                 cout << " m_size in begining of bool " << m_size<< endl;
                 m_size += sizeOFB;
@@ -91,7 +91,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const char& c ) {
-                cout << "writing char " << c << endl;
+//                 cout << "writing char " << c << endl;
                 m_size += getVarSize(c);
                  (void)id;
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
@@ -105,7 +105,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const unsigned char& uc ) {
-               cout << " writing uc " << uc <<endl;
+//                cout << " writing uc " << uc <<endl;
                 m_size += getVarSize(uc);
                  (void)id;
                 PROTO_TYPE protoType = ( PROTO_TYPE )6;
@@ -119,7 +119,7 @@ namespace core {
         }
 
         void PROTOSerializer::write ( const uint32_t id, const int32_t& i ) {
-              cout << " writing i " << i <<  endl;
+//               cout << " writing i " << i <<  endl;
                 m_size += getVarSize(i);
                  (void)id;
                 PROTO_TYPE protoType = ( PROTO_TYPE )0;
@@ -133,7 +133,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
-            cout << " writing ui " << ui << endl; 
+//             cout << " writing ui " << ui << endl; 
 //                 cout << " Writing uint32_t " << ui <<endl;
 //                 cout << " m_size in begning " << m_size <<endl;
                 m_size += getVarSize(ui); (void)id;
@@ -152,7 +152,7 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const float& f ) {
-            cout << " writing float " <<  f << endl;
+//             cout << " writing float " <<  f << endl;
                 float _f = f;
                 m_size += 4; (void)id;
 //                 cout << " funcin float 2" <<endl;
@@ -167,7 +167,7 @@ namespace core {
        }
 
         void PROTOSerializer::write ( const uint32_t id, const double& d ) {
-            cout << "writing double " << d << endl;
+//             cout << "writing double " << d << endl;
                 double _d = d; (void)id;
 //               (void)id;
                 m_size += 8;
@@ -188,7 +188,7 @@ namespace core {
 
         }
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {
-                cout << " writing string " << s << endl;
+//                 cout << " writing string " << s << endl;
                 PROTO_TYPE protoType = ( PROTO_TYPE )8; (void)id;
                 WIRE_TYPE wireType = getWireType ( protoType) ;
             
@@ -200,7 +200,7 @@ namespace core {
                 uint32_t stringSize = 0;
                 stringSize = s.length() ;
                 m_size += stringSize;
-               cout << " string size " << stringSize << endl;
+//                cout << " string size " << stringSize << endl;
                 encode( m_buffer,stringSize );
 //                  cout << " string " << s.c_str() <<endl;
                 m_buffer.write ( reinterpret_cast<const char *>(s.c_str()), stringSize );  

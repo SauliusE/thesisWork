@@ -27,10 +27,15 @@
 #include "core/data/Container.h"
 #include "core/data/TimeStamp.h"
 #include "core/data/control/VehicleControl.h"
+
+#include </home/cadogan/Git/thesisWork/OpenDaVINCI-msv/apps/2015/msv-data/include/SensorBoardData.h>
+// #include "core/platform.h"
+
 using namespace std;
 using namespace core::base;
 using namespace core::data;
 using namespace core::data::control;
+using namespace msv;
 
 class SerializationTestNestedData : public core::base::Serializable {
     public:
@@ -231,6 +236,22 @@ class SerializationTest : public CxxTest::TestSuite {
              TS_ASSERT(vc.toString() == vc3.toString());
 
             cout << " --- end  Test payload --- " << endl;
+       }
+       
+       
+       void testSBD(){
+           cout << " -- SensorBoardData serializing test -- " <<endl;
+           
+//            SensorBoardData sdb;
+           //void update(const uint32_t &sensorID, const double &distance);
+//            sdb.update(1, 12.2);
+//            sdb.update(2, 12.2);
+//            sdb.update(3, 12.2);
+//            sdb.update(4, 12.2);
+//            sdb.update(5, 12.2);
+//            sdb.update(6, 12.2);
+//            
+           
        }
         
         void xtestProtoSerialisation() {

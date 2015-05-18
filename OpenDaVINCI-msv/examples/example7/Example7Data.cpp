@@ -95,7 +95,7 @@ namespace examples {
         s.write("m_float", m_float);
         s.write("m_double", m_double);
    */     
-        ROSSerializer &s = sf.getROSSerializer(out);
+        PROTOSerializer &s = sf.getPROTOSerializer(out);
         s.write(1, m_numericalValue);
         s.write(2,m_stringValue);
         s.write(3,m_bool);
@@ -111,7 +111,7 @@ namespace examples {
 	istream& Example7Data::operator>>(istream &in) {
 		SerializationFactory sf;
 	//	LCMDeserializer &d = sf.getLCMDeserializer(in);
-                ROSDeserializer &d = sf.getROSDeserializer(in);
+                PROTODeserializer &d = sf.getPROTODeserializer(in);
     
 		d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('n', 'u', 'm') >::RESULT,
 			   m_numericalValue);

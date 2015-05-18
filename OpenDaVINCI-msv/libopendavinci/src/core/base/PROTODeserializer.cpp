@@ -46,7 +46,7 @@ namespace core {
 value = 0;
             decodeVar(in,value);
              uint16_t msgSize =static_cast<uint16_t>(value);
-              cout<<"msg size " <<msgSize<<endl;
+//               cout<<"msg size " <<msgSize<<endl;
             char c = 0;
             in.get(c);
 
@@ -68,7 +68,7 @@ value = 0;
         }
 
         PROTODeserializer::~PROTODeserializer() {
-            cout << " deconstructor " << endl;;
+//             cout << " deconstructor " << endl;;
              int pos = m_buffer.tellg();
             m_in.clear();
             m_in.seekg(pos, ios_base::beg);
@@ -94,7 +94,7 @@ value = 0;
                 m_buffer.get(c);
                 }
 //                 cout << " SS write and read pointers in the begining " << ss.tellp() << " " << ss.tellg() << endl;
-                cout << " Going to nested data  " << endl;
+//                 cout << " Going to nested data  " << endl;
 //                 cout << " Read position in Serializable " << pos <<endl;
                 
 //                 cout << " ss read pointer " << ss.tellg() << endl;
@@ -109,7 +109,7 @@ value = 0;
                 pos += ss.tellg();
                 m_buffer.clear();
                 m_buffer.seekg(pos, ios_base::beg);
-                cout << " End of Serializable " << pos<< endl;
+//                 cout << " End of Serializable " << pos<< endl;
 //                  cout << " m_buffer lenght " << m_buffer.str().length() <<endl;
             }
 
@@ -136,7 +136,7 @@ value = 0;
 //                 cout << " bool size was " <<size<<endl;
                 m_size -= size;
                 b = v;
-                cout << "decoded b " << b <<endl;
+//                 cout << "decoded b " << b <<endl;
 //                 cout << "m size after bool " << m_size<<endl;
                
         }
@@ -156,7 +156,7 @@ value = 0;
                 size  = decodeVar(m_buffer,v);
                 m_size -= size;                  
                 c =  v;
-                                cout << "decoded c " << c <<endl;
+//                                 cout << "decoded c " << c <<endl;
 
       }
 
@@ -173,7 +173,7 @@ value = 0;
                 size  = decodeVar(m_buffer,v);
                 m_size -= size;
                 uc =  v;
-                                cout << "decoded uc " << uc <<endl;
+//                                 cout << "decoded uc " << uc <<endl;
 
         }
 
@@ -199,7 +199,7 @@ value = 0;
                 m_size -= size;
 //                  cout << " decoded int  m_size" << m_size <<endl;
                 i = static_cast<int32_t>(v);
-                                                cout << "decoded i " << i <<endl;
+//                                                 cout << "decoded i " << i <<endl;
 
 //                 cout << "decoded int : " << i << endl;
 
@@ -224,12 +224,12 @@ value = 0;
 //                 cout << " decodede value  of uint32 " << v << endl; 
                 m_size -= size;
                 ui = static_cast<uint32_t>(v);
-                                                cout << "decoded ui " << ui <<endl;
+//                                                 cout << "decoded ui " << ui <<endl;
 
         }
 
         void PROTODeserializer::read(const uint32_t id, float &f) {
-               cout << " flaot m_size " <<  m_size << endl;
+//                cout << " flaot m_size " <<  m_size << endl;
                 (void) id;  
                 uint64_t key;
                 decodeVar(m_buffer,key);
@@ -242,7 +242,7 @@ value = 0;
                 m_buffer.read(reinterpret_cast<char *>(&_f), 4);
                 f= _f;
 //                    cout << " f end m_size " <<  m_size << endl;
-                                                   cout << "decoded f " <<f <<endl;
+//                                                    cout << "decoded f " <<f <<endl;
 
               
         }
@@ -250,7 +250,8 @@ value = 0;
         void PROTODeserializer::read(const uint32_t id, double &d) {
                 (void) id;
                 uint64_t key;
-                uint32_t size ;   cout << "d m_size " <<  m_size << endl;
+                uint32_t size ;   
+//                 cout << "d m_size " <<  m_size << endl;
 //                                 cout << " next will be 3 " << endl;
 //                 cout <<  " m size in double " << m_size <<endl;
                 size = decodeVar(m_buffer,key);
@@ -266,14 +267,14 @@ value = 0;
               m_size -=8;
                 m_buffer.read(reinterpret_cast<char *>(&d),8); 
 // cout <<  " m size in double end " << m_size <<endl;
-                 cout << " dd " <<d<<endl;
+//                  cout << " dd " <<d<<endl;
             //    d = _d;
         }
 
         void PROTODeserializer::read(const uint32_t id, string &s) {
                 (void) id;
                 uint64_t key;
-                   cout << "s m_size " <<  m_size << endl;
+//                    cout << "s m_size " <<  m_size << endl;
                 decodeVar(m_buffer,key);
 //                 cout << "decoded string key " << key <<endl;
                 WIRE_TYPE wireType = getWireType(key);
@@ -292,7 +293,7 @@ value = 0;
                 str[length] = '\0';
 //                 cout << " raw string " << str <<endl;
                 s = string(str, length);
-                cout << " string string " << s << endl;
+//                 cout << " string string " << s << endl;
 //                    cout << "s end m_size " <<  m_size << endl;
         }
 
@@ -339,7 +340,7 @@ value = 0;
                     readSize++;
                 }
 //                 cout <<"read size: "<<readSize<<endl;
-       /* */        cout << "m_buffer size " << m_buffer.str().length()<<endl;
+//        /* */        cout << "m_buffer size " << m_buffer.str().length()<<endl;
                 container.setSerializedData(m_buffer.str());
 
     }
