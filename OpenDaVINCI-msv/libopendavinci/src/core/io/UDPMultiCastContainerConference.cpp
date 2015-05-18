@@ -63,7 +63,38 @@ namespace core {
                 //cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
                 LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
-                lcm.read(stringstreamData, container); //double stringstreamData variable
+                
+                
+                 TimeStamp start;   
+                              lcm.read(stringstreamData, container); //double stringstreamData variable
+
+                TimeStamp end;
+                uint32_t data = container.getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/UDPReadSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/UDPReadVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/UDPReadVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+  
+                
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
              //   container.setReceivedTimeStamp(TimeStamp());
@@ -84,7 +115,35 @@ namespace core {
             LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
             container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
-            lcm.write(container);
+                          TimeStamp start;   
+                              lcm.write(container); //double stringstreamData variable
+
+                TimeStamp end;
+                uint32_t data = container.getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/UDPWriteSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/UDPWriteVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/UDPWriteVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+            
         //    stringstreamValue << container;
             //cout << "after stringstream << container" << endl;
             string stringValue = stringstreamValue.str();
