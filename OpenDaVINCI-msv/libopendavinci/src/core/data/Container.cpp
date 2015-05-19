@@ -35,12 +35,13 @@ namespace core {
                 m_received(TimeStamp(0, 0)),
                 m_message_size(){
                     
-            SerializationFactory sf;
-            ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
+//             SerializationFactory sf;
+//             ROSSerializer &lcm = sf.getROSSerializer(m_serializedData);
             
-            lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
+//             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
            // m_payloadHash = lcm.getHash();
          //   m_message_size = lcm.getMessageSize();
+                    m_serializedData << serializableData;
         }
 
         Container::Container(const Container &obj) :

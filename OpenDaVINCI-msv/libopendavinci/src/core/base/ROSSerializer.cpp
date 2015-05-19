@@ -28,8 +28,13 @@ namespace core {
             // - > size of message
             // - > payload
             // Writing size of message
-            m_out << m_size;
+//             m_out << m_size;
+            if(m_size !=0){
+                stringstream ss;
+            ss.write(reinterpret_cast<const char *>(&m_size), sizeof(uint32_t));
+            m_out << ss.str();
             m_out << m_buffer.str();
+            }
        
         } // end of ~constructor
 
@@ -38,7 +43,18 @@ namespace core {
             (void)id;
             stringstream buffer;
             buffer << s;
-            m_buffer << buffer.str();
+            uint32_t size = 0;
+            
+//             m_buffer << buffer.str();
+            buffer.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+            m_size += size;
+            char c = 0;
+            buffer.get(c);
+            while(buffer.good()){
+                m_buffer.put(c);
+                buffer.get(c);
+                
+            }
         }
     
     
@@ -145,6 +161,7 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
 //                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
                 
                 m_out << container.getSerializedData();
+                m_size = 0;
 
         }
     
