@@ -50,7 +50,7 @@ namespace core {
         void ROSDeserializer::read(const uint32_t id, Serializable &s) {
           (void) id; //to be removed in the future
           stringstream ss;
-          cout << " message size " << m_size << endl;
+//           cout << " message size " << m_size << endl;
               ss.write(reinterpret_cast<const char *>(&m_size), sizeof(uint32_t));
               uint32_t pos = m_buffer.tellg();
 //               stringstream ss;
@@ -128,7 +128,7 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
 //                 stringLength = ntohl(stringLength);
                 char *str = new char[stringLength+1];
                 m_buffer.read(reinterpret_cast<char *>(str), static_cast<uint32_t>(stringLength));
-                cout << " string length " <<  stringLength<<endl;
+//                 cout << " string length " <<  stringLength<<endl;
                 str[stringLength] = '\0';
                 // It is absolutely necessary to specify the size of the serialized string, otherwise, s contains only data until the first '\0' is read.
                 s = string(str, stringLength);
@@ -146,17 +146,17 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
                 uint8_t messageID;
                 uint16_t blockNr;
                 m_buffer.str("");
-                cout << "m_buffer size " << m_buffer.str().length();
+//                 cout << "m_buffer size " << m_buffer.str().length();
                 m_size = 0;
                 in.read(reinterpret_cast<char *>(&connectionID), sizeof(const uint32_t));
                 in.read(reinterpret_cast<char *>(&opcode), sizeof(const uint8_t));
                 in.read(reinterpret_cast<char *>(&messageID), sizeof(const uint8_t));
                 in.read(reinterpret_cast<char *>(&blockNr), sizeof(const uint16_t));
                 container.setDataType(static_cast<core::data::Container::DATATYPE>(connectionID));
-                cout << " connectionID " << connectionID <<endl;
-                cout << (int)opcode << endl;
-                cout << (int)messageID << endl;
-                cout << blockNr << endl;
+//                 cout << " connectionID " << connectionID <<endl;
+//                 cout << (int)opcode << endl;
+//                 cout << (int)messageID << endl;
+//                 cout << blockNr << endl;
                
                 char c = 0;
                 in.get(c);

@@ -25,7 +25,6 @@ namespace core {
                 m_sender(NULL),
                 m_receiver(NULL) {
             try {
-                cout << "THE PORT: " << port << endl;
                 m_sender = wrapper::UDPFactory::createUDPSender(address, port);
             } catch (string &s) {
                 OPENDAVINCI_CORE_THROW_EXCEPTION(ConferenceException, s);
@@ -64,13 +63,36 @@ namespace core {
                 //cout << "starting deserialize 1" << endl;
                 SerializationFactory sf;
                 ROSDeserializer &lcm = sf.getROSDeserializer(stringstreamData);
-                lcm.read(stringstreamData, container); //double stringstreamData variable
-        //       stringstreamData >> container;
-                //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
-             //   container.setReceivedTimeStamp(TimeStamp());
-	  
-                // Use superclass to distribute any received containers.
-                //cout << "receive container"<< endl;
+               
+                 TimeStamp start;   
+              lcm.read(stringstreamData, container); //double stringstreamData variable
+                TimeStamp end;
+                uint32_t data = container.getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/UDPReadSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/UDPReadVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/UDPReadVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamData.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+                
+                
                 receive(container);
                 //cout << "end of next string" <<endl;
             }
@@ -85,7 +107,35 @@ namespace core {
         	ROSSerializer &lcm = sf.getROSSerializer(stringstreamValue);
             container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
+            
+                TimeStamp start;   
             lcm.write(container);
+                TimeStamp end;
+                uint32_t data = container.getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/UDPWriteSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/UDPWriteVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/UDPWriteVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << stringstreamValue.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+            
         //    stringstreamValue << container;
             //cout << "after stringstream << container" << endl;
             string stringValue = stringstreamValue.str();

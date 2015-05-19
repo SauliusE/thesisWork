@@ -41,7 +41,34 @@ namespace core {
 //             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
            // m_payloadHash = lcm.getHash();
          //   m_message_size = lcm.getMessageSize();
-                    m_serializedData << serializableData;
+                  TimeStamp start;   
+                m_serializedData << serializableData;
+                TimeStamp end;
+                uint32_t data = getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/ContainerWriteSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/ContainerWriteVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/ContainerWriteVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+                    
         }
 
         Container::Container(const Container &obj) :

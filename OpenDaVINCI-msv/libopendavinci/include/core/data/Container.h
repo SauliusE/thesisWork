@@ -134,7 +134,35 @@ namespace core {
                     T containerData;
                     // Read from beginning.
                     m_serializedData.seekg(ios::beg);
-                    m_serializedData >> containerData;
+                    
+                     TimeStamp start;   
+                m_serializedData >> containerData;
+                TimeStamp end;
+                uint32_t data = getDataType();
+                ofstream myfile;
+                if(data == 1000){
+                     myfile.open ("/opt/msv/ContainerReadSBD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 41){
+                     myfile.open ("/opt/msv/ContainerReadVC.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                if(data == 39){
+                     myfile.open ("/opt/msv/ContainerReadVD.csv",ios::out | ios::app);
+                     myfile << (end.toMicroseconds() - start.toMicroseconds());
+                     myfile << " : " ;
+                     myfile << m_serializedData.str().length();
+                     myfile << endl;
+                }
+                myfile.close();
+                    
                     return containerData;
                 };
 
