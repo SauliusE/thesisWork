@@ -65,7 +65,6 @@ namespace core {
             m_size += static_cast<uint32_t>(sizeof(i));
             
             int32_t _i = i;
-            _i = htonl(_i);
             m_buffer.write(reinterpret_cast<const char *>(&_i), sizeof(const uint32_t));
         }
         
@@ -75,7 +74,6 @@ namespace core {
             m_size += static_cast<uint32_t>(sizeof(ui));
             
             uint32_t _ui = ui;
-            _ui = htonl(_ui);
             m_buffer.write(reinterpret_cast<const char *>(&_ui), sizeof(const uint32_t));
 
         }
@@ -86,7 +84,6 @@ namespace core {
             m_size += static_cast<uint32_t>(sizeof(f));
             
             float _f = f;
-            _f = Serializer::htonf(_f);
             m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
 
        }
@@ -102,7 +99,6 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
             m_size += static_cast<uint32_t>(sizeof(d));
             
             double _d = d;
-            _d = Serializer::htond(_d);
             m_buffer.write(reinterpret_cast<const char *>(&_d), sizeof(const double));
 
 
@@ -116,7 +112,6 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
         //    uint32_t size = static_cast<uint32_t>(stringLength + sizeof(uint32_t));             
 
             uint32_t _stringLength = stringLength;
-            _stringLength = htonl(_stringLength);
             m_buffer.write(reinterpret_cast<const char *>(&_stringLength), sizeof(uint32_t));
             m_buffer.write(reinterpret_cast<const char *>(s.c_str()), stringLength);
 
@@ -130,17 +125,24 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
 
     void ROSSerializer::write (core::data::Container &container){
    
-                uint32_t headerLength = 4;                
-                headerLength = htonl(headerLength);
-                m_out.write(reinterpret_cast<const char *>(&headerLength), sizeof(const uint32_t));
+                uint32_t connectionID = container.getDataType();
+                uint8_t opcode = 0;
+                uint8_t messageID = 0;
+                uint16_t blockNr = 1;
                 
-                uint32_t dataType = container.getDataType();
-                dataType = htonl(dataType);
-                m_out.write(reinterpret_cast<const char *>(&dataType), sizeof(const uint32_t));
+                
+
+                m_out.write(reinterpret_cast<const char *>(&connectionID), sizeof(const uint32_t));
+                m_out.write(reinterpret_cast<const char *>(&opcode), sizeof(const uint8_t));
+                m_out.write(reinterpret_cast<const char *>(&messageID), sizeof(const uint8_t));
+                m_out.write(reinterpret_cast<const char *>(&blockNr), sizeof(const uint16_t));
+                
+                
+                
             
-           //     uint32_t msgSize = container.getMessageSize();
-              //  msgSize = htonl(msgSize);
-                //m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
+//                uint32_t msgSize = container.getMessageSize();
+//                msgSize = htonl(msgSize);
+//                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
                 
                 m_out << container.getSerializedData();
 

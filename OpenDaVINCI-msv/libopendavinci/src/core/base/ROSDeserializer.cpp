@@ -109,19 +109,15 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
         }
         void ROSDeserializer::read(istream &in, core::data::Container &container) {
                 
-                uint32_t headerLength;                
-               
-                in.read(reinterpret_cast<char *>(&headerLength), sizeof(const uint32_t));
-                 headerLength = htonl(headerLength);
-                uint32_t dataType;
-                in.read(reinterpret_cast<char *>(&dataType), sizeof(const uint32_t));
-                            dataType = htonl(dataType);
+                uint32_t connectionID;
+                uint8_t opcode;
+                uint8_t messageID;
+                uint16_t blockNr;
 
-               uint32_t msgSize ;
-            
-                in.read(reinterpret_cast<char *>(&msgSize), sizeof(const uint32_t));
-                    msgSize = htonl(msgSize);
-            //    in << container.getSerializedData();
+                in.read(reinterpret_cast<char *>(&connectionID), sizeof(const uint32_t));
+                in.read(reinterpret_cast<char *>(&opcode), sizeof(const uint8_t));
+                in.read(reinterpret_cast<char *>(&messageID), sizeof(const uint8_t));
+                in.read(reinterpret_cast<char *>(&blockNr), sizeof(const uint16_t));
                 
                 char c = 0;
                 in.get(c);
