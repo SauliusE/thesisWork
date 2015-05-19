@@ -76,7 +76,7 @@ namespace core {
                 hash = (m_hashn<<1) + ((m_hashn>>63)&1);
                 m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             }
-            cout << "m_buffer length: " << m_buffer.str().length() << endl;
+//             cout << "m_buffer length: " << m_buffer.str().length() << endl;
             m_out << m_buffer.str();
         }
         
@@ -309,7 +309,7 @@ namespace core {
             double *dd = &_d;
             int64_t *p = (int64_t*) dd;
             
-            cout << "m_buffer write pos: " << m_buffer.tellp() << endl;
+//             cout << "m_buffer write pos: " << m_buffer.tellp() << endl;
             uint8_t buf[8];
             int64_t v = p[0];
             buf[0] = (v>>56)&0xff;

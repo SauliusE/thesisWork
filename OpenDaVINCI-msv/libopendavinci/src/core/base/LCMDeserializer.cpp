@@ -146,7 +146,7 @@ namespace core {
         // Double
         void LCMDeserializer::read(const uint32_t id, double &d) {
             (void) id;
-            cout << "m_buffer read pos: " << m_buffer.tellg() << endl;
+//             cout << "m_buffer read pos: " << m_buffer.tellg() << endl;
             uint8_t buf[8];
             m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
             if (m_buffer.good()) {
@@ -239,7 +239,7 @@ namespace core {
                 m_buffer.put(c);
                 in.get(c);
             }
-            cout << "m_buffer De len: " << m_buffer.str().length() << endl;
+//             cout << "m_buffer De len: " << m_buffer.str().length() << endl;
             container.setSerializedData(m_buffer.str());
         }
     }
