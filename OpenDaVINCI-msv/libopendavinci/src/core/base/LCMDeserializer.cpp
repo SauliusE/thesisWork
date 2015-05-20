@@ -71,12 +71,17 @@ namespace core {
             ss.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             
             int pos = m_buffer.tellg();
+            /*
             char c = 0;
             m_buffer.get(c);
             while (m_buffer.good()) {
                 ss.put(c);
                 m_buffer.get(c);
             }
+            */
+            
+            string st = m_buffer.str().substr(pos, m_buffer.str().length());
+            ss << st;
             
             ss >> s;
             
@@ -239,7 +244,7 @@ namespace core {
                 m_buffer.put(c);
                 in.get(c);
             }
-//             cout << "m_buffer De len: " << m_buffer.str().length() << endl;
+            
             container.setSerializedData(m_buffer.str());
         }
     }

@@ -97,6 +97,52 @@ namespace core {
             public:
                 enum { RESULT = CRC32_RECURSIVE<T::value, 0, typename T::tail>::RESULT };
         };
+        
+        
+        
+        // int64_t
+        
+        
+        
+        template<char c, uint32_t result >
+        class LCM32_COMPUTING {
+            public:
+                enum { RESULT = (result << 8) + c };
+        };
+        
+        template <char c, int32_t res, typename T>
+        class LCM32_RECURSIVE {
+            public:
+                enum { RES = LCM32_COMPUTING<c, res>::RESULT };
+                enum { RESULT = LCM32_RECURSIVE<T::value, RES, typename T::tail>::RESULT };
+        };
+
+        template <char c, int32_t res>
+        class LCM32_RECURSIVE<c, res, NullType> {
+            public:
+                enum { RESULT = LCM32_COMPUTING<c, res>::RESULT };
+        };
+        
+        template <char c, int32_t res, typename T>
+        class LCM32_RECURSIVE_LENGTH {
+            public:
+                enum { RESULT = LCM32_RECURSIVE_LENGTH<T::value, res + 1, typename T::tail>::RESULT };
+        };
+        
+        template <char c, int32_t res>
+        class LCM32_RECURSIVE_LENGTH<c, res, NullType> {
+            public:
+                enum { RESULT = res + 1 };
+        };
+        
+        template <typename T>
+        class LCM32 {
+            public:
+                //enum { LENGTH = LCM32_RECURSIVE_LENGTH<T::value, 0, typename T::tail>::RESULT };
+                enum { RESULT = LCM32_RECURSIVE<T::value, 0, typename T::tail>::RESULT };
+        };
+        
+        
 
     }
 } // core::base

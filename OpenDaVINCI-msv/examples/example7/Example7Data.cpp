@@ -89,11 +89,11 @@ namespace examples {
 
         LCMSerializer &s = sf.getLCMSerializer(out);
 
-        s.write(0, m_numericalValue);
-        s.write(0, m_stringValue);
-        s.write(0, m_bool);
-        s.write(0, m_float);
-        s.write(0, m_double);
+        s.write(LCM32 < OPENDAVINCI_CORE_STRINGLITERAL4('n', 'u', 'm', 'b') >::RESULT, m_numericalValue);
+        s.write(LCM32 < OPENDAVINCI_CORE_STRINGLITERAL4('s', 't', 'r', 'i') >::RESULT, m_stringValue);
+        s.write(LCM32 < OPENDAVINCI_CORE_STRINGLITERAL4('b', 'o', 'b', 'o') >::RESULT, m_bool);
+        s.write(LCM32 < OPENDAVINCI_CORE_STRINGLITERAL4('f', 'l', 'o', 'a') >::RESULT, m_float);
+        s.write(LCM32 < OPENDAVINCI_CORE_STRINGLITERAL4('d', 'o', 'u', 'b') >::RESULT, m_double);
    /*     
         ROSSerializer &s = sf.getROSSerializer(out);
         s.write(1, m_numericalValue);
