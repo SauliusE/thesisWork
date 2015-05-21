@@ -99,7 +99,7 @@ namespace core {
   
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
-             //   container.setReceivedTimeStamp(TimeStamp());
+              container.setReceivedTimeStamp(TimeStamp());
 	  
                 // Use superclass to distribute any received containers.
                 //cout << "receive container"<< endl;

@@ -188,7 +188,7 @@ class SerializationTest : public CxxTest::TestSuite {
             vc.setBrakeLights(true);
             vc.setLeftFlashingLights(false);
             vc.setRightFlashingLights(true);
-             cout << vc.toString() <<endl;
+//             cout << vc.toString() <<endl;
               
             Container c(Container::VEHICLECONTROL,vc);
           
@@ -205,7 +205,7 @@ class SerializationTest : public CxxTest::TestSuite {
             protod.read(inout, c2);
 
             VehicleControl vc2 = c2.getData<VehicleControl>();
-             cout << vc2.toString()<<endl;
+//             cout << vc2.toString()<<endl;
 
             TS_ASSERT(vc.toString() == vc2.toString());
 

@@ -38,7 +38,7 @@ namespace core {
             //if m_size != 0 so we wrote something 
             // else it was write container
 //            cout << "bye bye " << endl;
-             stringstream asd ;
+
             if(m_size !=0 ){
               stringstream ss ;
               encode(ss,m_size);
@@ -218,30 +218,14 @@ namespace core {
    
                 uint16_t magicNumber = 0xAABB;
 //                 cout << " magic number " <<magicNumber<<endl;
-                uint32_t dataType = container.getDataType(); 
+               // uint32_t dataType = container.getDataType();
 //                 cout << " data type " << dataType << endl;
                 encode(m_out, magicNumber);
-                encode(m_out, dataType); 
-            
-//                 uint32_t msgSize;
-//                 stringstream ss;
-//                 ss<< container.getSerializedData();
-//                 ss.read(reinterpret_cast<char *>(&msgSize),sizeof(uint32_t));
-//                 uint64_t value = 0;
-//                 decodeVar(ss,value);
-//                 msgSize = static_cast<uint32_t>
-//                 cout << "encoding msg size " <<  msgSize <<endl;
-//                 encode(m_out,msgSize);
-//                 char c = 0;
-//                 ss.get(c);
-//                 int cs = 0;
-//                 while(ss.good()){
-//                     m_out.put(c);
-//                     ss.get(c);
-//                     cs++;
-//                 }
-//                 cout <<"lol"<< cs<<endl;
-           m_out << container.getSerializedData();
+               // encode(m_out, dataType);
+            //    uint32_t payloadSize = 0;
+            //    payloadSize += container.getSerializedData().str();
+                m_buffer << container;
+                m_out << m_buffer.str();
                 m_size = 0;
 //                 cout << " END OF WRITING CONTAINER " <<endl;
 //                 Serializing container

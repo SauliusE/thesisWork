@@ -310,6 +310,7 @@ value = 0;
                 // casting value to uint16
                 uint16_t magicNumber = (uint16_t) value;
 //                 cout << "magic number des " << magicNumber<< endl;
+             //   cout << " magic number " << 0xAABB << " == "<< magicNumber << endl;
                 if (magicNumber != 0xAABB){
                    if (in.good()) {
                     // Stream is good but still no magic number?
@@ -317,31 +318,15 @@ value = 0;
                     }
                 return;                   
                 }
-                
-                value  = 0 ;    
-                decodeVar(in,value);
-                
-                uint16_t dataType = (uint16_t) value;
-//                 cout << "datatype in container " << dataType <<endl;
-                container.setDataType(static_cast<core::data::Container::DATATYPE>(dataType));
-//                 uint64_t size;
-//                 
-//                 decodeVar(in, size);
-                uint64_t readSize = 0;
-//                 cout << "size decoded containe:" << size <<endl;
+                stringstream buffer;
                 char c = 0;
                 in.get(c);
-//                  in.get(c);
-// //               
-//                 in.get(c);
                 while(in.good()){
-                    m_buffer.put(c);
-                    in.get(c);
-                    readSize++;
+                  buffer.put(c);
+                  in.get(c);
                 }
-//                 cout <<"read size: "<<readSize<<endl;
-//        /* */        cout << "m_buffer size " << m_buffer.str().length()<<endl;
-                container.setSerializedData(m_buffer.str());
+                buffer >> container;
+
 
     }
      
