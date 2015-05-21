@@ -110,7 +110,7 @@ namespace core {
             int64_t hash = (a<<32) + (b&0xffffffff);
             m_hashn = hash;
             
-            buffer.str(buffer.str().substr(sizeof(int64_t), buffer.str().length())); 
+            buffer.str(buffer.str().substr(sizeof(int64_t), buffer.str().length() - 1)); 
             m_buffer << buffer.str();
         }
         
@@ -414,11 +414,19 @@ namespace core {
             */
             
             // Writing the payload
-            //string payload = container.getSerializedData();
-            //string s1 = payload.substr(0, sizeof(int64_t));
-            //string s2 = payload.substr(sizeof(int64_t), payload.length());
+            /*
+            stringstream ss2;
+            string payload = container.getSerializedData();
+            string s1 = payload.substr(0, sizeof(int64_t));
+            string s2 = channel;
+            string s3 = payload.substr(sizeof(int64_t), payload.length() - 1);
+            ss2 << s1 << s2 << s3;7
+            */
             
-            m_out << container.getSerializedData();
+            stringstream ss2;
+            ss2 << container;
+            
+            m_out << ss2.str();
             
             //Preventing any hash from being written
             m_first = true;

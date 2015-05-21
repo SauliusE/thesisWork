@@ -71,18 +71,12 @@ namespace core {
             ss.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             
             int pos = m_buffer.tellg();
-            /*
             char c = 0;
             m_buffer.get(c);
             while (m_buffer.good()) {
                 ss.put(c);
                 m_buffer.get(c);
             }
-            */
-            
-            string st = m_buffer.str().substr(pos, m_buffer.str().length());
-            ss << st;
-            
             ss >> s;
             
             pos += ss.tellg();
@@ -145,13 +139,11 @@ namespace core {
             
             int64_t *p = (int64_t*) &f;
             *p = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
-            
         }
         
         // Double
         void LCMDeserializer::read(const uint32_t id, double &d) {
             (void) id;
-//             cout << "m_buffer read pos: " << m_buffer.tellg() << endl;
             uint8_t buf[8];
             m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
             if (m_buffer.good()) {
@@ -171,12 +163,10 @@ namespace core {
             uint8_t lengthBuf[4];
             m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const uint32_t));
             int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
-            
             char *str = new char[length];
             m_buffer.read(reinterpret_cast<char *>(str), length);
             s = string(str, length - 1);
             OPENDAVINCI_CORE_DELETE_ARRAY(str);
-            
         }
         
         // This is for data types with no appropriate read function
@@ -238,14 +228,15 @@ namespace core {
             */
             
             // Writing the payload to the m_buffer which will then be read and decoded
+            stringstream ss2;
             char c = 0;
             in.get(c);
             while (in.good()) {
-                m_buffer.put(c);
+                ss2.put(c);
                 in.get(c);
             }
             
-            container.setSerializedData(m_buffer.str());
+            ss2 >> container;
         }
     }
 } // core::base

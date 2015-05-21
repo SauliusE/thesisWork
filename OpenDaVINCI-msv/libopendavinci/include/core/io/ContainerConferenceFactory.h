@@ -24,8 +24,8 @@ namespace core {
         class OPENDAVINCI_API ContainerConferenceFactory {
             public:
                 enum {
-                    //MULTICAST_PORT = 12175 // Mariposa Rd, Victorville.
-                    MULTICAST_PORT = 7667
+                    MULTICAST_PORT = 12175 // Mariposa Rd, Victorville.
+                    //MULTICAST_PORT = 7667
                 };
 
             private:

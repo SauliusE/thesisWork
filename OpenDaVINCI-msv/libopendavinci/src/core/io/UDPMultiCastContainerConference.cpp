@@ -65,9 +65,16 @@ namespace core {
                 LCMDeserializer &lcm = sf.getLCMDeserializer(stringstreamData);
                 
                 
-                 TimeStamp start;   
-                              lcm.read(stringstreamData, container); //double stringstreamData variable
-
+                TimeStamp start;
+                lcm.read(stringstreamData, container); //double stringstreamData variable
+                /*
+                string payload = container.getSerializedData();
+                string s1 = payload.substr(0, sizeof(int64_t));
+                string s2 = payload.substr(sizeof(int64_t) + sizeof(int32_t), payload.length() - 33);
+                ss2 << s1 << s2;
+                m_buffer.str(ss2.str());
+                */
+                
                 TimeStamp end;
                 uint32_t data = container.getDataType();
                 ofstream myfile;
@@ -97,7 +104,7 @@ namespace core {
                 
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
-                //container.setReceivedTimeStamp(TimeStamp());
+                container.setReceivedTimeStamp(TimeStamp());
       
                 // Use superclass to distribute any received containers.
                 //cout << "receive container"<< endl;
@@ -113,41 +120,34 @@ namespace core {
 
             SerializationFactory sf;
             LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
-            //container.setSentTimeStamp(TimeStamp());
-            //cout << "--- UDP send function ---" << endl<< endl<< endl;
-                          TimeStamp start;   
-                              lcm.write(container); //double stringstreamData variable
-                              uint32_t data = container.getDataType();
-                              TimeStamp sent = container.getSentTimeStamp();
-                              TimeStamp rece = container.getReceivedTimeStamp();
-                              lcm.write(0, data);
-                              lcm.write(0, sent);
-                              lcm.write(0, rece);
-                TimeStamp end;
-                
-                ofstream myfile;
-                if(data == 1000){
-                     myfile.open ("/opt/msv/UDPWriteSBD.csv",ios::out | ios::app);
-                     myfile << (end.toMicroseconds() - start.toMicroseconds());
-                     myfile << " : " ;
-                     myfile << stringstreamValue.str().length();
-                     myfile << endl;
-                }
-                if(data == 41){
-                     myfile.open ("/opt/msv/UDPWriteVC.csv",ios::out | ios::app);
-                     myfile << (end.toMicroseconds() - start.toMicroseconds());
-                     myfile << " : " ;
-                     myfile << stringstreamValue.str().length();
-                     myfile << endl;
-                }
-                if(data == 39){
-                     myfile.open ("/opt/msv/UDPWriteVD.csv",ios::out | ios::app);
-                     myfile << (end.toMicroseconds() - start.toMicroseconds());
-                     myfile << " : " ;
-                     myfile << stringstreamValue.str().length();
-                     myfile << endl;
-                }
-                myfile.close();
+            container.setSentTimeStamp(TimeStamp());
+            TimeStamp start;
+            lcm.write(container); //double stringstreamData variable
+            TimeStamp end;
+            uint32_t data = container.getDataType();
+            ofstream myfile;
+            if(data == 1000){
+                myfile.open ("/opt/msv/UDPWriteSBD.csv",ios::out | ios::app);
+                myfile << (end.toMicroseconds() - start.toMicroseconds());
+                myfile << " : " ;
+                myfile << stringstreamValue.str().length();
+                myfile << endl;
+            }
+            if(data == 41){
+                myfile.open ("/opt/msv/UDPWriteVC.csv",ios::out | ios::app);
+                myfile << (end.toMicroseconds() - start.toMicroseconds());
+                myfile << " : " ;
+                myfile << stringstreamValue.str().length();
+                myfile << endl;
+            }
+            if(data == 39){
+                myfile.open ("/opt/msv/UDPWriteVD.csv",ios::out | ios::app);
+                myfile << (end.toMicroseconds() - start.toMicroseconds());
+                myfile << " : " ;
+                myfile << stringstreamValue.str().length();
+                myfile << endl;
+            }
+            myfile.close();
             
         //    stringstreamValue << container;
             //cout << "after stringstream << container" << endl;
