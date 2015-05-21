@@ -157,16 +157,25 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
 //                 cout << (int)opcode << endl;
 //                 cout << (int)messageID << endl;
 //                 cout << blockNr << endl;
-               
+                
+               stringstream buffer;
                 char c = 0;
                 in.get(c);
-                
                 while(in.good()){
-                    m_buffer.put(c);
-                    in.get(c);
+                  buffer.put(c);
+                  in.get(c);
                 }
+                buffer >> container;
                 
-                container.setSerializedData(m_buffer.str());
+//                 char c = 0;
+//                 in.get(c);
+//                 
+//                 while(in.good()){
+//                     m_buffer.put(c);
+//                     in.get(c);
+//                 }
+//                 
+//                 container.setSerializedData(m_buffer.str());
 
     }
      

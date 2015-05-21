@@ -28,7 +28,7 @@
 #include "core/data/TimeStamp.h"
 #include "core/data/control/VehicleControl.h"
 
-#include </home/victor/thesisWork/OpenDaVINCI-msv/apps/2015/msv-data/include/SensorBoardData.h>
+#include </home/cadogan/Git/thesisWork/OpenDaVINCI-msv/apps/2015/msv-data/include/SensorBoardData.h>
 // #include "core/platform.h"
 
 using namespace std;
@@ -158,14 +158,14 @@ class SerializationTest : public CxxTest::TestSuite {
             SerializationTestSampleData sd2;
             inout >> sd2;
 
-            TS_ASSERT(sd2.m_bool == sd.m_bool);
+            TS_ASSERT(sd2.m_bool);
             TS_ASSERT(sd2.m_int == 42);
             TS_ASSERT(sd2.m_string == "This is an example.");
             TS_ASSERT_DELTA(sd2.m_float, 123.32, 1e-5);
             TS_ASSERT_DELTA(sd2.m_double, 1999.354, 1e-5);
             TS_ASSERT_DELTA(sd2.m_nestedData.m_double,1234.32, 1e-5);
             TS_ASSERT(sd2.m_nestedData.m_int == 1234);
-            TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
+              TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
 // 
 //             cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
 //              cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
@@ -196,8 +196,8 @@ class SerializationTest : public CxxTest::TestSuite {
             stringstream inout;
 
             SerializationFactory sf;
-            ROSSerializer &ros = sf.getROSSerializer(inout);
-            ros.write(c);
+            ROSSerializer &protos = sf.getROSSerializer(inout);
+            protos.write(c);
             inout.flush();
             
             Container c2;

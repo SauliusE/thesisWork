@@ -145,23 +145,22 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
                 uint8_t opcode = 0;
                 uint8_t messageID = 0;
                 uint16_t blockNr = 1;
-                
-                
+
 
                 m_out.write(reinterpret_cast<const char *>(&connectionID), sizeof(const uint32_t));
                 m_out.write(reinterpret_cast<const char *>(&opcode), sizeof(const uint8_t));
                 m_out.write(reinterpret_cast<const char *>(&messageID), sizeof(const uint8_t));
                 m_out.write(reinterpret_cast<const char *>(&blockNr), sizeof(const uint16_t));
                 
-                
-                
-            
+
 //                uint32_t msgSize = container.getMessageSize();
 //                msgSize = htonl(msgSize);
 //                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
-                
-                m_out << container.getSerializedData();
+                m_buffer << container;
+                m_out << m_buffer.str();
                 m_size = 0;
+//                 m_out << container.getSerializedData();
+//                 m_size = 0;
 
         }
     
