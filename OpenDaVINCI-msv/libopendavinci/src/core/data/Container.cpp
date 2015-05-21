@@ -168,6 +168,7 @@ namespace core {
 
             // Write container data type.
             uint32_t dataType = getDataType();
+            TimeStamp start;
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                     dataType);
             
@@ -182,7 +183,32 @@ namespace core {
             // Write received time stamp data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'e', 'c', 'v', 'd') >::RESULT,
                     m_received);
-            
+            TimeStamp end;
+            uint32_t size = 0;
+                       size = sizeof(dataType) + m_serializedData.str().length() + sizeof(m_sent) + sizeof(m_received);
+                       ofstream myfile;
+                       if(dataType == 1000){
+                           myfile.open ("/opt/msv/ContainerWriteSBD.csv",ios::out | ios::app);
+                           myfile << (end.toMicroseconds() - start.toMicroseconds());
+                           myfile << " : " ;
+                           myfile << size;
+                           myfile << endl;
+                        }
+                        if(dataType == 41){
+                            myfile.open ("/opt/msv/ContainerWriteVC.csv",ios::out | ios::app);
+                            myfile << (end.toMicroseconds() - start.toMicroseconds());
+                            myfile << " : " ;
+                            myfile << size;
+                            myfile << endl;
+                        }
+                        if(dataType == 39){
+                            myfile.open ("/opt/msv/ContainerWriteVD.csv",ios::out | ios::app);
+                            myfile << (end.toMicroseconds() - start.toMicroseconds());
+                            myfile << " : " ;
+                            myfile << size;
+                            myfile << endl;
+                          }
+                         myfile.close();
             return out;
         }
 
@@ -194,6 +220,7 @@ namespace core {
          //   d.read();
             // Read container data type.
            uint32_t dataType = 0;
+           TimeStamp start;
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL2('i', 'd') >::RESULT,
                    dataType);
 
@@ -209,6 +236,33 @@ namespace core {
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'e', 'c', 'v', 'd') >::RESULT,
                    m_received);
             
+            TimeStamp end;
+
+                        uint32_t size = 0;
+                        size = sizeof(dataType) + rawData.length() + sizeof(m_sent) + sizeof(m_received);
+                        ofstream myfile;
+                        if(dataType == 1000){
+                            myfile.open ("/opt/msv/ContainerReadSBD.csv",ios::out | ios::app);
+                            myfile << (end.toMicroseconds() - start.toMicroseconds());
+                            myfile << " : " ;
+                            myfile << size;
+                            myfile << endl;
+                         }
+                         if(dataType == 41){
+                             myfile.open ("/opt/msv/ContainerReadVC.csv",ios::out | ios::app);
+                             myfile << (end.toMicroseconds() - start.toMicroseconds());
+                             myfile << " : " ;
+                             myfile << size;
+                             myfile << endl;
+                         }
+                         if(dataType == 39){
+                             myfile.open ("/opt/msv/ContainerReadVD.csv",ios::out | ios::app);
+                             myfile << (end.toMicroseconds() - start.toMicroseconds());
+                             myfile << " : " ;
+                             myfile << size;
+                             myfile << endl;
+                           }
+                          myfile.close();
             // Set data.
             m_dataType = static_cast<DATATYPE>(dataType);
             m_serializedData.str(rawData);
