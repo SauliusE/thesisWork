@@ -31,26 +31,6 @@ namespace core {
              * Otherwise, if it is not the serializer where the write(container) function is called, the hash will be written along with the payload without serialization.
              * This is to be able to get the hash from the serializer that is created in "buffer << s" in write(Serializable).
              */
-            /*
-            if (m_first) {
-                //m_hash = 0xf90d295ef96ee460;
-                m_hash = (m_hash<<1) + ((m_hash>>63)&1);
-                
-                uint8_t hashbuf[8];
-                hashbuf[0] = (m_hash>>56)&0xff;
-                hashbuf[1] = (m_hash>>48)&0xff;
-                hashbuf[2] = (m_hash>>40)&0xff;
-                hashbuf[3] = (m_hash>>32)&0xff;
-                hashbuf[4] = (m_hash>>24)&0xff;
-                hashbuf[5] = (m_hash>>16)&0xff;
-                hashbuf[6] = (m_hash>>8)&0xff;
-                hashbuf[7] = (m_hash & 0xff);
-                m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
-            } else if (m_hash != 0x12345678) {
-                int64_t hash = m_hash + m_hashn;
-                m_out.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
-            }
-            */
             
             int64_t hash;
             if (m_hash != 0x12345678) {
@@ -434,6 +414,10 @@ namespace core {
             */
             
             // Writing the payload
+            //string payload = container.getSerializedData();
+            //string s1 = payload.substr(0, sizeof(int64_t));
+            //string s2 = payload.substr(sizeof(int64_t), payload.length());
+            
             m_out << container.getSerializedData();
             
             //Preventing any hash from being written

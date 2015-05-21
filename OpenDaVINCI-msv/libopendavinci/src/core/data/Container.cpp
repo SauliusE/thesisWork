@@ -41,8 +41,9 @@ namespace core {
 //             lcm.setFirst(true);
 //             lcm.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL3('s','e','r') >:: RESULT,serializableData);
 //             setHash(lcm.getHash());
-            
-          
+               
+               m_serializedData << serializableData;
+                /*
                TimeStamp start;   
                 m_serializedData << serializableData;
                 TimeStamp end;
@@ -70,6 +71,7 @@ namespace core {
                      myfile << endl;
                 }
                 myfile.close();
+                */
             /*
             SerializationFactory sf;
             LCMSerializer &lcm = sf.getLCMSerializer(m_serializedData);
@@ -180,7 +182,7 @@ namespace core {
             // Write received time stamp data.
             s.write(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('r', 'e', 'c', 'v', 'd') >::RESULT,
                     m_received);
-
+            
             return out;
         }
 

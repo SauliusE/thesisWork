@@ -97,7 +97,7 @@ namespace core {
                 
         //       stringstreamData >> container;
                 //cout << " after stringstreamData >> container; "  << container.m_serializedData.str()<<endl;
-             //   container.setReceivedTimeStamp(TimeStamp());
+                //container.setReceivedTimeStamp(TimeStamp());
       
                 // Use superclass to distribute any received containers.
                 //cout << "receive container"<< endl;
@@ -113,13 +113,18 @@ namespace core {
 
             SerializationFactory sf;
             LCMSerializer &lcm = sf.getLCMSerializer(stringstreamValue);
-            container.setSentTimeStamp(TimeStamp());
+            //container.setSentTimeStamp(TimeStamp());
             //cout << "--- UDP send function ---" << endl<< endl<< endl;
                           TimeStamp start;   
                               lcm.write(container); //double stringstreamData variable
-
+                              uint32_t data = container.getDataType();
+                              TimeStamp sent = container.getSentTimeStamp();
+                              TimeStamp rece = container.getReceivedTimeStamp();
+                              lcm.write(0, data);
+                              lcm.write(0, sent);
+                              lcm.write(0, rece);
                 TimeStamp end;
-                uint32_t data = container.getDataType();
+                
                 ofstream myfile;
                 if(data == 1000){
                      myfile.open ("/opt/msv/UDPWriteSBD.csv",ios::out | ios::app);
