@@ -223,7 +223,7 @@ class SerializationTest : public CxxTest::TestSuite {
         void xtestLcmSerialisation() {
           cout << " LCM serialisation test " << endl;
           char* rawData; // need assign raw data somehow
-          stringstream rawDataStream ;
+          stringstream rawDataStream;
           rawDataStream << rawData;
            VehicleControl vc;
            vc.setSpeed(2.0);
@@ -248,34 +248,45 @@ class SerializationTest : public CxxTest::TestSuite {
         
         }
         
-        void xtestLcmDeserialisation() {
+        void testLcmDeserialisation() {
             
-           cout << " lcm Deserialisation test " << endl;
-           char* rawData;// need assign raw data somehow
-           stringstream rawDataStream ;
-           rawDataStream << rawData;
-  
-           VehicleControl vc;
-           vc.setSpeed(2.0);
-           vc.setAcceleration(1.6);
-           vc.setSteeringWheelAngle(32);
-           vc.setBrakeLights(true);
-           vc.setLeftFlashingLights(false);
-           vc.setRightFlashingLights(true);
-           
-           cout << vc.toString() << endl;
-           
-           SerializationFactory sf;
-           LCMDeserializer &lcmd = sf.getLCMDeserializer(rawDataStream);
-           Container c;
-           lcmd.read(rawDataStream,c);
-           
-           VehicleControl vc2 = c.getData<VehicleControl>();
-           cout << vc2.toString()<<endl;
+            cout << " lcm Deserialisation test " << endl;
+            //char* rawData = "";
+            
+            string hex = "4c433032000000003130303500284dcbf791b0cc2a40000000000000003ff999999999999a4040000000000000010000";
+            int len = hex.length();
+            string rawData;
+            
+            for(int i=0; i< len; i+=2) {
+                string byte = hex.substr(i,2);
+                char chr = (char) (int)strtol(byte.c_str(), NULL, 16);
+                rawData.push_back(chr);
+            }
+            
+            stringstream rawDataStream ;
+            rawDataStream << rawData;
 
-           TS_ASSERT(vc.toString() == vc2.toString());
-          
-           cout << " End of lcm Deserialisation test" <<endl;
+            VehicleControl vc;
+            vc.setSpeed(2.0);
+            vc.setAcceleration(1.6);
+            vc.setSteeringWheelAngle(32);
+            vc.setBrakeLights(true);
+            vc.setLeftFlashingLights(false);
+            vc.setRightFlashingLights(true);
+            
+            cout << vc.toString() << endl;
+            
+            SerializationFactory sf;
+            LCMDeserializer &lcmd = sf.getLCMDeserializer(rawDataStream);
+            Container c;
+            lcmd.read(rawDataStream,c);
+            
+            VehicleControl vc2 = c.getData<VehicleControl>();
+            cout << vc2.toString()<<endl;
+
+            TS_ASSERT(vc.toString() == vc2.toString());
+            
+            cout << " End of lcm Deserialisation test" <<endl;
         }
         
         void xtestContainerNestedDataSerialisation() {}
