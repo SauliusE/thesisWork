@@ -22,12 +22,12 @@ namespace core {
             m_buffer(),
             m_hash(0x12345678),
             m_hashn(0),
-            m_first(false) {}
+            m_writeHash(true) {}
         
         LCMSerializer::~LCMSerializer() {
             /* 
              * Calculates and writes the hash number and the payload to the ostream which will then get written to the container stream.
-             * If this is the Serializer from the container (m_first is true), the hash will be serialized and written along with the payload.
+             * If this is the Serializer from the container (m_writeHash is true), the hash will be serialized and written along with the payload.
              * Otherwise, if it is not the serializer where the write(container) function is called, the hash will be written along with the payload without serialization.
              * This is to be able to get the hash from the serializer that is created in "buffer << s" in write(Serializable).
              */
@@ -36,13 +36,11 @@ namespace core {
             if (m_hash != 0x12345678) {
                 hash = m_hash + ((m_hashn<<1) + ((m_hashn>>63)&1));
                 hash = (hash<<1) + ((hash>>63)&1);
-            } else if (!m_first) {
+            } else if (m_writeHash) {
                 hash = (m_hashn<<1) + ((m_hashn>>63)&1);
             }
             
-            if (!m_first) {
-                //hash = 0xbd6168d5cdb9b155;
-                //hash = (hash<<1) + ((hash>>63)&1);
+            if (m_writeHash) {
                 uint8_t hashbuf[8];
                 hashbuf[0] = (hash>>56)&0xff;
                 hashbuf[1] = (hash>>48)&0xff;
@@ -55,12 +53,10 @@ namespace core {
                 m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
             }
             
-            
-//             cout << "m_buffer length: " << m_buffer.str().length() << endl;
             m_out << m_buffer.str();
         }
         
-        // Set and get methods
+        // Set and get methods for hash.
         int64_t LCMSerializer::getHash() {
             return m_hash;
         }
@@ -69,20 +65,14 @@ namespace core {
             m_hash = hash;
         }
         
-        bool LCMSerializer::getFirst() {
-            return m_first;
-        }
-        
-        void LCMSerializer::setFirst(bool f) {
-            m_first = f;
-        }
-        
         /*
          * The write functions below are called to encode and write variables to a stringstream buffer.
          * The variables will be written to the buffer in the order the write functions are called.
          * 
          * A hash number is also generated based on the names and the types of the variables that are being written.
          * This hash number is not used in OpenDaVINCI. It is only used by LCM.
+         * The hash number generation does not work unless all variables are 4 characters long.
+         * LCM32 also has to be used instead of the CRC32 for the id.
          * 
          * For single byte variables, they are just written to the buffer without any encoding.
          * For others, the bytes of a variable are stored into a uint8_t buffer and the buffer is then written to the stream.
@@ -281,13 +271,10 @@ namespace core {
             m_hash = calculate_hash(m_hash, 0);
             
             
-            // This way of encoding is taken straight from LCM.
-            // Don't even know how and why it works myself.
             double _d = d;
             double *dd = &_d;
             int64_t *p = (int64_t*) dd;
             
-//             cout << "m_buffer write pos: " << m_buffer.tellp() << endl;
             uint8_t buf[8];
             int64_t v = p[0];
             buf[0] = (v>>56)&0xff;
@@ -299,16 +286,11 @@ namespace core {
             buf[6] = (v>>8)&0xff;
             buf[7] = (v & 0xff);
             m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint64_t));
-            
-            
-            //double _d = d;
-            //m_buffer.write(reinterpret_cast<const char *>(&_d), sizeof(const uint64_t));
         }
         
         /*
-         * A string is encoded by first converting the string to a char*.
-         * The length of the string, including the '\0', is encoded and written to the buffer
-         * and then the char* is written to the buffer.
+         * When encoding a string, the length of the string, including the '\0', is encoded and written to the buffer
+         * and then the string is written to the buffer as a char*.
          */
         
         // String
@@ -323,8 +305,6 @@ namespace core {
             m_hash = hash_string(m_hash, "string");
             m_hash = calculate_hash(m_hash, 0);
             
-            
-            //char* cstr = (char *) s.c_str();
             uint32_t length = s.length() + 1;
             
             uint8_t lengthBuf[4];
@@ -358,15 +338,21 @@ namespace core {
              * This function will be called when all the necessary data has been encoded and written for the container.
              * An LCM message has the following structure:
              * 
-             * MagicNumber|SequenceNumber|ChannelName|0|Hash|Payload
+             * MagicNumber|SequenceNumber|ChannelName|'\0'|Hash|Payload
              * 
              * MagicNumber is used to check if the message is an LCM message. It is 4 bytes big.
-             * SequenceNumber is not used since we only have non-fragmented messages. It is 4 bytes big.
+             * SequenceNumber is used to check if a message that has been split is sent and received in the correct order. Since OpenDaVINCI only sends non-fragmented messages, it is not used. It is 4 bytes big.
              * ChannelName is the channel which the message will appear in. In our case it is the container data type. It can be up to 256 bytes big.
-             * The 0 is used to know when the ChannelName ends. It is 1 byte big.
+             * The '\0' is used to know when the ChannelName ends. It is 1 byte big.
              * Hash shows which variables have been encoded and in which order. It is only for LCM and is not used in OpenDaVINCI. It is 8 bytes big.
              * Payload is where the encoded data will be.
+             * 
+             * Since OpenDaVINCI also require a datatype and 2 timestamps in the message, the message structure actually becomes:
+             * 
+             * MagicNumber|SequenceNumber|ChannelName|'\0'|Datatype|Hash|Payload|Timestamp|Timestamp
+             * 
              */
+            
             
             // Encoding and writing the magic number
             uint32_t magicNumber = 0x4c433032;
@@ -377,6 +363,7 @@ namespace core {
             mnbuf[3] = (magicNumber & 0xff);
             m_out.write(reinterpret_cast<const char *>(&mnbuf), sizeof(const uint32_t));
             
+            
             // Sequence Number
             uint32_t sequence = 0;
             uint8_t seqbuf[4];
@@ -386,50 +373,27 @@ namespace core {
             seqbuf[3] = (sequence & 0xff);
             m_out.write(reinterpret_cast<const char *>(&seqbuf), sizeof(const uint32_t));
             
+            
             // Channel name
             string channel;
             stringstream ss;
-            
             uint32_t chan = container.getDataType();
             ss << chan;
             channel = ss.str();
             m_out << channel;
             
-            // 0
+            
+            // '\0'
             uint8_t zero = 0;
             m_out.write(reinterpret_cast<const char *>(&zero), sizeof(const uint8_t));
-            /*
-            // Writing the hash
-            int64_t hash = container.getHash();
-            uint8_t hashbuf[8];
-            hashbuf[0] = (hash>>56)&0xff;
-            hashbuf[1] = (hash>>48)&0xff;
-            hashbuf[2] = (hash>>40)&0xff;
-            hashbuf[3] = (hash>>32)&0xff;
-            hashbuf[4] = (hash>>24)&0xff;
-            hashbuf[5] = (hash>>16)&0xff;
-            hashbuf[6] = (hash>>8)&0xff;
-            hashbuf[7] = (hash & 0xff);
-            m_out.write(reinterpret_cast<const char *>(&hashbuf), sizeof(const uint64_t));
-            */
             
-            // Writing the payload
-            /*
-            stringstream ss2;
-            string payload = container.getSerializedData();
-            string s1 = payload.substr(0, sizeof(int64_t));
-            string s2 = channel;
-            string s3 = payload.substr(sizeof(int64_t), payload.length() - 1);
-            ss2 << s1 << s2 << s3;7
-            */
             
-            stringstream ss2;
-            ss2 << container;
+            // Since the hash is a part of payload, we don't need to write the hash and just go straight to writing the payload.
+            m_out << container.getSerializedData();
             
-            m_out << ss2.str();
             
             //Preventing any hash from being written
-            m_first = true;
+            m_writeHash = false;
         }
         
         // Functions taken from LCM for calculating hash

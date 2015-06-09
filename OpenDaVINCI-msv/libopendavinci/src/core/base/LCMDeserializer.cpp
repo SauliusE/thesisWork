@@ -25,7 +25,7 @@ namespace core {
                 in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
                 int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
                 
-                // Sets the instream position to the beginning
+                // Sets the read position to the beginning
                 in.clear();
                 in.seekg(0, ios_base::beg);
                 
@@ -33,7 +33,7 @@ namespace core {
                     return;
                 }
                 
-                
+                // Since the hash is a part of the payload and the hash is not used, just read it and ignore it.
                 int64_t hash;
                 in.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
                 
@@ -49,6 +49,7 @@ namespace core {
             }
 
         LCMDeserializer::~LCMDeserializer() {
+            // This is used when reading nested data to tell how much has been read.
             int pos = m_buffer.tellg();
             m_in.clear();
             m_in.seekg(pos, ios_base::beg);
@@ -214,20 +215,9 @@ namespace core {
             uint32_t containerDataType = 0;
             ss >> containerDataType;
             container.setDataType(static_cast<core::data::Container::DATATYPE>(containerDataType));
-            /*
-            // Decoding Hash
-            uint8_t hashBuf[8];
-            in.read(reinterpret_cast<char*>(&hashBuf), sizeof(uint64_t));
-            uint64_t hash = (((uint64_t)hashBuf[0])<<56) + (((uint64_t)hashBuf[1])<<48) + (((uint64_t)hashBuf[2])<<40) + (((uint64_t)hashBuf[3])<<32) + (((uint64_t)hashBuf[4])<<24) + (((uint64_t)hashBuf[5])<<16) + (((uint64_t)hashBuf[6])<<8) + ((uint64_t)hashBuf[7]);
-            container.setHash(hash);
-            */
-            /* We are not using the hash for now
-            if (hash != 0x0e65ec258fc2e665LL) {
-                return;
-            }
-            */
             
-            // Writing the payload to the m_buffer which will then be read and decoded
+            // Writing the payload to the m_buffer which will then be read and decoded.
+            // This payload also includes the hash.
             stringstream ss2;
             char c = 0;
             in.get(c);
@@ -236,7 +226,9 @@ namespace core {
                 in.get(c);
             }
             
-            ss2 >> container;
+            container.setSerializedData(ss2.str());
+            
+            //ss2 >> container;
         }
     }
 } // core::base

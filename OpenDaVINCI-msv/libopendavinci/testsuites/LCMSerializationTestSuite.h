@@ -253,7 +253,7 @@ class SerializationTest : public CxxTest::TestSuite {
             cout << " lcm Deserialisation test " << endl;
             //char* rawData = "";
             
-            string hex = "4c433032000000003130303500284dcbf791b0cc2a40000000000000003ff999999999999a4040000000000000010000";
+            string hex = "4c433032000000003130303500284dcbf791b0cc2a40000000000000003ff999999999999a4040000000000000010001";
             int len = hex.length();
             string rawData;
             
