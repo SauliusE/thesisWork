@@ -27,6 +27,7 @@ namespace core {
             m_size = size;
             char c = 0;
             in.get(c);
+            cout << " messge size " << m_size << endl;
 //             cout << " constructor " << m_size << " "  <<endl;
             while(in.good() ){
 //                 cout << " putting to buffer " << endl;  
@@ -126,6 +127,7 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
                 uint32_t stringLength = 0;
                 m_buffer.read(reinterpret_cast<char *>(&stringLength), sizeof(uint32_t));
 //                 stringLength = ntohl(stringLength);
+                cout << "string lenght " << stringLength << endl;
                 char *str = new char[stringLength+1];
                 m_buffer.read(reinterpret_cast<char *>(str), static_cast<uint32_t>(stringLength));
 //                 cout << " string length " <<  stringLength<<endl;
