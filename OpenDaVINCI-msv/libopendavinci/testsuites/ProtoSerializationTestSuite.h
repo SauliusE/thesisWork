@@ -96,8 +96,7 @@ class SerializationTestSampleData : public core::base::Serializable {
             
             s.write(1,m_float);
             s.write(2,m_double);
-            s.write(3, m_bool);
-            s.write(4, m_nestedData);       
+            s.write(3, m_bool);       
             s.write(5, m_int);
             s.write(6, m_string);
               
@@ -113,8 +112,6 @@ class SerializationTestSampleData : public core::base::Serializable {
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '2', 'o', 'l') >::RESULT,m_double);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                    m_bool);           
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
-                    m_nestedData);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
                    m_int);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
@@ -132,12 +129,12 @@ class SerializationTest : public CxxTest::TestSuite {
            SerializationTestSampleData sd;
            sd.m_bool = true;
            sd.m_int = 42;
-           sd.m_nestedData.m_double = 1234.32;
-           sd.m_nestedData.m_int = 1234;
+          // sd.m_nestedData.m_double = 1234.32;
+           //sd.m_nestedData.m_int = 1234;
            sd.m_string = "This is an example.";
            sd.m_float = 123.32;
            sd.m_double = 1999.354;
-           sd.m_nestedData.m_string = "Nested one.";
+          // sd.m_nestedData.m_string = "Nested one.";
            stringstream inout;
            inout << sd;
            inout.flush();
@@ -152,8 +149,8 @@ class SerializationTest : public CxxTest::TestSuite {
            TS_ASSERT_DELTA(sd2.m_float, sd.m_float, 1e-5);
            TS_ASSERT_DELTA(sd2.m_double, sd.m_double, 1e-5);
            TS_ASSERT_DELTA(sd2.m_nestedData.m_double,sd.m_nestedData.m_double, 1e-5);
-           TS_ASSERT(sd2.m_nestedData.m_int == sd.m_nestedData.m_int);
-           TS_ASSERT(sd2.m_nestedData.m_string == sd.m_nestedData.m_string);
+      //     TS_ASSERT(sd2.m_nestedData.m_int == sd.m_nestedData.m_int);
+        //   TS_ASSERT(sd2.m_nestedData.m_string == sd.m_nestedData.m_string);
            
            cout << " --- end testing nested data --- " << endl; 
            
@@ -223,23 +220,32 @@ class SerializationTest : public CxxTest::TestSuite {
        
        
         
-        void xtestProtoSerialisation() {
-          cout << " --- Proto serialisation test --- " << endl;
-          
-          stringstream rawDataStream ;
+        void testProtoSerialisation() {
+          cout << " --- Proto serialisation test with a raw data --- " << endl;
+          string hex = "2B0dd7a3f6421123dbf97e6a3d9f401801202a2a1750726f746f62756620526177204461746120546573742e";
+          int len = hex.length();
+          string rawData;
+            
+          for(int i=0; i< len; i+=2) {
+                string byte = hex.substr(i,2);
+                char chr = (char) (int)strtol(byte.c_str(), NULL, 16);
+                rawData.push_back(chr);
+           }
+          stringstream rawDataStream;
+          rawDataStream << rawData;
              
           SerializationTestSampleData sd;
            
           rawDataStream >> sd;
            
            
-           TS_ASSERT(sd.m_bool);
-           TS_ASSERT(sd.m_int == 42);
-           TS_ASSERT(sd.m_string == "This is an example.");
-//            TS_ASSERT(sd.m_float, 123.32, 1e-5);
-//            TS_ASSERT(sd.m_double, 1999.354, 1e-5);
+          TS_ASSERT(sd.m_bool == true);
+          TS_ASSERT(sd.m_int == 42);
+          TS_ASSERT(sd.m_string == "Protobuf Raw Data Test.");
+          TS_ASSERT_DELTA(sd.m_float, 123.32, 1e-5);
+          TS_ASSERT_DELTA(sd.m_double, 1999.354, 1e-5);
                    
-          
+         
           cout << " --- End of the proto serialisation test with raw data ---" << endl;
         
         }

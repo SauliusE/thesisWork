@@ -45,7 +45,7 @@ namespace core {
                     in.get(c);
                 }
                 m_size = msgSize;
-            
+           
 
                 in.clear();
                 in.seekg(position,ios_base::beg);
