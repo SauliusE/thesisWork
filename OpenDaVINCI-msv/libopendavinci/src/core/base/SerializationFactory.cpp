@@ -5,7 +5,7 @@
  */
 
 #include "core/base/QueryableNetstringsSerializer.h"
- #include "core/base/QueryableNetstringsDeserializer.h"
+#include "core/base/QueryableNetstringsDeserializer.h"
 #include "core/base/PROTOSerializer.h"
 #include "core/base/PROTODeserializer.h"
 #include "core/base/SerializationFactory.h"
@@ -72,7 +72,6 @@ namespace core {
         
         //Thesis implementation
         LCMSerializer& SerializationFactory::getLCMSerializer(ostream &out) const {
-            cout << " NOT SUPPOSE TO DO THIS " << endl;
                 LCMSerializer *lcms = NULL;
                 if (m_listOfLCMSerializers.empty()){
                         lcms = new LCMSerializer(out);
@@ -86,8 +85,6 @@ namespace core {
 
 
         LCMDeserializer& SerializationFactory::getLCMDeserializer(istream &in) const {
-                        cout << " NOT SUPPOSE TO DO THIS " << endl;
-
                         LCMDeserializer *lcmd = NULL;
                         if (m_listOfLCMDeserializers.empty()) {
                                 lcmd = new LCMDeserializer(in);
@@ -128,8 +125,7 @@ namespace core {
         
         
         
-                ROSSerializer& SerializationFactory::getROSSerializer(ostream &out) const {
-                                cout << " NOT SUPPOSE TO DO THIS " << endl;
+        ROSSerializer& SerializationFactory::getROSSerializer(ostream &out) const {
 
             ROSSerializer *lcms = NULL;
             if (m_listOfROSSerializers.empty()){

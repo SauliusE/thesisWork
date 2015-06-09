@@ -28,14 +28,12 @@
 #include "core/data/TimeStamp.h"
 #include "core/data/control/VehicleControl.h"
 
-#include </home/cadogan/Git/thesisWork/OpenDaVINCI-msv/apps/2015/msv-data/include/SensorBoardData.h>
-// #include "core/platform.h"
 
 using namespace std;
 using namespace core::base;
 using namespace core::data;
 using namespace core::data::control;
-using namespace msv;
+
 
 class SerializationTestNestedData : public core::base::Serializable {
     public:
@@ -83,7 +81,7 @@ class SerializationTestSampleData : public core::base::Serializable {
                 m_float(),
                 m_nestedData() 
                 {}
-
+    
         bool m_bool;
         int32_t m_int;
         string m_string;
@@ -99,13 +97,10 @@ class SerializationTestSampleData : public core::base::Serializable {
             s.write(1,m_float);
             s.write(2,m_double);
             s.write(3, m_bool);
-   s.write(4, m_nestedData);
-        
+            s.write(4, m_nestedData);       
             s.write(5, m_int);
-           
             s.write(6, m_string);
-    
-          
+              
             return out;
         }
 
@@ -114,23 +109,17 @@ class SerializationTestSampleData : public core::base::Serializable {
 
             Deserializer &d = sf.getDeserializer(in);
             
-             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '3', 'o', 'l') >::RESULT,m_float);
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '3', 'o', 'l') >::RESULT,m_float);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '2', 'o', 'l') >::RESULT,m_double);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
-                   m_bool);
-            
-//            
-                  d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
+                   m_bool);           
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
                     m_nestedData);
-             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
+            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
                    m_int);
             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
                    m_string);
-       
-
-// 
             
-
             return in;
         }
 };
@@ -149,30 +138,24 @@ class SerializationTest : public CxxTest::TestSuite {
            sd.m_float = 123.32;
            sd.m_double = 1999.354;
            sd.m_nestedData.m_string = "Nested one.";
-            stringstream inout;
-            inout << sd;
-            inout.flush();
+           stringstream inout;
+           inout << sd;
+           inout.flush();
 
-            // Read from the previously created data sink.
-//             cout << " STARTING DECODING " <<endl;
-            SerializationTestSampleData sd2;
-            inout >> sd2;
+           // Read from the previously created data sink.
+           SerializationTestSampleData sd2;
+           inout >> sd2;
 
-            TS_ASSERT(sd2.m_bool);
-            TS_ASSERT(sd2.m_int == 42);
-            TS_ASSERT(sd2.m_string == "This is an example.");
-            TS_ASSERT_DELTA(sd2.m_float, 123.32, 1e-5);
-            TS_ASSERT_DELTA(sd2.m_double, 1999.354, 1e-5);
-            TS_ASSERT_DELTA(sd2.m_nestedData.m_double,1234.32, 1e-5);
-            TS_ASSERT(sd2.m_nestedData.m_int == 1234);
-              TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
-// 
-//             cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
-//              cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
-//             cout << "m_int : " << sd2.m_int << "expected : " << sd.m_int <<endl;
-              cout << "m_nestedData : " << sd2.m_nestedData.m_string<< " expected : " <<sd.m_nestedData.m_string <<endl;;
-            cout << " --- end testing nested data --- " << endl; 
-
+           TS_ASSERT(sd2.m_bool == sd.m_bool);
+           TS_ASSERT(sd2.m_int == sd.m_int);
+           TS_ASSERT(sd2.m_string ==  sd.m_string);
+           TS_ASSERT_DELTA(sd2.m_float, sd.m_float, 1e-5);
+           TS_ASSERT_DELTA(sd2.m_double, sd.m_double, 1e-5);
+           TS_ASSERT_DELTA(sd2.m_nestedData.m_double,sd.m_nestedData.m_double, 1e-5);
+           TS_ASSERT(sd2.m_nestedData.m_int == sd.m_nestedData.m_int);
+           TS_ASSERT(sd2.m_nestedData.m_string == sd.m_nestedData.m_string);
+           
+           cout << " --- end testing nested data --- " << endl; 
            
         }
         
@@ -239,115 +222,31 @@ class SerializationTest : public CxxTest::TestSuite {
        }
        
        
-       void testSBD(){
-           cout << " -- SensorBoardData serializing test -- " <<endl;
-           
-//            SensorBoardData sdb;
-           //void update(const uint32_t &sensorID, const double &distance);
-//            sdb.update(1, 12.2);
-//            sdb.update(2, 12.2);
-//            sdb.update(3, 12.2);
-//            sdb.update(4, 12.2);
-//            sdb.update(5, 12.2);
-//            sdb.update(6, 12.2);
-//            
-           
-       }
         
         void xtestProtoSerialisation() {
           cout << " --- Proto serialisation test --- " << endl;
           
-          stringstream rawData ;
+          stringstream rawDataStream ;
              
-           VehicleControl vc;
-           vc.setSpeed(2.0);
-           vc.setAcceleration(1.6);
-           vc.setSteeringWheelAngle(32);
-           vc.setBrakeLights(true);
-           vc.setLeftFlashingLights(false);
-           vc.setRightFlashingLights(true);
+          SerializationTestSampleData sd;
            
-           stringstream inout;
+          rawDataStream >> sd;
+           
+           
+           TS_ASSERT(sd.m_bool);
+           TS_ASSERT(sd.m_int == 42);
+           TS_ASSERT(sd.m_string == "This is an example.");
+//            TS_ASSERT(sd.m_float, 123.32, 1e-5);
+//            TS_ASSERT(sd.m_double, 1999.354, 1e-5);
+                   
           
-           Container c(Container::VEHICLECONTROL,vc);
-           
-           SerializationFactory sf;
-           PROTOSerializer &protos = sf.getPROTOSerializer(inout);
-           
-           protos.write(c);
-           
-           TS_ASSERT(rawData.str() == inout.str());
-          
-           cout << " --- End of the proto serialisation test ---" << endl;
+          cout << " --- End of the proto serialisation test with raw data ---" << endl;
         
         }
         
-        void xtestProtoDeserialisation() {
-            
-           cout << " --- Proto Deserialisation test ---" << endl;
-           stringstream rawData;
-             
-           VehicleControl vc;
-           vc.setSpeed(2.0);
-           vc.setAcceleration(1.6);
-           vc.setSteeringWheelAngle(32);
-           vc.setBrakeLights(true);
-           vc.setLeftFlashingLights(false);
-           vc.setRightFlashingLights(true);
-           
-           cout << vc.toString() << endl;
-           
-           SerializationFactory sf;
-           PROTODeserializer &protod = sf.getPROTODeserializer(rawData);
-           Container c;
-           protod.read(rawData,c);
-           
-           VehicleControl vc2 = c.getData<VehicleControl>();
-           cout << vc2.toString()<<endl;
-
-           TS_ASSERT(vc.toString() == vc2.toString());
-          
-           cout << " --- End of proto Deserialisation test ---" <<endl;
-        }
+  
         
-        void xtestContainerNestedDataSerialisation() {
-                 cout << " --- Test serializing  container --- " << endl;
-            // Create some data.
-        
-            SerializationTestNestedData sd;
-            VehicleControl vc;
-            vc.setSpeed(10);
-            vc.setAcceleration(1.6);
-            vc.setSteeringWheelAngle(32);
-            vc.setBrakeLights(true);
-            vc.setLeftFlashingLights(false);
-            vc.setRightFlashingLights(true);
-//             cout << vc.toString() <<endl;
-              sd.m_int = 10;
-            Container c(Container::VEHICLECONTROL,vc);
-          
-
-            stringstream inout;
-
-            SerializationFactory sf;
-            PROTOSerializer &protos = sf.getPROTOSerializer(inout);
-            protos.write(c);
-            inout.flush();
-            
-            Container c2;
-            PROTODeserializer &protod = sf.getPROTODeserializer(inout);
-            protod.read(inout, c2);
-
-            VehicleControl vc2 = c2.getData<VehicleControl>();
-            cout << vc.toString() <<endl;
-            cout << vc2.toString()<<endl;
-
-            TS_ASSERT(vc.toString() == vc2.toString());
-
-            cout << " --- end test of container --- 123" << endl;
-            
-            
-        }
+       
 };
 
 #endif /*CORE_PROTOSERIALIZATIONTESTSUITE_H_*/
