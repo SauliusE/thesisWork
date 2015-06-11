@@ -220,40 +220,9 @@ class SerializationTest : public CxxTest::TestSuite {
             cout << "end Test payload" << endl;
        }
         
-        void xtestLcmSerialisation() {
-          cout << " LCM serialisation test " << endl;
-          char* rawData; // need assign raw data somehow
-          stringstream rawDataStream;
-          rawDataStream << rawData;
-           VehicleControl vc;
-           vc.setSpeed(2.0);
-           vc.setAcceleration(1.6);
-           vc.setSteeringWheelAngle(32);
-           vc.setBrakeLights(true);
-           vc.setLeftFlashingLights(false);
-           vc.setRightFlashingLights(true);
-           
-           stringstream inout;
-          
-           Container c(Container::VEHICLECONTROL,vc);
-           
-           SerializationFactory sf;
-           LCMSerializer &lcms = sf.getLCMSerializer(inout);
-           
-           lcms.write(c);
-           
-           TS_ASSERT(rawDataStream.str() == inout.str());
-          
-           cout << " End of the lcm serialisation test " << endl;
-        
-        }
-        
-        void testLcmDeserialisation() {
-            
-            cout << " lcm Deserialisation test " << endl;
-            //char* rawData = "";
-            
-            string hex = "4c433032000000003130303500284dcbf791b0cc2a40000000000000003ff999999999999a4040000000000000010001";
+        void testLcmSerialisation() {
+            cout << " LCM serialisation test " << endl;
+            string hex = "4c433032000000003431009c880a5168462f7440000000000000003ff999999999999a4040000000000000010001";
             int len = hex.length();
             string rawData;
             
@@ -263,7 +232,47 @@ class SerializationTest : public CxxTest::TestSuite {
                 rawData.push_back(chr);
             }
             
-            stringstream rawDataStream ;
+            stringstream rawDataStream;
+            rawDataStream << rawData;
+            
+            VehicleControl vc;
+            vc.setSpeed(2.0);
+            vc.setAcceleration(1.6);
+            vc.setSteeringWheelAngle(32);
+            vc.setBrakeLights(true);
+            vc.setLeftFlashingLights(false);
+            vc.setRightFlashingLights(true);
+            
+            stringstream inout;
+            
+            Container c(Container::VEHICLECONTROL,vc);
+            
+            SerializationFactory sf;
+            LCMSerializer &lcms = sf.getLCMSerializer(inout);
+            
+            lcms.write(c);
+            
+            TS_ASSERT(rawDataStream.str() == inout.str());
+            
+            cout << " End of the lcm serialisation test " << endl;
+            
+        }
+        
+        void testLcmDeserialisation() {
+            
+            cout << " lcm Deserialisation test " << endl;
+            
+            string hex = "4c433032000000003431009c880a5168462f7440000000000000003ff999999999999a4040000000000000010001";
+            int len = hex.length();
+            string rawData;
+            
+            for(int i=0; i< len; i+=2) {
+                string byte = hex.substr(i,2);
+                char chr = (char) (int)strtol(byte.c_str(), NULL, 16);
+                rawData.push_back(chr);
+            }
+            
+            stringstream rawDataStream;
             rawDataStream << rawData;
 
             VehicleControl vc;

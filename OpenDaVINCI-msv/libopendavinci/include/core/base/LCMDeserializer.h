@@ -100,7 +100,7 @@ namespace core {
 
             private:
                 stringstream m_buffer; // Buffer where the payload is stored to then get decoded
-                istream &m_in;
+                istream &m_in; // Buffer used when reading nested data to know how much was read so we can move the read position of the m_buffer later.
         };
 
     }

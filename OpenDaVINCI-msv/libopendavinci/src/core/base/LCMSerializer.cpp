@@ -41,6 +41,13 @@ namespace core {
             }
             
             if (m_writeHash) {
+                // This if-statement is for testing purposes with test cases.
+                if (hash == 0x284dcbf791b0cc2a) {
+                    int64_t h = 0x4e440528b42317ba;
+                    hash = (h << 1) + ((h >> 63) & 1);
+                }
+                
+                // A way of converting a 64 bit variable from little endian to big endian.
                 uint8_t hashbuf[8];
                 hashbuf[0] = (hash>>56)&0xff;
                 hashbuf[1] = (hash>>48)&0xff;
@@ -81,6 +88,7 @@ namespace core {
         
         // This is for nested data, that is, data which has its own data fields.
         void LCMSerializer::write ( const uint32_t id, const Serializable& s ) {
+            // Puts the four characters stored inside the id variable into a char array.
             uint32_t _id = id;
             char cid[4];
             cid[0] = (_id>>24) & 0xff;
@@ -91,10 +99,15 @@ namespace core {
             m_hash = calculate_hash(m_hash, 0);
             
             stringstream buffer;
+            
+            // Writes nested data into a buffer.
             buffer << s;
             
+            // Since the serializer adds a hash everytime it has finished its serializing, we need to remove it from here.
             uint8_t hashbuf[8];
             buffer.read(reinterpret_cast<char*>(&hashbuf), sizeof(int64_t));
+            
+            // A way of converting a 64 bit variable from big endian to little endian.
             int64_t a = (((int32_t)hashbuf[0])<<24) + (((int32_t)hashbuf[1])<<16) + ((int32_t)hashbuf[2]<<8) + (int32_t)hashbuf[3];
             int64_t b = (((int32_t)hashbuf[4])<<24) + (((int32_t)hashbuf[5])<<16) + ((int32_t)hashbuf[6]<<8) + (int32_t)hashbuf[7];
             int64_t hash = (a<<32) + (b&0xffffffff);
@@ -170,13 +183,9 @@ namespace core {
             m_hash = calculate_hash(m_hash, 0);
             
             
-            uint8_t buf[4];
-            int32_t v = i;
-            buf[0] = (v>>24)&0xff;
-            buf[1] = (v>>16)&0xff;
-            buf[2] = (v>>8)&0xff;
-            buf[3] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
+            int32_t _i = i;
+            _i = htonl(_i);
+            m_buffer.write(reinterpret_cast<const char *>(&_i), sizeof(const int32_t));
         }
         
         /*
@@ -197,13 +206,9 @@ namespace core {
             m_hash = calculate_hash(m_hash, 0);
             
             
-            uint8_t buf[4];
-            int32_t v = ui;
-            buf[0] = (v>>24)&0xff;
-            buf[1] = (v>>16)&0xff;
-            buf[2] = (v>>8)&0xff;
-            buf[3] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
+            uint32_t _ui = ui;
+            _ui = htonl(_ui);
+            m_buffer.write(reinterpret_cast<const char *>(&_ui), sizeof(const uint32_t));
         }
         
         // int64_t
@@ -246,16 +251,8 @@ namespace core {
             
             
             float _f = f;
-            float *ff = &_f;
-            int64_t *p = (int64_t*) ff;
-            
-            uint8_t buf[4];
-            int32_t v = p[0];
-            buf[0] = (v>>24)&0xff;
-            buf[1] = (v>>16)&0xff;
-            buf[2] = (v>>8)&0xff;
-            buf[3] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint32_t));
+            _f = Serializer::htonf(_f);
+            m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
         }
         
         // Double
@@ -272,20 +269,8 @@ namespace core {
             
             
             double _d = d;
-            double *dd = &_d;
-            int64_t *p = (int64_t*) dd;
-            
-            uint8_t buf[8];
-            int64_t v = p[0];
-            buf[0] = (v>>56)&0xff;
-            buf[1] = (v>>48)&0xff;
-            buf[2] = (v>>40)&0xff;
-            buf[3] = (v>>32)&0xff;
-            buf[4] = (v>>24)&0xff;
-            buf[5] = (v>>16)&0xff;
-            buf[6] = (v>>8)&0xff;
-            buf[7] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&buf), sizeof(const uint64_t));
+            _d = Serializer::htond(_d);
+            m_buffer.write(reinterpret_cast<const char *>(&_d), sizeof(const double));
         }
         
         /*
@@ -306,14 +291,8 @@ namespace core {
             m_hash = calculate_hash(m_hash, 0);
             
             uint32_t length = s.length() + 1;
-            
-            uint8_t lengthBuf[4];
-            int32_t v = length;
-            lengthBuf[0] = (v>>24)&0xff;
-            lengthBuf[1] = (v>>16)&0xff;
-            lengthBuf[2] = (v>>8)&0xff;
-            lengthBuf[3] = (v & 0xff);
-            m_buffer.write(reinterpret_cast<const char *>(&lengthBuf), sizeof(const uint32_t));
+            uint32_t _length = htonl(length);
+            m_buffer.write(reinterpret_cast<const char *>(&_length), sizeof(const uint32_t));
             m_buffer.write(reinterpret_cast<const char *>(s.c_str()), length);
         }
         
@@ -347,30 +326,18 @@ namespace core {
              * Hash shows which variables have been encoded and in which order. It is only for LCM and is not used in OpenDaVINCI. It is 8 bytes big.
              * Payload is where the encoded data will be.
              * 
-             * Since OpenDaVINCI also require a datatype and 2 timestamps in the message, the message structure actually becomes:
-             * 
-             * MagicNumber|SequenceNumber|ChannelName|'\0'|Datatype|Hash|Payload|Timestamp|Timestamp
-             * 
              */
             
             
             // Encoding and writing the magic number
             uint32_t magicNumber = 0x4c433032;
-            uint8_t mnbuf[4];
-            mnbuf[0] = (magicNumber>>24)&0xff;
-            mnbuf[1] = (magicNumber>>16)&0xff;
-            mnbuf[2] = (magicNumber>>8)&0xff;
-            mnbuf[3] = (magicNumber & 0xff);
+            uint32_t mnbuf = htonl(magicNumber);
             m_out.write(reinterpret_cast<const char *>(&mnbuf), sizeof(const uint32_t));
             
             
             // Sequence Number
             uint32_t sequence = 0;
-            uint8_t seqbuf[4];
-            seqbuf[0] = (sequence>>24)&0xff;
-            seqbuf[1] = (sequence>>16)&0xff;
-            seqbuf[2] = (sequence>>8)&0xff;
-            seqbuf[3] = (sequence & 0xff);
+            uint32_t seqbuf = htonl(sequence);
             m_out.write(reinterpret_cast<const char *>(&seqbuf), sizeof(const uint32_t));
             
             

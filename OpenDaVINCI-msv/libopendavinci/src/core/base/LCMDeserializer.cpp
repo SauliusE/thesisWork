@@ -6,6 +6,7 @@
 
 #include "core/base/LCMDeserializer.h"
 #include "core/base/Serializable.h"
+#include <inttypes.h>
 
 namespace core {
     namespace base {
@@ -21,9 +22,9 @@ namespace core {
                  * If not, it means we got the payload. The payload is put into the stringstream m_buffer.
                  */
                 
-                uint8_t magicBuf[4];
-                in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
-                int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+                int32_t _magicNumber;
+                in.read(reinterpret_cast<char*>(&_magicNumber), sizeof(int32_t));
+                int32_t magicNumber = ntohl(_magicNumber);
                 
                 // Sets the read position to the beginning
                 in.clear();
@@ -36,6 +37,7 @@ namespace core {
                 // Since the hash is a part of the payload and the hash is not used, just read it and ignore it.
                 int64_t hash;
                 in.read(reinterpret_cast<char*>(&hash), sizeof(int64_t));
+                
                 
                 char c = 0;
                 in.get(c);
@@ -68,9 +70,12 @@ namespace core {
         void LCMDeserializer::read(const uint32_t id, Serializable &s) {
             (void) id;
             stringstream ss;
+            
+            // Add a dummy hash to the beginning of the stream that are going to be read, because the deserializer always removes a hash when created.
             int64_t hash = 1234;
             ss.write(reinterpret_cast<const char *>(&hash), sizeof(const int64_t));
             
+            // Get the read position and put all the data from that point and forward inside ss.
             int pos = m_buffer.tellg();
             char c = 0;
             m_buffer.get(c);
@@ -78,8 +83,11 @@ namespace core {
                 ss.put(c);
                 m_buffer.get(c);
             }
+            
+            // Read from ss into the nested data
             ss >> s;
             
+            // Once we have read the data, move the read position of m_buffer forward by how much was read.
             pos += ss.tellg();
             m_buffer.clear();
             m_buffer.seekg(pos, ios_base::beg);
@@ -106,17 +114,17 @@ namespace core {
         // int32_t
         void LCMDeserializer::read(const uint32_t id, int32_t &i) {
             (void) id;
-            uint8_t buf[4];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
-            i = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+            int32_t _i;
+            m_buffer.read(reinterpret_cast<char *>(&_i), sizeof(int32_t));
+            i = ntohl(_i);
         }
         
         // uint32_t
         void LCMDeserializer::read(const uint32_t id, uint32_t &ui) {
             (void) id;
-            uint8_t buf[4];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
-            ui = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+            uint32_t _ui;
+            m_buffer.read(reinterpret_cast<char *>(&_ui), sizeof(uint32_t));
+            ui = ntohl(_ui);
         }
         
         // int64_t
@@ -125,7 +133,7 @@ namespace core {
             uint8_t buf[8];
             m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
             
-            //int64_t *p = (int64_t*) &i;
+            // A way of converting a 64 bit variable from big endian to little endian.
             int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
             int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
             i = (a<<32) + (b&0xffffffff);
@@ -135,35 +143,27 @@ namespace core {
         // Float
         void LCMDeserializer::read(const uint32_t id, float &f) {
             (void) id;
-            uint8_t buf[4];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint32_t));
-            
-            int64_t *p = (int64_t*) &f;
-            *p = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + (((int32_t)buf[2])<<8) + ((int32_t)buf[3]);
+            float _f;
+            m_buffer.read(reinterpret_cast<char *>(&_f), sizeof(float));
+            f = Deserializer::ntohf(_f);
         }
         
         // Double
         void LCMDeserializer::read(const uint32_t id, double &d) {
             (void) id;
-            uint8_t buf[8];
-            m_buffer.read(reinterpret_cast<char *>(&buf), sizeof(uint64_t));
-            if (m_buffer.good()) {
-                double *dd = &d;
-                int64_t *p = (int64_t*) dd;
-                int64_t a = (((int32_t)buf[0])<<24) + (((int32_t)buf[1])<<16) + ((int32_t)buf[2]<<8) + (int32_t)buf[3];
-                int64_t b = (((int32_t)buf[4])<<24) + (((int32_t)buf[5])<<16) + ((int32_t)buf[6]<<8) + (int32_t)buf[7];
-                *p = (a<<32) + (b&0xffffffff);
-            } else {
-                d = 0;
-            }
+            double _d;
+            m_buffer.read(reinterpret_cast<char *>(&_d), sizeof(double));
+            d = Deserializer::ntohd(_d);
         }
         
         // String
         void LCMDeserializer::read(const uint32_t id, string &s) {
             (void) id;
-            uint8_t lengthBuf[4];
-            m_buffer.read(reinterpret_cast<char *>(&lengthBuf), sizeof(const uint32_t));
-            int32_t length = (((int32_t)lengthBuf[0])<<24) + (((int32_t)lengthBuf[1])<<16) + (((int32_t)lengthBuf[2])<<8) + ((int32_t)lengthBuf[3]);
+            
+            int32_t _length;
+            m_buffer.read(reinterpret_cast<char *>(&_length), sizeof(const int32_t));
+            int32_t length = ntohl(_length);
+            
             char *str = new char[length];
             m_buffer.read(reinterpret_cast<char *>(str), length);
             s = string(str, length - 1);
@@ -183,9 +183,9 @@ namespace core {
              */
             
             // Decoding the Magic number
-            uint8_t magicBuf[4];
-            in.read(reinterpret_cast<char*>(&magicBuf), sizeof(uint32_t));
-            int32_t magicNumber = (((int32_t)magicBuf[0])<<24) + (((int32_t)magicBuf[1])<<16) + (((int32_t)magicBuf[2])<<8) + ((int32_t)magicBuf[3]);
+            int32_t _magicNumber;
+            in.read(reinterpret_cast<char*>(&_magicNumber), sizeof(int32_t));
+            int32_t magicNumber = ntohl(_magicNumber);
             if (magicNumber != 0x4c433032) {
                 if (in.good()) {
                     // Stream is good but still no magic number?
@@ -195,11 +195,11 @@ namespace core {
             }
             
             // Decoding the seq_number.
-            uint8_t seqBuf[4];
-            in.read(reinterpret_cast<char*>(&seqBuf), sizeof(uint32_t));
-            int32_t msg_seq = (((int32_t)seqBuf[0])<<24) + (((int32_t)seqBuf[1])<<16) + (((int32_t)seqBuf[2])<<8) + ((int32_t)seqBuf[3]);
-            // Sequence Number is not used so void it to avoid unused variable warning
-            (void) msg_seq; 
+            int32_t _sequence;
+            in.read(reinterpret_cast<char*>(&_sequence), sizeof(int32_t));
+            int32_t sequence = ntohl(_sequence);
+            // Sequence Number is not used so void it to avoid unused variable warning.
+            (void) sequence; 
             
             // Decoding Channel Name
             char channel[256];
@@ -227,8 +227,6 @@ namespace core {
             }
             
             container.setSerializedData(ss2.str());
-            
-            //ss2 >> container;
         }
     }
 } // core::base
