@@ -28,12 +28,17 @@ namespace core {
             // - > size of message
             // - > payload
             // Writing size of message
-//             m_out << m_size;
+            
+            // Keeping payload size infront of the payload. 
+            // if m_size = 0, then it is container or nothing was writen to m_buffer.
             if(m_size !=0){
-                stringstream ss;
+            stringstream ss;
             ss.write(reinterpret_cast<const char *>(&m_size), sizeof(uint32_t));
             m_out << ss.str();
             m_out << m_buffer.str();
+            
+            
+            // All write functions are simple, just writes values into m_buffer.
             }
        
         } // end of ~constructor
@@ -43,23 +48,21 @@ namespace core {
             (void)id;
             stringstream buffer;
             buffer << s;
+           // After serializable was serialized we read size of payload, an add it to current m_size.
             uint32_t size = 0;
             
-//             m_buffer << buffer.str();
             buffer.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
             m_size += size;
             char c = 0;
             buffer.get(c);
             while(buffer.good()){
                 m_buffer.put(c);
-                buffer.get(c);
-                
+                buffer.get(c);  
             }
         }
     
     
         void ROSSerializer::write ( const uint32_t id, const bool& b ) {
-            
             (void) id;
             m_size += static_cast<uint32_t>(sizeof(b));
             
@@ -103,10 +106,10 @@ namespace core {
             m_buffer.write(reinterpret_cast<const char *>(&_f), sizeof(const float));
 
        }
-void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
-{
-(void) id;(void)uc;
-}
+        void ROSSerializer::write(const uint32_t id, const unsigned char& uc){
+        (void) id;
+        (void)uc;
+        }
 
 
         void ROSSerializer::write ( const uint32_t id, const double& d ) {
@@ -125,7 +128,6 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
             m_size += static_cast<uint32_t>(sizeof(s));
             
             uint32_t stringLength = s.length();
-        //    uint32_t size = static_cast<uint32_t>(stringLength + sizeof(uint32_t));             
 
             uint32_t _stringLength = stringLength;
             m_buffer.write(reinterpret_cast<const char *>(&_stringLength), sizeof(uint32_t));
@@ -135,7 +137,10 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
         }
 
         void ROSSerializer::write ( const uint32_t id, const void* data, const uint32_t& size ) {
-            cout<< "Writing id: " << id << "of user data " << data << " size of it " << size << endl;
+                    (void) id;
+                    (void) data;
+                    (void) size;
+            
         }
     
 
@@ -153,14 +158,9 @@ void ROSSerializer::write(const uint32_t id, const unsigned char& uc)
                 m_out.write(reinterpret_cast<const char *>(&blockNr), sizeof(const uint16_t));
                 
 
-//                uint32_t msgSize = container.getMessageSize();
-//                msgSize = htonl(msgSize);
-//                m_out.write(reinterpret_cast<const char *>(&msgSize), sizeof(const uint32_t));
                 m_buffer << container;
                 m_out << m_buffer.str();
                 m_size = 0;
-//                 m_out << container.getSerializedData();
-//                 m_size = 0;
 
         }
     

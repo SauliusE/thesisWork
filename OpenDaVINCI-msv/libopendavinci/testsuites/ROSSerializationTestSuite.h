@@ -123,7 +123,7 @@ class SerializationTestSampleData : public core::base::Serializable {
             s.write(1,m_float);
             s.write(2,m_double);
             s.write(3, m_bool);
-//             s.write(4, m_nestedData);
+            s.write(4, m_nestedData);
         
             s.write(5, m_int);
            
@@ -139,21 +139,15 @@ class SerializationTestSampleData : public core::base::Serializable {
             Deserializer &d = sf.getDeserializer(in);
             
              d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '3', 'o', 'l') >::RESULT,m_float);
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '2', 'o', 'l') >::RESULT,m_double);
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
+             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', '2', 'o', 'l') >::RESULT,m_double);
+             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL6('m', '_', 'b', 'o', 'o', 'l') >::RESULT,
                    m_bool);
-            
-//            
-//                   d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
-//                     m_nestedData);
+             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL8('m', '_', 'n', 'e', 's', 't', 'e', 'd') >::RESULT,
+                    m_nestedData);                       
              d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 'i', 'n', 't') >::RESULT,
                    m_int);
-            d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
-                   m_string);
-       
-
-// 
-            
+             d.read(CRC32 < OPENDAVINCI_CORE_STRINGLITERAL5('m', '_', 's', 't', 'r') >::RESULT,
+                   m_string);            
 
             return in;
         }
@@ -163,22 +157,19 @@ class SerializationTestSampleData : public core::base::Serializable {
 class SerializationTest : public CxxTest::TestSuite {
     public:
         void testSerializationNested() {
-            std::cout << " --- testing nested data --- " << endl; 
            SerializationTestSampleData sd;
            sd.m_bool = true;
            sd.m_int = 42;
-//            sd.m_nestedData.m_double = 1234.32;
-//            sd.m_nestedData.m_int = 1234;
+           sd.m_nestedData.m_double = 1234.32;
+           sd.m_nestedData.m_int = 1234;
            sd.m_string = "This is an example.";
            sd.m_float = 123.32;
            sd.m_double = 1999.354;
-//            sd.m_nestedData.m_string = "Nested one.";
+           sd.m_nestedData.m_string = "Nested one.";
             stringstream inout;
             inout << sd;
             inout.flush();
 
-            // Read from the previously created data sink.
-//             cout << " STARTING DECODING " <<endl;
             SerializationTestSampleData sd2;
             inout >> sd2;
 
@@ -187,23 +178,12 @@ class SerializationTest : public CxxTest::TestSuite {
             TS_ASSERT(sd2.m_string == "This is an example.");
             TS_ASSERT_DELTA(sd2.m_float, 123.32, 1e-5);
             TS_ASSERT_DELTA(sd2.m_double, 1999.354, 1e-5);
-//             TS_ASSERT_DELTA(sd2.m_nestedData.m_double,1234.32, 1e-5);
-//             TS_ASSERT(sd2.m_nestedData.m_int == 1234);
-//             TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
-// 
-//             cout << "m_bool : "  << sd2.m_bool << " expected : " <<sd.m_bool << endl;
-//              cout << " m_string " << sd2.m_string<< " Expected : " << sd.m_string << endl;;
-//             cout << "m_int : " << sd2.m_int << "expected : " << sd.m_int <<endl;
-//               cout << "m_nestedData : " << sd2.m_nestedData.m_string<< " expected : " <<sd.m_nestedData.m_string <<endl;;
-            cout << " --- end testing nested data --- " << endl; 
-
-           
+            TS_ASSERT_DELTA(sd2.m_nestedData.m_double,1234.32, 1e-5);
+            TS_ASSERT(sd2.m_nestedData.m_int == 1234);
+            TS_ASSERT(sd2.m_nestedData.m_string == "Nested one.");
         }
         
           void testSerializationContainer() {
-            cout << " --- Test serializing  container --- " << endl;
-            // Create some data.
-        
               
             VehicleControl vc;
             vc.setSpeed(2.0);
@@ -212,11 +192,9 @@ class SerializationTest : public CxxTest::TestSuite {
             vc.setBrakeLights(true);
             vc.setLeftFlashingLights(false);
             vc.setRightFlashingLights(true);
-//             cout << vc.toString() <<endl;
               
             Container c(Container::VEHICLECONTROL,vc);
           
-
             stringstream inout;
 
             SerializationFactory sf;
@@ -229,15 +207,10 @@ class SerializationTest : public CxxTest::TestSuite {
             protod.read(inout, c2);
 
             VehicleControl vc2 = c2.getData<VehicleControl>();
-//             cout << vc2.toString()<<endl;
 
             TS_ASSERT(vc.toString() == vc2.toString());
-
-            cout << " --- end test of container ---" << endl;
-        }
-        
+          }        
           void testSerializationPayload() {
-            cout << " --- Test payload --- " << endl;
             
             VehicleControl vc;
             vc.setSpeed(2.0);
@@ -247,50 +220,38 @@ class SerializationTest : public CxxTest::TestSuite {
             vc.setLeftFlashingLights(false);
             vc.setRightFlashingLights(true);
             
-//             cout << vc.toString() <<endl;
-              
-            
             stringstream inout2;
             inout2 << vc;
             
             VehicleControl vc3 ;
             inout2 >> vc3;
-//             cout << vc3.toString()<<endl;
 
              TS_ASSERT(vc.toString() == vc3.toString());
 
-            cout << " --- end  Test payload --- " << endl;
-       }
-       
-       
-
+           }
+              
         
-        
-        void testProtoDeserialisation() {
+        void testProtoDeserialisationRawData() {
             
-           cout << " --- Proto Deserialisation test ---" << endl;
-           
-             ROSSerializationData data;
-         //  string hex = "1100000000D00000656c6c6f2c20576f726c642021";
-           string hex = "110000000D00000048656c6c6f2c20576f726c64202100";
-           int len = hex.length();
-           string rawData;
+          ROSSerializationData data;
+          // Raw data structure : message length , string length, string with value: Hello, World!
+          
+          string hex = "110000000D00000048656c6c6f2c20576f726c64210d0a";
+          int len = hex.length();
+          string rawData;
             
-           for(int i=0; i< len; i+=2) {
+          for(int i=0; i< len; i+=2) {
                string byte = hex.substr(i,2);
                char chr = (char) (int)strtol(byte.c_str(), NULL, 16);
                rawData.push_back(chr);
-           }
-            data.m_string = "";
-           stringstream rawDataStream ;
-           rawDataStream << rawData;
+          }
+          data.m_string = "";
+          stringstream rawDataStream ;
+          rawDataStream << rawData;
           
-           
-           rawDataStream >> data;
-           
-           cout << "String " << data.m_string <<endl;
-           
-           cout << " --- End of proto Deserialisation test ---" <<endl;
+          rawDataStream >> data;
+          
+          TS_ASSERT(data.m_string == "Hello, World!");
         }
         
     

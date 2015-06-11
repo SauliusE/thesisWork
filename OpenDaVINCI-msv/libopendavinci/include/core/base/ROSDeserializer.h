@@ -83,11 +83,10 @@ namespace core {
             private:
                                 
                 stringstream m_buffer;
-                map<uint32_t, streampos> m_values;
                 uint32_t m_size;
                 uint32_t position;
-    istream &m_in;
-                                uint32_t decode(istream &in, uint64_t &value);
+                istream &m_in;
+                
         };
 
     }

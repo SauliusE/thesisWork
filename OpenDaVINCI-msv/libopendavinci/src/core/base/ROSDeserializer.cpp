@@ -14,23 +14,21 @@ namespace core {
 
         ROSDeserializer::ROSDeserializer(istream &in) :
                 m_buffer(),
-                m_values(),
                 m_size(0),
                 position(0),
                 m_in(in){
             // Initialize the stringstream for getting valid positions when calling tellp().
             // This MUST be a blank (Win32 has a *special* implementation...)!
-             position = in.tellg();
+                    
+            // Get currect possition and after putting everything into m_buffer we reset read pointer.
+            // Used for nested data to keep track of istream in read pointer possition.
+            position = in.tellg();
             uint32_t size ;
             in.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-//             in.read(reinterpret_cast<char *>(&size), sizeof(uint32_t));
             m_size = size;
             char c = 0;
             in.get(c);
-            cout << " messge size " << m_size << endl;
-//             cout << " constructor " << m_size << " "  <<endl;
             while(in.good() ){
-//                 cout << " putting to buffer " << endl;  
                 m_buffer.put(c);
                 in.get(c);
                 
@@ -49,19 +47,23 @@ namespace core {
        
 
         void ROSDeserializer::read(const uint32_t id, Serializable &s) {
-          (void) id; //to be removed in the future
-          stringstream ss;
-//           cout << " message size " << m_size << endl;
-              ss.write(reinterpret_cast<const char *>(&m_size), sizeof(uint32_t));
-              uint32_t pos = m_buffer.tellg();
-//               stringstream ss;
-               char c = 0;
+                (void) id;
+               // As size of payload, we put m_size infront of payload, for nested data.
+                stringstream ss;
+                ss.write(reinterpret_cast<const char *>(&m_size), sizeof(uint32_t));
+                uint32_t pos = m_buffer.tellg();
+                
+                char c = 0;
                 m_buffer.get(c);
                 while (m_buffer.good()) {
                 ss.put(c);
                 m_buffer.get(c);
                 }
+                
                 ss >> s;
+                
+                //moving read pointer, based on how much it moved by reading nested data.
+                
                 pos += ss.tellg();
                 m_buffer.clear();
                 m_buffer.seekg(pos, ios_base::beg);
@@ -80,66 +82,54 @@ namespace core {
             
                 (void)id;           
                 m_buffer.read(reinterpret_cast<char *>(&c), sizeof(char));
-      }
+        }
 
-void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
-{
- (void) id;
- (void)uc;
-}
+        void ROSDeserializer::read(const uint32_t id, unsigned char& uc){
+                (void) id;
+                (void)uc;
+        }
 
         void ROSDeserializer::read(const uint32_t id, int32_t &i) {
-            
                 (void)id;           
                 m_buffer.read(reinterpret_cast<char *>(&i), sizeof(int32_t));
-
         }
 
         void ROSDeserializer::read(const uint32_t id, uint32_t &ui) {
-            
                 (void)id;           
-                uint32_t _ui ;
+                uint32_t _ui = 0;
                 m_buffer.read(reinterpret_cast<char *>(&_ui), sizeof(uint32_t));
                 ui = _ui;
         }
 
         void ROSDeserializer::read(const uint32_t id, float &f) {
-            
                 (void)id;           
-                float _f;
+                float _f = 0;
                 m_buffer.read(reinterpret_cast<char *>(&_f), sizeof(float));
                 f = _f;
-              
         }
 
         void ROSDeserializer::read(const uint32_t id, double &d) {
-            
                 (void)id;         
-                double _d;
+                double _d = 0;
                 m_buffer.read(reinterpret_cast<char *>(&_d), sizeof(double));
                 d = _d;
-                
         }
 
         void ROSDeserializer::read(const uint32_t id, string &s) {
-            
                 (void)id;           
                 uint32_t stringLength = 0;
                 m_buffer.read(reinterpret_cast<char *>(&stringLength), sizeof(uint32_t));
-//                 stringLength = ntohl(stringLength);
-                cout << "string lenght " << stringLength << endl;
                 char *str = new char[stringLength+1];
                 m_buffer.read(reinterpret_cast<char *>(str), static_cast<uint32_t>(stringLength));
-//                 cout << " string length " <<  stringLength<<endl;
                 str[stringLength] = '\0';
-                // It is absolutely necessary to specify the size of the serialized string, otherwise, s contains only data until the first '\0' is read.
                 s = string(str, stringLength);
                 OPENDAVINCI_CORE_DELETE_ARRAY(str);
         }
 
         void ROSDeserializer::read(const uint32_t id, void *data, uint32_t size) {
-              cout << "Read data Deserializer" << "- ID value: " << id <<" |  data  value: " << data << " | size of data : "<< size <<endl;
-
+                (void) id;
+                (void) data;
+                (void) size;
         }
         void ROSDeserializer::read(istream &in, core::data::Container &container) {
                 
@@ -148,18 +138,15 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
                 uint8_t messageID;
                 uint16_t blockNr;
                 m_buffer.str("");
-//                 cout << "m_buffer size " << m_buffer.str().length();
                 m_size = 0;
+               // Read Header values
                 in.read(reinterpret_cast<char *>(&connectionID), sizeof(const uint32_t));
                 in.read(reinterpret_cast<char *>(&opcode), sizeof(const uint8_t));
                 in.read(reinterpret_cast<char *>(&messageID), sizeof(const uint8_t));
                 in.read(reinterpret_cast<char *>(&blockNr), sizeof(const uint16_t));
                 container.setDataType(static_cast<core::data::Container::DATATYPE>(connectionID));
-//                 cout << " connectionID " << connectionID <<endl;
-//                 cout << (int)opcode << endl;
-//                 cout << (int)messageID << endl;
-//                 cout << blockNr << endl;
                 
+                // rest of the buffer moved into new buffer, and deserialized as container.
                stringstream buffer;
                 char c = 0;
                 in.get(c);
@@ -169,15 +156,6 @@ void ROSDeserializer::read(const uint32_t id, unsigned char& uc)
                 }
                 buffer >> container;
                 
-//                 char c = 0;
-//                 in.get(c);
-//                 
-//                 while(in.good()){
-//                     m_buffer.put(c);
-//                     in.get(c);
-//                 }
-//                 
-//                 container.setSerializedData(m_buffer.str());
 
     }
      

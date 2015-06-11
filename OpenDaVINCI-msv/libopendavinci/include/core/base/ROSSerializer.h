@@ -70,14 +70,13 @@ namespace core{
 
                 virtual void write( const uint32_t id, const void *data, const uint32_t &size );
 
-                                void write(core::data::Container &container);
+                void write(core::data::Container &container);
                                 
-                                uint8_t getMessageSize(){return m_size;}
             private:
                             
                 ostream &m_out;
                 stringstream m_buffer;
-                                uint32_t m_size;
+                uint32_t m_size;
         };
     }
 } // core::base
