@@ -27,7 +27,7 @@ namespace core {
         LCMSerializer::~LCMSerializer() {
             /* 
              * Calculates and writes the hash number and the payload to the ostream which will then get written to the container stream.
-             * If this is the Serializer from the container (m_writeHash is true), the hash will be serialized and written along with the payload.
+             * If this is the Serializer from the container (m_writeHash is false), the hash will be serialized and written along with the payload.
              * Otherwise, if it is not the serializer where the write(container) function is called, the hash will be written along with the payload without serialization.
              * This is to be able to get the hash from the serializer that is created in "buffer << s" in write(Serializable).
              */
