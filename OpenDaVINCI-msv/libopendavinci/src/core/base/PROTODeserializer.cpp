@@ -13,7 +13,6 @@ namespace core {
         using namespace std;
         PROTODeserializer::PROTODeserializer(istream &in) :
                 m_buffer(),
-                m_values(),
                 m_size(0),
                 position(0),
                 m_in(in){
@@ -21,25 +20,31 @@ namespace core {
             // Initialize the stringstream for getting valid positions when calling tellp().
             // This MUST be a blank (Win32 has a *special* implementation...)!
  
-                
                 m_buffer.str("");
                 position = in.tellg();
+                // Reading first value and checking if it is magic number.
                 uint64_t value = 0;
                 decodeVar(in,value);
                 uint16_t magicNumber = static_cast<uint16_t>(value);
                 in.clear();
                 in.seekg(0,ios_base::beg);
                 
+                // If magic number found, that means it is full message and read as container.
+                
                 if(magicNumber == 0xAABB){
                     return;                
                 }
+                
+                // Reads message size from the payload and then puts rest of payload into m_buffer.
+
+                                
                 value = 0;
                 decodeVar(in,value);
                 uint16_t msgSize =static_cast<uint16_t>(value);
                 char c = 0;
                 in.get(c);
 
-                // check size encoding
+                // moving rest of the payload into m_buffer.
                 while(in.good() ){
                     m_buffer.put(c);            
                     in.get(c);
@@ -53,15 +58,17 @@ namespace core {
         }
 
         PROTODeserializer::~PROTODeserializer() {
-             int pos = m_buffer.tellg();
-             m_in.clear();
-             m_in.seekg(pos, ios_base::beg);
+                int pos = m_buffer.tellg();
+                m_in.clear();
+                m_in.seekg(pos, ios_base::beg);
         }
        
 
         void PROTODeserializer::read(const uint32_t id, Serializable &s) {
                 (void) id; //to be removed in the future
+                
                 stringstream ss;
+                // Payload size has to be infront of payload
                 uint64_t tempSize = static_cast<uint64_t>(m_size);
                 encode(ss,tempSize);
                 int pos = m_buffer.tellg();
@@ -92,6 +99,7 @@ namespace core {
         
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 uint64_t v = 0;
@@ -105,8 +113,10 @@ namespace core {
                 (void)id;
                 uint64_t key;
                 decodeVar(m_buffer,key);                   
+                
                 WIRE_TYPE wireType = getWireType(key);           
                 uint32_t fieldId = getFieldNumber(key);                   
+                
                 (void) wireType;                  
                 (void) fieldId;                  
                 uint64_t v;                   
@@ -117,11 +127,14 @@ namespace core {
 
       }
 
-        void PROTODeserializer::read(const uint32_t id, unsigned char &uc) {          (void)id;
+        void PROTODeserializer::read(const uint32_t id, unsigned char &uc) {
+                (void)id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 uint64_t v = 0;
@@ -139,8 +152,10 @@ namespace core {
                 uint64_t key;
                 size = decodeVar(m_buffer,key);
                 m_size -=size;
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 uint64_t v = 0;
@@ -159,8 +174,10 @@ namespace core {
                 
 
                 decodeVar(m_buffer,key);
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 
@@ -176,8 +193,10 @@ namespace core {
                 (void) id;  
                 uint64_t key;
                 decodeVar(m_buffer,key);
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 m_size -= 4;
@@ -194,8 +213,10 @@ namespace core {
                 uint32_t size ;   
                 size = decodeVar(m_buffer,key);
                 m_size -= size;
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;                
                 double _d =0;    
@@ -209,8 +230,10 @@ namespace core {
                 (void) id;
                 uint64_t key;
                 decodeVar(m_buffer,key);
+                
                 WIRE_TYPE wireType = getWireType(key);
                 uint32_t fieldId = getFieldNumber(key);
+                
                 (void) wireType;
                 (void) fieldId;
                 uint64_t size;
@@ -233,6 +256,7 @@ namespace core {
               // Implement read user data from byte sequence
 
         }
+        
         void PROTODeserializer::read(istream &in, core::data::Container &container) {
                 // Getting message size
                 // Decoding magic number
@@ -253,43 +277,32 @@ namespace core {
                   in.get(c);
                 }
                 buffer >> container;
-
-
-    }
+        }
      
-        uint32_t PROTODeserializer::decodeVar ( istream &in, uint64_t &value )
-          {
-          uint32_t size = 0;
+        uint32_t PROTODeserializer::decodeVar ( istream &in, uint64_t &value ){
+              uint32_t size = 0;
               int shift = 0;
               uint8_t c;
               value = 0;
-
               do {
                     c = in.get();
                     value |= ( uint64_t ) ( c & 0x7F ) << shift;
                     shift += 7;
                     ++size;
               } while ( in.good() && ( c & 0x80 ) != 0 );
-
               value = le64toh ( value );
-
               return size;
           }
           
             void PROTODeserializer::encode( ostream &out, uint64_t value){
-  
-                value = htole64( value);
-                
+                value = htole64( value);              
                     do {
-
                         char byte = value & (uint8_t) 0x7F;
                         value >>= 7;
-            
                         if ( value) {
                             byte |= ( uint8_t ) 0x80;
                         }
                         out.put( byte );
-                
                 } while (value);
             }
 

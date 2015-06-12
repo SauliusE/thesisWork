@@ -67,7 +67,7 @@ namespace core {
             (void)id;    
             uint32_t size;
                 
-            PROTO_TYPE protoType = ( PROTO_TYPE )6;
+            PROTO_TYPE protoType =  BOOL;
             WIRE_TYPE wireType = getWireType( protoType) ;
                 
             uint32_t key = getKey ( 1, wireType );              
@@ -79,11 +79,11 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const char& c ) {
-            //Doesnt support this type, expressing as boolean value.
+            //Doesnt support this type, expressing as INT32 to write as varint.
             (void)id;                
             uint32_t size; 
             
-            PROTO_TYPE protoType = ( PROTO_TYPE )6;              
+            PROTO_TYPE protoType = INT32;              
             WIRE_TYPE wireType = getWireType ( protoType) ;  
             
             uint32_t key = getKey ( 1, wireType );                                                   
@@ -95,11 +95,11 @@ namespace core {
         }
         
         void PROTOSerializer::write ( const uint32_t id, const unsigned char& uc ) {
-           //Doesnt support this type, expressing as boolean value.
+           //Doesnt support this type, expressing expressing as INT32 to write as varint.
             (void)id;    
             uint32_t size;
                  
-            PROTO_TYPE protoType = ( PROTO_TYPE )6;
+            PROTO_TYPE protoType = INT32;
             WIRE_TYPE wireType = getWireType ( protoType) ;
                 
             uint32_t key = getKey ( 1, wireType );
@@ -114,7 +114,7 @@ namespace core {
             (void)id;
             uint32_t size;
                 
-            PROTO_TYPE protoType = ( PROTO_TYPE )0;
+            PROTO_TYPE protoType = INT32;
             WIRE_TYPE wireType = getWireType ( protoType) ;
                
             uint32_t key = getKey ( 1, wireType );
@@ -128,7 +128,8 @@ namespace core {
         void PROTOSerializer::write ( const uint32_t id, const uint32_t& ui ) {
             (void)id;
             uint32_t size;
-            PROTO_TYPE protoType = ( PROTO_TYPE )2;
+
+            PROTO_TYPE protoType = UINT32;
             WIRE_TYPE wireType = getWireType ( protoType) ;
                
             uint32_t key = getKey ( 1, wireType );
@@ -144,7 +145,8 @@ namespace core {
             uint32_t size;
             float _f = f;
             m_size += 4; 
-            PROTO_TYPE protoType = ( PROTO_TYPE )4;
+            
+            PROTO_TYPE protoType = FLOAT;
             WIRE_TYPE wireType = getWireType ( protoType) ;
             
             uint32_t key = getKey ( 1, wireType );            
@@ -159,8 +161,10 @@ namespace core {
             uint32_t size;
             double _d = d; 
             m_size += 8;
-            PROTO_TYPE protoType = ( PROTO_TYPE )5;
+            
+            PROTO_TYPE protoType = DOUBLE;
             WIRE_TYPE wireType = getWireType ( protoType) ;
+            
             uint32_t key = getKey ( 1, wireType );               
             size = encode(m_buffer,key);
             m_size += size;
@@ -170,7 +174,8 @@ namespace core {
         void PROTOSerializer::write ( const uint32_t id, const string& s ) {
             (void)id;
             uint32_t size;
-            PROTO_TYPE protoType = ( PROTO_TYPE )8; 
+            
+            PROTO_TYPE protoType = STRING; 
             WIRE_TYPE wireType = getWireType ( protoType) ;
             
             uint32_t key = getKey ( 1, wireType );
@@ -195,13 +200,11 @@ namespace core {
     
 
         void PROTOSerializer::write (core::data::Container &container){
-    
-                    uint16_t magicNumber = 0xAABB;
-
-                    encode(m_out, magicNumber);
-                    m_buffer << container;
-                    m_out << m_buffer.str();
-                    m_size = 0;
+            uint16_t magicNumber = 0xAABB;
+            encode(m_out, magicNumber);
+            m_buffer << container;
+            m_out << m_buffer.str();
+            m_size = 0;
         }
     
 
@@ -211,41 +214,35 @@ namespace core {
                     uint8_t size = 0;
                     value = htole64( value);                
                         do {
-
                             char byte = value & (uint8_t) 0x7F;
                             value >>= 7;
-                
                             if ( value) {
                                 byte |= ( uint8_t ) 0x80;
                             }
                             out.put( byte );
                             ++size;
-                    
                     } while (value);
                     return size;
-                
         } 
       
-    
+
+          // Source Mike Achtelik
         uint32_t PROTOSerializer::decodeVar(std::istream& in, uint64_t& value){
-        
                 uint32_t size = 0;
                 int shift = 0;
                 uint8_t c;
                 value = 0;
-
                 do {
                     c = in.get();
                     value |= ( uint64_t ) ( c & 0x7F ) << shift;
                     shift += 7;
                     ++size;
                 } while ( in.good() && ( c & 0x80 ) != 0 );
-                
                 value = le64toh ( value );
                 return size;              
         }
 
-        
+            // Source Mike Achtelik
         PROTOSerializer::WIRE_TYPE PROTOSerializer::getWireType ( PROTOSerializer::PROTO_TYPE type ) {
         switch ( type ) {
             case INT32:
@@ -268,7 +265,6 @@ namespace core {
             default:
                 return OTHER;
             } // end of switch case
-
         } // end of 
     }
 } // core:base
